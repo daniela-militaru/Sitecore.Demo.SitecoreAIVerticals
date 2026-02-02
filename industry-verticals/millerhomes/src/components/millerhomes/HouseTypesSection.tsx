@@ -74,7 +74,7 @@ export type HouseTypesSectionProps = ComponentProps & {
 export const Default = (props: HouseTypesSectionProps): JSX.Element => {
   const id = props.params.RenderingIdentifier;
   const { styles, DynamicPlaceholderId } = props.params;
-  const { fields } = props;
+  const { fields } = props || defaultFields;
   const [showFilters, setShowFilters] = useState(false);
 
   const phHouseTypes = `houseTypes-${DynamicPlaceholderId}`;

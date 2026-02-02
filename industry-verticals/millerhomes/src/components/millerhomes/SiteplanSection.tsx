@@ -59,7 +59,7 @@ export type SiteplanSectionProps = ComponentProps & {
 export const Default = (props: SiteplanSectionProps): JSX.Element => {
   const id = props.params.RenderingIdentifier;
   const { styles } = props.params;
-  const { fields } = props;
+  const { fields } = props || defaultFields;
   const [isLoading, setIsLoading] = useState(true);
 
   return (

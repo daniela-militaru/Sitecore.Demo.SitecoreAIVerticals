@@ -147,7 +147,7 @@ export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['PersonaliseSection', { ...PersonaliseSection, componentType: 'client' }],
   ['PageTitleSection', { ...PageTitleSection, componentType: 'client' }],
   ['NearbyDevelopmentsSection', { ...NearbyDevelopmentsSection, componentType: 'client' }],
-  ['NearbyDevelopmentCard', { ...NearbyDevelopmentCard }],
+  ['NearbyDevelopmentCard', { ...NearbyDevelopmentCard, componentType: 'client' }],
   ['MyMillerHomeSection', { ...MyMillerHomeSection, componentType: 'client' }],
   ['MortgageCalculatorSection', { ...MortgageCalculatorSection, componentType: 'client' }],
   ['LocalAmenitiesSection', { ...LocalAmenitiesSection, componentType: 'client' }],

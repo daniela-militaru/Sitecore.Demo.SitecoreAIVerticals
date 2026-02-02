@@ -58,9 +58,6 @@ export const Default = (props: TestimonialsSectionProps): JSX.Element => {
   const stars = fields.Stars?.value || '4,5';
   const reviewLanguages = fields.ReviewLanguages?.value || 'en';
 
-  // Build the Trustpilot iframe URL
-  const iframeSrc = ''; //`https://widget.trustpilot.com/trustboxes/${templateId}/index.html?templateId=${templateId}&businessunitId=${businessUnitId}#locale=${locale}&styleHeight=${encodeURIComponent(widgetHeight)}&styleWidth=100%25&theme=${theme}&stars=${encodeURIComponent(stars)}&reviewLanguages=${reviewLanguages}`;
-
   return (
     <section
       className={`component testimonials-section bg-white py-8 lg:py-12 ${styles || ''}`}

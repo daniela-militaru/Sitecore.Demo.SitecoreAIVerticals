@@ -96,7 +96,7 @@ export type FloorplanSectionProps = ComponentProps & {
 export const Default = (props: FloorplanSectionProps): JSX.Element => {
   const id = props.params.RenderingIdentifier;
   const { styles } = props.params;
-  const { fields } = props;
+  const { fields } = props || defaultFields;
   const [planStyle, setPlanStyle] = useState<'link' | 'main'>('link');
   const [activeFloor, setActiveFloor] = useState<'ground' | 'first'>('ground');
   const [showDimensions, setShowDimensions] = useState(false);

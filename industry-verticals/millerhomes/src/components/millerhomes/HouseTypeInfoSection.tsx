@@ -104,7 +104,7 @@ export type HouseTypeInfoSectionProps = ComponentProps & {
 export const Default = (props: HouseTypeInfoSectionProps): JSX.Element => {
   const id = props.params.RenderingIdentifier;
   const { styles } = props.params;
-  const { fields } = props;
+  const { fields } = props || defaultFields;
 
   return (
     <div

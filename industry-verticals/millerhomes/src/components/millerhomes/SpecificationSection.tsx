@@ -55,7 +55,7 @@ export type SpecificationSectionProps = ComponentProps & {
 export const Default = (props: SpecificationSectionProps): JSX.Element => {
   const id = props.params.RenderingIdentifier;
   const { styles } = props.params;
-  const { fields } = props;
+  const { fields } = props || defaultFields;
 
   return (
     <div className={`component specification-section bg-white py-12 ${styles || ''}`} id={id}>

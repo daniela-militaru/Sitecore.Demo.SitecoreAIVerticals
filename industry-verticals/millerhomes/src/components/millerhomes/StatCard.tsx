@@ -32,7 +32,7 @@ export const Default = (props: StatCardProps): JSX.Element => {
   const fields = props.fields || defaultFields;
 
   return (
-    <div className={`component stat-card flex-shrink-0 text-center ${styles || ''}`} id={id}>
+    <div className={`component stat-card shrink-0 text-center ${styles || ''}`} id={id}>
       {/* Stat Value - Light cyan/teal color */}
       <div className="mb-1 text-4xl font-light text-[#00B5E2] md:text-5xl lg:text-5xl">
         <Text field={fields.Value} />

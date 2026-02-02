@@ -59,7 +59,7 @@ export type ImageCarouselSectionProps = ComponentProps & {
 export const Default = (props: ImageCarouselSectionProps): JSX.Element => {
   const id = props.params.RenderingIdentifier;
   const { styles, DynamicPlaceholderId } = props.params;
-  const { fields } = props;
+  const { fields } = props || defaultFields;
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,

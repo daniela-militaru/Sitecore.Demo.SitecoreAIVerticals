@@ -54,7 +54,7 @@ export type HouseTypeHeroSectionProps = ComponentProps & {
 export const Default = (props: HouseTypeHeroSectionProps): JSX.Element => {
   const id = props.params.RenderingIdentifier;
   const { styles, DynamicPlaceholderId } = props.params;
-  const { fields } = props;
+  const { fields } = props || defaultFields;
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });

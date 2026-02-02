@@ -21,7 +21,7 @@ import ProductCarousel from 'src/components/non-sitecore/ProductCarousel';
 import { CommonStyles, LayoutStyles, PromoFlags, HeroBannerStyles } from '@/types/styleFlags';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation, A11y, Keyboard } from 'swiper/modules';
-import { ArrowRight, ChevronLeft, ChevronRight, ChevronDown, Heart, Plus, Star, User, X, Check, Loader2, LoaderCircle, ShoppingCart, Search, Download, MapPin, Home, Compass, Calendar, ArrowLeft, Building2, School, ShoppingBag, Utensils, TreePine, Train, Church, Coffee, Bed, Ruler, Bath, Car, Trees, Navigation as Navigation_6b289e2de0a07a8bed65fcf19e83723e986797b2, Video, Play, Menu, Twitter, Facebook, Instagram, Youtube, Linkedin, Grid3X3, List, Share2, MessageSquare, Phone, Globe, MoreHorizontal } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, ChevronDown, Heart, Plus, Star, User, X, Check, Loader2, LoaderCircle, ShoppingCart, Search, Download, MapPin, Home, Compass, Calendar, ArrowLeft, Building2, School, ShoppingBag, Utensils, TreePine, Train, Church, Coffee, Bed, Ruler, Bath, Car, Trees, Navigation as Navigation_6b289e2de0a07a8bed65fcf19e83723e986797b2, Video, Play, Grid3X3, List, Share2, MessageSquare, Phone, Globe, MoreHorizontal } from 'lucide-react';
 import Link_a258c208ba01265ca0aa9c7abae745cc7141aa63 from 'next/link';
 import { cn } from '@/shadcn/lib/utils';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -241,12 +241,6 @@ const importMap = [
       { name: 'Navigation', value: Navigation_6b289e2de0a07a8bed65fcf19e83723e986797b2 },
       { name: 'Video', value: Video },
       { name: 'Play', value: Play },
-      { name: 'Menu', value: Menu },
-      { name: 'Twitter', value: Twitter },
-      { name: 'Facebook', value: Facebook },
-      { name: 'Instagram', value: Instagram },
-      { name: 'Youtube', value: Youtube },
-      { name: 'Linkedin', value: Linkedin },
       { name: 'Grid3X3', value: Grid3X3 },
       { name: 'List', value: List },
       { name: 'Share2', value: Share2 },
