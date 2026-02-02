@@ -59,12 +59,12 @@ export type DevelopmentHeroSectionProps = ComponentProps & {
 export const Default = (props: DevelopmentHeroSectionProps): JSX.Element => {
   const id = props.params.RenderingIdentifier;
   const { styles } = props.params;
-  const { fields } = props;
+  const { fields } = props || defaultFields;
 
   return (
     <div className={`component development-hero-section relative ${styles || ''}`} id={id}>
       {/* Hero Image */}
-      <div className="relative h-[300px] overflow-hidden md:h-[400px] lg:h-[500px]">
+      <div className="relative h-75 overflow-hidden md:h-100 lg:h-125">
         {fields.Image && (
           <SitecoreImage field={fields.Image} className="h-full w-full object-cover" />
         )}

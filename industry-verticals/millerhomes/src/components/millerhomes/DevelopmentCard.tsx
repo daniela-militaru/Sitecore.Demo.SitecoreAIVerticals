@@ -82,7 +82,7 @@ export type DevelopmentCardProps = ComponentProps & {
 export const Default = (props: DevelopmentCardProps): JSX.Element => {
   const id = props.params.RenderingIdentifier;
   const { styles } = props.params;
-  const { fields } = props;
+  const { fields } = props  || defaultFields;
 
   const hasPromoBanner = fields.PromoBanner?.value;
   const hasEventInfo = fields.EventInfo?.value;

@@ -82,7 +82,7 @@ export const Default = (props: DevelopmentInfoSectionProps): JSX.Element => {
             {/* Address & Actions */}
             <div className="mb-6 flex flex-wrap items-center gap-4 text-sm">
               {fields.Address && (
-                <span className="text-[#4a4a4a]">
+                <span className="text-foreground-light">
                   <Text field={fields.Address} />
                 </span>
               )}
@@ -116,7 +116,7 @@ export const Default = (props: DevelopmentInfoSectionProps): JSX.Element => {
 
             {/* Description */}
             {fields.Description && (
-              <div className="prose prose-sm mb-4 max-w-none text-[#4a4a4a] [&_a]:text-[#0072CE]">
+              <div className="prose prose-sm mb-4 max-w-none text-foreground-light [&_a]:text-[#0072CE]">
                 <RichText field={fields.Description} />
               </div>
             )}
@@ -131,7 +131,7 @@ export const Default = (props: DevelopmentInfoSectionProps): JSX.Element => {
           </div>
 
           {/* Right Column */}
-          <div className="flex-shrink-0 lg:w-[320px]">
+          <div className="shrink-0 lg:w-[320px]">
             {/* Opening Hours */}
             <div className="mb-6">
               <h4 className="mb-2 text-sm font-semibold text-[#003057]">
@@ -141,7 +141,7 @@ export const Default = (props: DevelopmentInfoSectionProps): JSX.Element => {
                   'Our opening hours are:'
                 )}
               </h4>
-              <div className="space-y-1 text-sm text-[#4a4a4a]">
+              <div className="space-y-1 text-sm text-foreground-light">
                 {fields.WeekdayHours && (
                   <p>
                     <strong>Monday - Friday:</strong> <Text field={fields.WeekdayHours} />

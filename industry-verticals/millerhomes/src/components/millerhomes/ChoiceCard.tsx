@@ -49,12 +49,12 @@ export const Default = (props: ChoiceCardProps): JSX.Element => {
 
   return (
     <div
-      className={`component choice-card flex w-full flex-col overflow-hidden rounded-md bg-white shadow-xl md:w-1/2 md:max-w-[360px] ${styles || ''}`}
+      className={`component choice-card flex w-full flex-col overflow-hidden rounded-md bg-white shadow-xl md:w-1/2 md:max-w-90 ${styles || ''}`}
       id={id}
     >
       {/* Image */}
       {fields.Image && (
-        <div className="relative aspect-[16/10] w-full overflow-hidden">
+        <div className="relative aspect-16/10 w-full overflow-hidden">
           <SitecoreImage field={fields.Image} className="h-full w-full object-cover" />
         </div>
       )}
@@ -70,7 +70,7 @@ export const Default = (props: ChoiceCardProps): JSX.Element => {
 
         {/* Description */}
         {fields.Description && (
-          <p className="mb-6 max-w-[280px] flex-1 text-sm leading-relaxed text-[#4a4a4a]">
+          <p className="mb-6 max-w-70 flex-1 text-sm leading-relaxed text-foreground-light">
             <Text field={fields.Description} />
           </p>
         )}
@@ -79,7 +79,7 @@ export const Default = (props: ChoiceCardProps): JSX.Element => {
         {fields.CTALink && (
           <SitecoreLink
             field={fields.CTALink}
-            className="w-full max-w-[220px] rounded bg-[#003057] px-6 py-3 text-center text-sm font-medium text-white transition-colors hover:bg-[#002040]"
+            className="w-full max-w-55 rounded bg-[#003057] px-6 py-3 text-center text-sm font-medium text-white transition-colors hover:bg-[#002040]"
           >
             <Text field={fields.CTAText} />
           </SitecoreLink>

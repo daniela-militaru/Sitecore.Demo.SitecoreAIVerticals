@@ -56,7 +56,7 @@ export const Default = (props: FeatureSectionProps): JSX.Element => {
       {/* Mobile/Tablet: Stacked layout */}
       <div className="lg:hidden">
         {/* Image - Full width */}
-        <div className="aspect-[4/3] w-full">
+        <div className="aspect-4/3 w-full">
           {fields.BackgroundImage?.value?.src ? (
             <SitecoreImage field={fields.BackgroundImage} className="h-full w-full object-cover" />
           ) : (
@@ -94,7 +94,7 @@ export const Default = (props: FeatureSectionProps): JSX.Element => {
       {/* Desktop: Image background with overlaid content card */}
       <div className="relative hidden lg:block">
         {/* Full-width background image */}
-        <div className="relative h-[450px] w-full xl:h-[500px]">
+        <div className="relative h-112.5 w-full xl:h-125">
           {fields.BackgroundImage?.value?.src ? (
             <SitecoreImage
               field={fields.BackgroundImage}
@@ -107,7 +107,7 @@ export const Default = (props: FeatureSectionProps): JSX.Element => {
 
         {/* Content card overlay */}
         <div className="absolute inset-0 z-10 mx-auto max-w-screen-2xl px-4">
-          <div className="flex h-full items-center lg:max-w-[28rem]">
+          <div className="flex h-full items-center lg:max-w-md">
             <div className="space-y-5 bg-white p-8">
               <h2 className="text-4xl xl:text-5xl">
                 <Text

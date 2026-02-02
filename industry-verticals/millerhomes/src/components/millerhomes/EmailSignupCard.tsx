@@ -60,7 +60,7 @@ export const Default = (props: EmailSignupCardProps): JSX.Element => {
     <div className={`component email-signup-card ${styles}`} id={id}>
       <div className="flex flex-col items-center gap-8 lg:flex-row lg:gap-12">
         {/* Phone Mockups - Left Side */}
-        <div className="flex w-full flex-shrink-0 justify-center lg:w-1/2">
+        <div className="flex w-full shrink-0 justify-center lg:w-1/2">
           <div className="relative w-full max-w-md">
             <JssImage field={fields.PhoneImage} className="h-auto w-full object-contain" />
           </div>
@@ -100,7 +100,7 @@ export const Default = (props: EmailSignupCardProps): JSX.Element => {
           {/* CTA Button */}
           <JssLink
             field={fields.ButtonLink}
-            className="inline-block min-w-[200px] rounded bg-[#0072CE] px-8 py-3 text-center font-semibold text-white transition-colors hover:bg-[#005ba3]"
+            className="inline-block min-w-50 rounded bg-[#0072CE] px-8 py-3 text-center font-semibold text-white transition-colors hover:bg-[#005ba3]"
           >
             <Text field={fields.ButtonText} />
           </JssLink>
