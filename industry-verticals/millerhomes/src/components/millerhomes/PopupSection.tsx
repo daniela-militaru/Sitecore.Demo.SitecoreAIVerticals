@@ -101,83 +101,83 @@ export const Default = (props: PopupSectionProps): JSX.Element => {
     };
   }, [isOpen]);
 
-  // In editing mode: always show grayed placeholder with button to preview modal
-  // This allows editors to always see and access the component
+  // In editing mode: show collapsible version for editing
+  // By default shows a small grayed box, click to expand and show modal overlay
+  // IMPORTANT: Placeholder must ALWAYS be in DOM for Sitecore editing - use CSS hidden, not conditional render
   if (isEditing) {
     return (
       <>
-        {/* Grayed placeholder box - always visible in editing mode */}
+        {/* Small grayed box - always visible in editing mode */}
         <div
-          className={`component popup-section my-4 rounded-lg border-2 border-dashed border-gray-400 bg-gray-200 p-6 ${styles || ''}`}
+          className={`component popup-section my-4 rounded-lg border-2 border-dashed border-gray-400 bg-gray-200 p-4 ${styles || ''}`}
           id={id}
         >
-          <div className="mb-4 text-center text-gray-500">
-            <div className="mb-1 text-sm font-medium">Popup Section</div>
-            <div className="mb-3 text-xs">Popup will appear after {timeout}ms on the live site</div>
-            {/* Button to preview modal in editing mode */}
+          <div className="flex items-center justify-between text-gray-500">
+            <div>
+              <div className="text-sm font-medium">Popup Section</div>
+              <div className="text-xs">Popup will appear as modal after {timeout}ms on the live site</div>
+            </div>
             <button
               onClick={() => setIsOpen(true)}
               className="rounded bg-[#003057] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#003057]/90"
             >
-              Open modal
+              Edit Popup Content
             </button>
           </div>
         </div>
 
-        {/* Modal - shown when editor clicks Preview button */}
-        {isOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center">
-            {/* Backdrop */}
-            <div
-              className="absolute inset-0 bg-[#003057]/80 backdrop-blur-sm"
-              onClick={() => setIsOpen(false)}
-              aria-hidden="true"
-            />
+        {/* Modal overlay for editing - contains the Placeholder */}
+        {/* Using relative positioning instead of fixed so Sitecore can still edit */}
+        <div 
+          className={`${isOpen ? 'block' : 'hidden'} fixed inset-0 z-[9999] flex items-center justify-center`}
+          style={{ pointerEvents: isOpen ? 'auto' : 'none' }}
+        >
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-[#003057]/80 backdrop-blur-sm"
+            onClick={() => setIsOpen(false)}
+            aria-hidden="true"
+          />
 
-            {/* Modal Container */}
-            <div
-              className={`relative mx-4 max-h-[90vh] w-full overflow-y-auto rounded-lg shadow-2xl ${
-                isBranded ? 'max-w-4xl bg-[#003057]' : 'max-w-5xl bg-transparent'
-              }`}
-              role="dialog"
-              aria-modal="true"
-              aria-labelledby="popup-title"
-            >
-              {/* Header - Only for branded variant */}
-              {isBranded && (
-                <div className="flex items-center justify-between p-6 pb-0">
-                  {/* Logo */}
-                  <div className="flex items-center gap-1">
-                    <span className="text-2xl font-light text-white">
-                      {fields.LogoPrefix?.value}
-                    </span>
-                    <span className="text-2xl font-bold text-white">{fields.LogoText?.value}</span>
-                    <span className="text-2xl font-light text-[#0072CE]">
-                      {fields.LogoHighlight?.value}
-                    </span>
-                  </div>
-
-                  {/* Close Button */}
-                  <button
-                    onClick={() => setIsOpen(false)}
-                    className="flex items-center gap-2 text-white transition-colors hover:text-white/80"
-                    aria-label={fields.CloseButtonText?.value as string}
-                  >
-                    <span className="text-sm font-medium">{fields.CloseButtonText?.value}</span>
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-[#0072CE]">
-                      <X className="h-5 w-5 text-[#0072CE]" />
-                    </div>
-                  </button>
+          {/* Modal Container */}
+          <div
+            className={`relative mx-4 max-h-[90vh] w-full overflow-y-auto rounded-lg shadow-2xl ${
+              isBranded ? 'max-w-4xl bg-[#003057]' : 'max-w-5xl bg-transparent'
+            }`}
+          >
+            {/* Header - Only for branded variant */}
+            {isBranded && (
+              <div className="flex items-center justify-between p-6 pb-0">
+                {/* Logo */}
+                <div className="flex items-center gap-1">
+                  <span className="text-2xl font-light text-white">
+                    {fields.LogoPrefix?.value}
+                  </span>
+                  <span className="text-2xl font-bold text-white">{fields.LogoText?.value}</span>
+                  <span className="text-2xl font-light text-[#0072CE]">
+                    {fields.LogoHighlight?.value}
+                  </span>
                 </div>
-              )}
 
-              {/* Dynamic Placeholder Content */}
-              <div className={`${isBranded ? 'p-6' : 'p-4'} flex`}>
-                <Placeholder name={phPopupContent} rendering={props.rendering} />
+                {/* Close Button */}
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center gap-2 text-white transition-colors hover:text-white/80"
+                >
+                  <span className="text-sm font-medium">{fields.CloseButtonText?.value}</span>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-[#0072CE]">
+                    <X className="h-5 w-5 text-[#0072CE]" />
+                  </div>
+                </button>
               </div>
+            )}
+
+            {/* Editable Placeholder Content - ALWAYS in DOM for Sitecore editing */}
+            <div className={`${isBranded ? 'p-6' : 'p-4'} flex`}>
+              <Placeholder name={phPopupContent} rendering={props.rendering} />
             </div>
           </div>
-        )}
+        </div>
       </>
     );
   }
