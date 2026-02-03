@@ -1,7 +1,6 @@
 'use client';
 
 import type { JSX } from 'react';
-import { useState } from 'react';
 import {
   TextField,
   RichTextField,
@@ -60,7 +59,6 @@ export const Default = (props: SiteplanSectionProps): JSX.Element => {
   const id = props.params.RenderingIdentifier;
   const { styles } = props.params;
   const { fields } = props || defaultFields;
-  const [isLoading, setIsLoading] = useState(true);
 
   return (
     <div className={`component siteplan-section bg-white py-12 ${styles || ''}`} id={id}>
@@ -82,20 +80,9 @@ export const Default = (props: SiteplanSectionProps): JSX.Element => {
 
         {/* Siteplan Container */}
         <div className="relative flex min-h-100 items-center justify-center overflow-hidden rounded-lg bg-gray-100 md:min-h-125">
-          {/* Loading Spinner */}
-          {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-              <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#0072CE] border-t-transparent" />
-            </div>
-          )}
-
           {/* Siteplan Image */}
           {fields.SiteplanImage ? (
-            <SitecoreImage
-              field={fields.SiteplanImage}
-              className="h-full w-full object-contain"
-              onLoad={() => setIsLoading(false)}
-            />
+            <SitecoreImage field={fields.SiteplanImage} className="h-full w-full object-contain" />
           ) : (
             <div className="text-foreground-light text-center">
               <p className="text-lg">Interactive Siteplan</p>
