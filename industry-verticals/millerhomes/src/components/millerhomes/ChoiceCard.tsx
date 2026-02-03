@@ -70,7 +70,7 @@ export const Default = (props: ChoiceCardProps): JSX.Element => {
 
         {/* Description */}
         {fields.Description && (
-          <p className="mb-6 max-w-70 flex-1 text-sm leading-relaxed text-foreground-light">
+          <p className="text-foreground-light mb-6 max-w-70 flex-1 text-sm leading-relaxed">
             <Text field={fields.Description} />
           </p>
         )}

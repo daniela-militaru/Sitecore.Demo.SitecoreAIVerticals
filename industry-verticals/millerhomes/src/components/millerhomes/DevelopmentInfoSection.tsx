@@ -116,7 +116,11 @@ export const Default = (props: DevelopmentInfoSectionProps): JSX.Element => {
 
             {/* Description */}
             {fields.Description && (
-                <RichText tag="div" field={fields.Description} className="prose prose-sm mb-4 max-w-none text-foreground-light [&_a]:text-[#0072CE]" />
+              <RichText
+                tag="div"
+                field={fields.Description}
+                className="prose prose-sm text-foreground-light mb-4 max-w-none [&_a]:text-[#0072CE]"
+              />
             )}
 
             {/* Read More */}
@@ -139,7 +143,7 @@ export const Default = (props: DevelopmentInfoSectionProps): JSX.Element => {
                   'Our opening hours are:'
                 )}
               </h4>
-              <div className="space-y-1 text-sm text-foreground-light">
+              <div className="text-foreground-light space-y-1 text-sm">
                 {fields.WeekdayHours && (
                   <p>
                     <strong>Monday - Friday:</strong> <Text field={fields.WeekdayHours} />

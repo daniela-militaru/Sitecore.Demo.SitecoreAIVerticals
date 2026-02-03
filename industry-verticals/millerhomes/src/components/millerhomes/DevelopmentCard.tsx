@@ -82,7 +82,7 @@ export type DevelopmentCardProps = ComponentProps & {
 export const Default = (props: DevelopmentCardProps): JSX.Element => {
   const id = props.params.RenderingIdentifier;
   const { styles } = props.params;
-  const { fields } = props  || defaultFields;
+  const { fields } = props || defaultFields;
 
   const hasPromoBanner = fields.PromoBanner?.value;
   const hasEventInfo = fields.EventInfo?.value;
@@ -145,15 +145,15 @@ export const Default = (props: DevelopmentCardProps): JSX.Element => {
 
         {/* Description */}
         {fields.Description && (
-          <div className="mb-3 line-clamp-3 text-sm text-foreground-light">
+          <div className="text-foreground-light mb-3 line-clamp-3 text-sm">
             <RichText field={fields.Description} />
           </div>
         )}
 
         {/* Location */}
         {fields.Location && (
-          <div className="mb-2 flex items-start gap-2 text-sm text-foreground-light">
-            <MapPin className="mt-0.5 h-4 w-4 shsrink-0 text-[#0072CE]" />
+          <div className="text-foreground-light mb-2 flex items-start gap-2 text-sm">
+            <MapPin className="shsrink-0 mt-0.5 h-4 w-4 text-[#0072CE]" />
             <Text field={fields.Location} />
           </div>
         )}
@@ -170,7 +170,7 @@ export const Default = (props: DevelopmentCardProps): JSX.Element => {
 
         {/* Region */}
         {fields.Region && (
-          <div className="mb-3 flex items-center gap-2 text-sm text-foreground-light">
+          <div className="text-foreground-light mb-3 flex items-center gap-2 text-sm">
             <span className="flex h-4 w-4 items-center justify-center rounded-full border border-gray-300 text-[10px]">
               ⊙
             </span>
@@ -180,7 +180,7 @@ export const Default = (props: DevelopmentCardProps): JSX.Element => {
 
         {/* Event Info */}
         {hasEventInfo && (
-          <div className="mb-3 rounded bg-gray-50 p-3 text-sm text-foreground-light">
+          <div className="text-foreground-light mb-3 rounded bg-gray-50 p-3 text-sm">
             <Text field={fields.EventInfo} />
           </div>
         )}

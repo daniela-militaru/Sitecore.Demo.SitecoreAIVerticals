@@ -63,7 +63,7 @@ export const Default = (props: ContentCardProps): JSX.Element | null => {
       id={id}
     >
       {/* Mobile/Tablet: Stacked layout */}
-      <div className="overflow-hidden bg-background-accent lg:hidden">
+      <div className="bg-background-accent overflow-hidden lg:hidden">
         {/* Image */}
         {fields.Image?.value?.src && (
           <div className="relative aspect-4/3 overflow-hidden">
@@ -75,7 +75,7 @@ export const Default = (props: ContentCardProps): JSX.Element | null => {
           <h3 className="mb-3 text-xl leading-tight font-bold text-[#003057]">
             <Text field={fields.Title} />
           </h3>
-          <div className="mb-5 text-sm leading-relaxed text-foreground-light">
+          <div className="text-foreground-light mb-5 text-sm leading-relaxed">
             <RichText field={fields.Description} />
           </div>
           {fields.CTALink?.value?.href && (
@@ -101,11 +101,11 @@ export const Default = (props: ContentCardProps): JSX.Element | null => {
           )}
         </div>
         {/* Text Content - narrower (38%) */}
-        <div className="flex w-[38%] flex-col justify-center overflow-hidden bg-background-accent p-5 xl:p-6">
+        <div className="bg-background-accent flex w-[38%] flex-col justify-center overflow-hidden p-5 xl:p-6">
           <h3 className="mb-3 text-xl leading-tight font-bold text-[#003057] xl:text-2xl">
             <Text field={fields.Title} />
           </h3>
-          <div className="mb-4 line-clamp-4 text-sm leading-relaxed text-foreground-light">
+          <div className="text-foreground-light mb-4 line-clamp-4 text-sm leading-relaxed">
             <RichText field={fields.Description} />
           </div>
           {fields.CTALink?.value?.href && (
