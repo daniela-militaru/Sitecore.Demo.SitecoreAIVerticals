@@ -124,4 +124,3 @@ export const Default = (props: PlotCardProps): JSX.Element => {
     </div>
   );
 };
-

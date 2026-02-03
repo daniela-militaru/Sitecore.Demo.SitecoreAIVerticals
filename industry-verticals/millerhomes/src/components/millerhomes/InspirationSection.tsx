@@ -144,4 +144,3 @@ export const Default = (props: InspirationSectionProps): JSX.Element => {
     </section>
   );
 };
-

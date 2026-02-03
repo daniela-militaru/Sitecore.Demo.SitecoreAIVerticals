@@ -33,4 +33,3 @@ export const Default = (props: DevelopmentGridSectionProps): JSX.Element => {
     </div>
   );
 };
-

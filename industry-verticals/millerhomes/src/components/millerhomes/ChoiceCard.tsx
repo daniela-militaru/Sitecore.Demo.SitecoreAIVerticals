@@ -90,4 +90,3 @@ export const Default = (props: ChoiceCardProps): JSX.Element => {
 };
 
 export default Default;
-

@@ -191,4 +191,3 @@ export const Default = (props: ContentCarouselSectionProps): JSX.Element => {
     </section>
   );
 };
-

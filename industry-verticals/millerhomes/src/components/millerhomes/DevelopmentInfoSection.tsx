@@ -116,9 +116,7 @@ export const Default = (props: DevelopmentInfoSectionProps): JSX.Element => {
 
             {/* Description */}
             {fields.Description && (
-              <div className="prose prose-sm mb-4 max-w-none text-foreground-light [&_a]:text-[#0072CE]">
-                <RichText field={fields.Description} />
-              </div>
+                <RichText tag="div" field={fields.Description} className="prose prose-sm mb-4 max-w-none text-foreground-light [&_a]:text-[#0072CE]" />
             )}
 
             {/* Read More */}
@@ -206,4 +204,3 @@ export const Default = (props: DevelopmentInfoSectionProps): JSX.Element => {
     </div>
   );
 };
-

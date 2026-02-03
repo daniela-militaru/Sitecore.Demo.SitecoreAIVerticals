@@ -210,4 +210,3 @@ export const Default = (props: HouseTypesSectionProps): JSX.Element => {
     </div>
   );
 };
-

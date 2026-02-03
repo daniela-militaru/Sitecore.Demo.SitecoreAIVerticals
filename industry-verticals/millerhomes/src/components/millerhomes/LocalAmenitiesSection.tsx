@@ -144,4 +144,3 @@ export const Default = (props: LocalAmenitiesSectionProps): JSX.Element => {
     </div>
   );
 };
-

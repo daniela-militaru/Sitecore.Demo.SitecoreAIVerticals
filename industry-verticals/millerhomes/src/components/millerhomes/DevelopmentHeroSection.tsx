@@ -116,4 +116,3 @@ export const Default = (props: DevelopmentHeroSectionProps): JSX.Element => {
     </div>
   );
 };
-

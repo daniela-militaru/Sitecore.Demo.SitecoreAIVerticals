@@ -102,4 +102,3 @@ export const Default = (props: SpecificationSectionProps): JSX.Element => {
     </div>
   );
 };
-

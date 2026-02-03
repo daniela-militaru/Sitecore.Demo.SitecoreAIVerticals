@@ -187,4 +187,3 @@ export const Default = (props: ContactSectionProps): JSX.Element => {
     </div>
   );
 };
-

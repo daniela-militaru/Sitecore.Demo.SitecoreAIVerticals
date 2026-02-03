@@ -45,4 +45,3 @@ export const Default = (props: StatCardProps): JSX.Element => {
     </div>
   );
 };
-

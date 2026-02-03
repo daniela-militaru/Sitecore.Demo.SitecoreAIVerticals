@@ -196,4 +196,3 @@ export const Default = (props: DevelopmentCardProps): JSX.Element => {
     </div>
   );
 };
-

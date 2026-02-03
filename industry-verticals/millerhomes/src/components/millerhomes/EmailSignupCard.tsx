@@ -119,4 +119,3 @@ export const Default = (props: EmailSignupCardProps): JSX.Element => {
     </div>
   );
 };
-

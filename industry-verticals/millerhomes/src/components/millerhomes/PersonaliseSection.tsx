@@ -101,4 +101,3 @@ export const Default = (props: PersonaliseSectionProps): JSX.Element => {
     </div>
   );
 };
-

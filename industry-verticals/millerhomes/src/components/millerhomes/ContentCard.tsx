@@ -123,4 +123,3 @@ export const Default = (props: ContentCardProps): JSX.Element | null => {
     </div>
   );
 };
-

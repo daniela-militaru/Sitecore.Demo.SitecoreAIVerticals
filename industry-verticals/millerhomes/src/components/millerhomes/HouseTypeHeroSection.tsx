@@ -153,4 +153,3 @@ export const Default = (props: HouseTypeHeroSectionProps): JSX.Element => {
     </div>
   );
 };
-

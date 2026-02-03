@@ -30,6 +30,7 @@ interface HeroSlide {
   fields: {
     BackgroundImage: ImageField;
     Title: TextField;
+    SubTitle: TextField;
     Description: RichTextField;
     CTAText: TextField;
     CTALink: LinkField;
@@ -51,6 +52,7 @@ const defaultFields: Fields = {
       fields: {
         BackgroundImage: { value: { src: '', alt: 'Hero' } },
         Title: { value: 'Be the first to know when we release new homes for sale' },
+        SubTitle: { value: '' },
         Description: {
           value:
             'We have a dedicated email alert and promotion service just for you. Sign up today to receive exclusive offers and more.',
@@ -132,19 +134,26 @@ export const Default = (props: HeroCarouselSectionProps): JSX.Element => {
                     <div className="max-w-xl text-white">
                       <Text
                         tag="h1"
-                        className="mb-4 text-3xl leading-tight font-light text-white md:text-4xl lg:text-5xl"
+                        className="mb-4 text-2xl leading-tight font-light text-white md:text-2xl lg:text-3xl"
                         field={slide.fields.Title}
+                      />
+                      <Text
+                        tag="h2"
+                        className="mb-4 text-1xl leading-tight font-light text-white md:text-1xl lg:text-2xl"
+                        field={slide.fields.SubTitle}
                       />
                       <RichText
                         className="mb-6 max-w-md text-sm text-white/90 md:text-base"
                         field={slide.fields.Description}
                       />
+                      {slide.fields.CTALink?.value?.href ? (
                       <SitecoreLink
                         field={slide.fields.CTALink}
                         className="inline-block rounded bg-[#004b91] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#004b91]"
                       >
                         <Text field={slide.fields.CTAText} classname="font-extrabold" />
                       </SitecoreLink>
+                    ) : (<></>)}
                     </div>
                   </div>
                 </div>
@@ -172,4 +181,3 @@ export const Default = (props: HeroCarouselSectionProps): JSX.Element => {
     </section>
   );
 };
-

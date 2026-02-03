@@ -95,4 +95,3 @@ export const Default = (props: AnnouncementBannerSectionProps): JSX.Element => {
     </div>
   );
 };
-

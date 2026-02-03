@@ -194,4 +194,3 @@ export const Default = (props: NearbyDevelopmentsSectionProps): JSX.Element => {
     </section>
   );
 };
-

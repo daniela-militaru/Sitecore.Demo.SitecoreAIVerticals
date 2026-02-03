@@ -241,4 +241,3 @@ export const Default = (props: PopupSectionProps): JSX.Element => {
     </div>
   );
 };
-

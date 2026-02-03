@@ -266,4 +266,3 @@ export const Default = (props: HouseTypeInfoSectionProps): JSX.Element => {
     </div>
   );
 };
-

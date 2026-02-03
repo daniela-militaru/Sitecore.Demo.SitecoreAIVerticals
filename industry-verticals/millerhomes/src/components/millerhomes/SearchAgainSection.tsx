@@ -91,4 +91,3 @@ export const Default = (props: SearchAgainSectionProps): JSX.Element => {
     </div>
   );
 };
-

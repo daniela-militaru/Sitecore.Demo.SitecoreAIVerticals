@@ -60,4 +60,3 @@ export const Default = (props: VirtualTourBannerSectionProps): JSX.Element => {
     </div>
   );
 };
-

@@ -327,4 +327,3 @@ export const Default = (props: FooterSectionProps): JSX.Element => {
     </footer>
   );
 };
-

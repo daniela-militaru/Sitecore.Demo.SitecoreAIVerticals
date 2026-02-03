@@ -107,4 +107,3 @@ export const Default = (props: StatsSectionProps): JSX.Element => {
     </section>
   );
 };
-

@@ -69,4 +69,3 @@ export const Default = (props: PageTitleSectionProps): JSX.Element => {
     </div>
   );
 };
-

@@ -134,4 +134,3 @@ export const Default = (props: SearchSectionProps): JSX.Element => {
     </section>
   );
 };
-

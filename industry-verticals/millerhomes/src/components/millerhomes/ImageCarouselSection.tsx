@@ -132,4 +132,3 @@ export const Default = (props: ImageCarouselSectionProps): JSX.Element => {
     </div>
   );
 };
-

@@ -189,4 +189,3 @@ export const Default = (props: HouseTypeCardProps): JSX.Element => {
     </div>
   );
 };
-

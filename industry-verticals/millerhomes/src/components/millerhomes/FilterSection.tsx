@@ -187,4 +187,3 @@ export const Default = (props: FilterSectionProps): JSX.Element => {
     </div>
   );
 };
-

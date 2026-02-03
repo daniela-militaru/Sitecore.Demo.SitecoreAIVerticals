@@ -97,4 +97,3 @@ export const Default = (props: PlotAvailabilitySectionProps): JSX.Element => {
     </div>
   );
 };
-

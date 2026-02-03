@@ -87,4 +87,3 @@ export const Default = (props: TestimonialsSectionProps): JSX.Element => {
     </section>
   );
 };
-

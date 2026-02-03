@@ -72,4 +72,3 @@ export const Default = (props: AvailableHomesSectionProps): JSX.Element => {
     </div>
   );
 };
-

@@ -262,4 +262,3 @@ export const Default = (props: MortgageCalculatorSectionProps): JSX.Element => {
     </div>
   );
 };
-

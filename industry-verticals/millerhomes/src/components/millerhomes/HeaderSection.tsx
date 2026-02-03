@@ -306,4 +306,3 @@ export const Default = (props: HeaderSectionProps): JSX.Element => {
     </header>
   );
 };
-

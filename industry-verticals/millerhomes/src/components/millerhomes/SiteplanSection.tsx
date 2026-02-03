@@ -118,4 +118,3 @@ export const Default = (props: SiteplanSectionProps): JSX.Element => {
     </div>
   );
 };
-

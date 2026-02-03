@@ -143,4 +143,3 @@ export const Default = (props: FeatureSectionProps): JSX.Element => {
     </section>
   );
 };
-

@@ -125,4 +125,3 @@ export const Default = (props: MyMillerHomeSectionProps): JSX.Element => {
     </div>
   );
 };
-
