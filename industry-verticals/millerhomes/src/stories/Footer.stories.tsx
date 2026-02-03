@@ -45,6 +45,29 @@ const baseFields = {
   TermsText: createLinkField('Terms & Conditions'),
   Description: createRichTextField(1),
   Logo: createImageField('logo'),
+
+  /** Social/CTA heading */
+  SocialHeading: createTextField('Scials'),
+
+  /** Social links */
+  TwitterLink: createLinkField('Terms & Conditions'),
+  FacebookLink: createLinkField('Terms & Conditions'),
+  InstagramLink: createLinkField('Terms & Conditions'),
+  YoutubeLink: createLinkField('Terms & Conditions'),
+  LinkedinLink: createLinkField('Terms & Conditions'),
+
+  /** Badges */
+  TrustpilotBadge: createImageField('logo'),
+  ConsumerCodeBadge: createImageField('logo'),
+  TSIBadge: createImageField('logo'),
+  NewHomesQualityBadge: createImageField('logo'),
+
+  /** Bottom bar */
+  PrivacyPolicyLink: createLinkField('Terms & Conditions'),
+  AccessibilityLink: createLinkField('Terms & Conditions'),
+  TermsLink: createLinkField('Terms & Conditions'),
+  CookiePolicyLink: createLinkField('Terms & Conditions'),
+  PrivacySettingsLink: createLinkField('Terms & Conditions'),
 };
 
 const LinkListRendering = {
