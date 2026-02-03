@@ -75,7 +75,7 @@ export const Default = (props: InspirationSectionProps): JSX.Element => {
               </span>
             </h2>
 
-            <div className="text-sm leading-relaxed text-foreground-light">
+            <div className="text-foreground-light text-sm leading-relaxed">
               <RichText field={fields.Description} />
             </div>
           </div>
@@ -124,7 +124,7 @@ export const Default = (props: InspirationSectionProps): JSX.Element => {
                   </span>
                 </h2>
 
-                <div className="text-sm leading-relaxed text-foreground-light">
+                <div className="text-foreground-light text-sm leading-relaxed">
                   <RichText field={fields.Description} />
                 </div>
               </div>

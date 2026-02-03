@@ -85,7 +85,7 @@ export type HouseTypeCardProps = ComponentProps & {
 export const Default = (props: HouseTypeCardProps): JSX.Element => {
   const id = props.params.RenderingIdentifier;
   const { styles } = props.params;
-  const { fields } = props  || defaultFields;
+  const { fields } = props || defaultFields;
 
   const isComingSoon = (fields.Status?.value as string).toLowerCase().includes('coming soon');
 

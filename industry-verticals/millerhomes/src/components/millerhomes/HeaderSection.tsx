@@ -68,7 +68,7 @@ export const Default = (props: HeaderSectionProps): JSX.Element => {
       id={id}
     >
       {/* Top utility bar - Desktop only */}
-      <div className="hidden border-b border-gray-200 bg-background-accent lg:block">
+      <div className="bg-background-accent hidden border-b border-gray-200 lg:block">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-end gap-8 py-2 text-sm">
             {fields.CorporateLink?.value?.href && (

@@ -85,7 +85,7 @@ export const Default = (props: ImageCarouselSectionProps): JSX.Element => {
 
         {/* Description */}
         {fields.Description && (
-          <div className="mx-auto mb-8 max-w-2xl text-center text-foreground-light">
+          <div className="text-foreground-light mx-auto mb-8 max-w-2xl text-center">
             <RichText field={fields.Description} />
           </div>
         )}

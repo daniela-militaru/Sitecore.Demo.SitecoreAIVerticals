@@ -139,7 +139,7 @@ export const Default = (props: HeroCarouselSectionProps): JSX.Element => {
                       />
                       <Text
                         tag="h2"
-                        className="mb-4 text-1xl leading-tight font-light text-white md:text-1xl lg:text-2xl"
+                        className="text-1xl md:text-1xl mb-4 leading-tight font-light text-white lg:text-2xl"
                         field={slide.fields.SubTitle}
                       />
                       <RichText
@@ -147,13 +147,15 @@ export const Default = (props: HeroCarouselSectionProps): JSX.Element => {
                         field={slide.fields.Description}
                       />
                       {slide.fields.CTALink?.value?.href ? (
-                      <SitecoreLink
-                        field={slide.fields.CTALink}
-                        className="inline-block rounded bg-[#004b91] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#004b91]"
-                      >
-                        <Text field={slide.fields.CTAText} classname="font-extrabold" />
-                      </SitecoreLink>
-                    ) : (<></>)}
+                        <SitecoreLink
+                          field={slide.fields.CTALink}
+                          className="inline-block rounded bg-[#004b91] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[#004b91]"
+                        >
+                          <Text field={slide.fields.CTAText} classname="font-extrabold" />
+                        </SitecoreLink>
+                      ) : (
+                        <></>
+                      )}
                     </div>
                   </div>
                 </div>

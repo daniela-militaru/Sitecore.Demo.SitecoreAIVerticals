@@ -1,13 +1,7 @@
 'use client';
 
 import type { JSX } from 'react';
-import {
-  TextField,
-  RichTextField,
-  LinkField,
-  Text,
-  RichText
-} from '@sitecore-content-sdk/nextjs';
+import { TextField, RichTextField, LinkField, Text, RichText } from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from '@/lib/component-props';
 import { Bed, Bath, Car, Trees, MapPin, Calendar, Heart, Navigation, Video } from 'lucide-react';
 
