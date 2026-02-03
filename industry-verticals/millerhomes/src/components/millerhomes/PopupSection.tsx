@@ -1,7 +1,7 @@
 'use client';
 
 import React, { type JSX, useEffect, useState } from 'react';
-import { TextField, Placeholder } from '@sitecore-content-sdk/nextjs';
+import { TextField, Placeholder, useSitecore } from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from '@/lib/component-props';
 import { X } from 'lucide-react';
 
@@ -12,6 +12,10 @@ import { X } from 'lucide-react';
  * Variants (via params.Variant):
  * - "branded" (default): Dark blue background with Miller Home logo and close button
  * - "choice": Transparent container for choice cards, click outside to close
+ *
+ * Features:
+ * - Timeout: Number of milliseconds before the popup appears (0 = immediate)
+ * - In editing mode: grayed placeholder always shown, button to preview modal
  *
  * The placeholder renders ChoiceCard, EmailSignupCard, or any other card components
  */
@@ -41,9 +45,19 @@ export type PopupSectionProps = ComponentProps & {
 
 export const Default = (props: PopupSectionProps): JSX.Element => {
   const id = props.params.RenderingIdentifier;
-  const { styles, DynamicPlaceholderId, Variant } = props.params;
+  const { styles, DynamicPlaceholderId, Variant, Timeout } = props.params;
   const fields = props.fields || defaultFields;
-  const [isOpen, setIsOpen] = useState(true);
+
+  // Get Sitecore context to check if we're in editing mode
+  const { page } = useSitecore();
+  const isEditing = page?.mode.isEditing === true;
+
+  // Get rendering parameter values
+  // Timeout: number of milliseconds before popup appears (default 0 = immediate)
+  const timeout = Timeout ? parseInt(Timeout, 10) : 0;
+
+  // Start closed, will open after timeout (not in editing mode) or manually via button (in editing mode)
+  const [isOpen, setIsOpen] = useState(false);
 
   // Determine variant - "branded" (default) or "choice"
   const variant = Variant || 'branded';
@@ -51,25 +65,124 @@ export const Default = (props: PopupSectionProps): JSX.Element => {
 
   const phPopupContent = `popupContent-${DynamicPlaceholderId}`;
 
-  // Close on escape key
+  // Handle opening logic - only for non-editing mode
   useEffect(() => {
+    // In editing mode: don't auto-open, editor must click button to preview
+    if (isEditing) {
+      return;
+    }
+
+    // Not in editing mode: show after timeout (0 = immediate)
+    const timer = setTimeout(() => {
+      setIsOpen(true);
+    }, timeout);
+
+    return () => clearTimeout(timer);
+  }, [timeout, isEditing]);
+
+  // Handle escape key and body scroll lock - only when modal is open
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setIsOpen(false);
       }
     };
 
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
-    }
+    document.addEventListener('keydown', handleEscape);
+    document.body.style.overflow = 'hidden';
 
     return () => {
       document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
     };
   }, [isOpen]);
 
+  // In editing mode: always show grayed placeholder with button to preview modal
+  // This allows editors to always see and access the component
+  if (isEditing) {
+    return (
+      <>
+        {/* Grayed placeholder box - always visible in editing mode */}
+        <div
+          className={`component popup-section my-4 rounded-lg border-2 border-dashed border-gray-400 bg-gray-200 p-6 ${styles || ''}`}
+          id={id}
+        >
+          <div className="mb-4 text-center text-gray-500">
+            <div className="mb-1 text-sm font-medium">Popup Section</div>
+            <div className="mb-3 text-xs">Popup will appear after {timeout}ms on the live site</div>
+            {/* Button to preview modal in editing mode */}
+            <button
+              onClick={() => setIsOpen(true)}
+              className="rounded bg-[#003057] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#003057]/90"
+            >
+              Open modal
+            </button>
+          </div>
+        </div>
+
+        {/* Modal - shown when editor clicks Preview button */}
+        {isOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
+            {/* Backdrop */}
+            <div
+              className="absolute inset-0 bg-[#003057]/80 backdrop-blur-sm"
+              onClick={() => setIsOpen(false)}
+              aria-hidden="true"
+            />
+
+            {/* Modal Container */}
+            <div
+              className={`relative mx-4 max-h-[90vh] w-full overflow-y-auto rounded-lg shadow-2xl ${
+                isBranded ? 'max-w-4xl bg-[#003057]' : 'max-w-5xl bg-transparent'
+              }`}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="popup-title"
+            >
+              {/* Header - Only for branded variant */}
+              {isBranded && (
+                <div className="flex items-center justify-between p-6 pb-0">
+                  {/* Logo */}
+                  <div className="flex items-center gap-1">
+                    <span className="text-2xl font-light text-white">
+                      {fields.LogoPrefix?.value}
+                    </span>
+                    <span className="text-2xl font-bold text-white">{fields.LogoText?.value}</span>
+                    <span className="text-2xl font-light text-[#0072CE]">
+                      {fields.LogoHighlight?.value}
+                    </span>
+                  </div>
+
+                  {/* Close Button */}
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center gap-2 text-white transition-colors hover:text-white/80"
+                    aria-label={fields.CloseButtonText?.value as string}
+                  >
+                    <span className="text-sm font-medium">{fields.CloseButtonText?.value}</span>
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-[#0072CE]">
+                      <X className="h-5 w-5 text-[#0072CE]" />
+                    </div>
+                  </button>
+                </div>
+              )}
+
+              {/* Dynamic Placeholder Content */}
+              <div className={`${isBranded ? 'p-6' : 'p-4'} flex`}>
+                <Placeholder name={phPopupContent} rendering={props.rendering} />
+              </div>
+            </div>
+          </div>
+        )}
+      </>
+    );
+  }
+
+  // Not in editing mode and not open: don't render anything (page scrolling remains normal)
   if (!isOpen) return <></>;
 
   return (
@@ -120,17 +233,9 @@ export const Default = (props: PopupSectionProps): JSX.Element => {
         )}
 
         {/* Dynamic Placeholder Content */}
-        <div className={`${isBranded ? 'p-6' : 'p-4'}`}>
+        <div className={`${isBranded ? 'p-6' : 'p-4'} flex`}>
           {/* Wrapper for choice cards - displays them in a row */}
-          <div
-            className={
-              variant === 'choice'
-                ? 'flex flex-col items-stretch justify-center gap-6 md:flex-row'
-                : ''
-            }
-          >
-            <Placeholder name={phPopupContent} rendering={props.rendering} />
-          </div>
+          <Placeholder name={phPopupContent} rendering={props.rendering} />
         </div>
       </div>
     </div>
