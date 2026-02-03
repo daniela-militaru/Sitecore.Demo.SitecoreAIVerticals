@@ -1,10 +1,10 @@
 'use client';
 
 import type { JSX } from 'react';
-import { useState } from 'react';
-import { TextField, Text, Placeholder } from '@sitecore-content-sdk/nextjs';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { TextField, Text, Placeholder, useSitecore } from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from '@/lib/component-props';
-import { ChevronDown, Bed, Home, Calendar, Ruler } from 'lucide-react';
+import { ChevronDown, Bed, Home, Calendar, Ruler, ArrowLeft, ArrowRight } from 'lucide-react';
 
 /**
  * HouseTypesSection Component
@@ -47,6 +47,10 @@ interface Fields {
   PartExchangeText: TextField;
   /** Dictionary key: HouseTypes_ViewFullSelection */
   ViewFullSelectionText: TextField;
+  /** Dictionary key: HouseTypes_Previous */
+  PreviousLabel: TextField;
+  /** Dictionary key: HouseTypes_Next */
+  NextLabel: TextField;
 }
 
 const defaultFields: Fields = {
@@ -65,6 +69,8 @@ const defaultFields: Fields = {
   ReadyNowText: { value: 'Ready Now' },
   PartExchangeText: { value: 'Part Exchange' },
   ViewFullSelectionText: { value: 'View full selection' },
+  PreviousLabel: { value: 'Previous' },
+  NextLabel: { value: 'Next' },
 };
 
 export type HouseTypesSectionProps = ComponentProps & {
@@ -74,10 +80,57 @@ export type HouseTypesSectionProps = ComponentProps & {
 export const Default = (props: HouseTypesSectionProps): JSX.Element => {
   const id = props.params.RenderingIdentifier;
   const { styles, DynamicPlaceholderId } = props.params;
-  const { fields } = props || defaultFields;
+  const fields = props.fields || defaultFields;
   const [showFilters, setShowFilters] = useState(false);
 
+  const sitecore = useSitecore();
+  const isEditing = sitecore?.page?.mode?.isEditing ?? false;
+
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [totalSlides, setTotalSlides] = useState(0);
+
   const phHouseTypes = `houseTypes-${DynamicPlaceholderId}`;
+
+  // Count slides from DOM
+  useEffect(() => {
+    if (!carouselRef.current) return;
+
+    const countSlides = () => {
+      const slides = carouselRef.current?.querySelectorAll(':scope > .house-type-card');
+      const count = slides?.length || 0;
+      setTotalSlides(count);
+    };
+
+    countSlides();
+    const observer = new MutationObserver(countSlides);
+    observer.observe(carouselRef.current, { childList: true, subtree: true });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Autoplay (only in live mode)
+  useEffect(() => {
+    if (isEditing || totalSlides <= 1) return;
+
+    const interval = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % totalSlides);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [isEditing, totalSlides]);
+
+  const handlePrev = useCallback(() => {
+    setActiveIndex((prev) => (prev - 1 + totalSlides) % totalSlides);
+  }, [totalSlides]);
+
+  const handleNext = useCallback(() => {
+    setActiveIndex((prev) => (prev + 1) % totalSlides);
+  }, [totalSlides]);
+
+  const handleGoTo = useCallback((index: number) => {
+    setActiveIndex(index);
+  }, []);
 
   return (
     <div className={`component house-types-section bg-white py-12 ${styles || ''}`} id={id}>
@@ -91,7 +144,7 @@ export const Default = (props: HouseTypesSectionProps): JSX.Element => {
 
         {/* Subtitle */}
         {fields.Subtitle && (
-          <p className="mx-auto mb-8 max-w-2xl text-center text-[#4a4a4a]">
+          <p className="mx-auto mb-8 max-w-2xl text-center text-foreground-light">
             <Text field={fields.Subtitle} />
           </p>
         )}
@@ -100,7 +153,7 @@ export const Default = (props: HouseTypesSectionProps): JSX.Element => {
         <div className="mb-8">
           {/* Show Availability Toggle */}
           <div className="mb-4 flex justify-center gap-4">
-            <label className="flex cursor-pointer items-center gap-2 text-sm text-[#4a4a4a]">
+            <label className="flex cursor-pointer items-center gap-2 text-sm text-foreground-light">
               <input type="checkbox" className="h-4 w-4 accent-[#0072CE]" />
               Show Availability
             </label>
@@ -202,10 +255,90 @@ export const Default = (props: HouseTypesSectionProps): JSX.Element => {
           )}
         </div>
 
-        {/* House Types Grid */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <Placeholder name={phHouseTypes} rendering={props.rendering} />
+        {/* House Types Carousel */}
+        <div className="relative">
+          {/* Navigation Arrows - Desktop */}
+          <button
+            onClick={handlePrev}
+            className="absolute top-1/2 -left-4 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[#003057] text-white shadow-lg transition-colors hover:bg-[#002040] lg:flex xl:-left-8"
+            aria-label={fields.PreviousLabel?.value as string}
+          >
+            <ArrowLeft className="h-5 w-5" strokeWidth={2.5} />
+          </button>
+          <button
+            onClick={handleNext}
+            className="absolute top-1/2 -right-4 z-10 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[#003057] text-white shadow-lg transition-colors hover:bg-[#002040] lg:flex xl:-right-8"
+            aria-label={fields.NextLabel?.value as string}
+          >
+            <ArrowRight className="h-5 w-5" strokeWidth={2.5} />
+          </button>
+
+          {/* Carousel Track */}
+          <div className="overflow-hidden">
+            <div
+              ref={carouselRef}
+              className="house-types-carousel-track flex transition-transform duration-500 ease-out"
+              style={
+                {
+                  '--slide-index': activeIndex,
+                } as React.CSSProperties
+              }
+            >
+              <Placeholder name={phHouseTypes} rendering={props.rendering} />
+            </div>
+          </div>
+          <style jsx>{`
+            .house-types-carousel-track {
+              transform: translateX(calc(-1 * var(--slide-index) * 100%));
+            }
+            @media (min-width: 768px) {
+              .house-types-carousel-track {
+                /* On tablet, show 2 cards. Each card is 50% width */
+                transform: translateX(calc(-1 * var(--slide-index) * 50%));
+              }
+            }
+            @media (min-width: 1024px) {
+              .house-types-carousel-track {
+                /* On desktop, show 4 cards. Each card is 25% width */
+                transform: translateX(calc(-1 * var(--slide-index) * 25%));
+              }
+            }
+          `}</style>
+
+          {/* Mobile Navigation Arrows */}
+          <div className="mt-6 flex items-center justify-center gap-4 lg:hidden">
+            <button
+              onClick={handlePrev}
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-[#003057] text-white shadow-lg transition-colors hover:bg-[#002040]"
+              aria-label={fields.PreviousLabel?.value as string}
+            >
+              <ArrowLeft className="h-5 w-5" strokeWidth={2.5} />
+            </button>
+            <button
+              onClick={handleNext}
+              className="flex h-12 w-12 items-center justify-center rounded-full bg-[#003057] text-white shadow-lg transition-colors hover:bg-[#002040]"
+              aria-label={fields.NextLabel?.value as string}
+            >
+              <ArrowRight className="h-5 w-5" strokeWidth={2.5} />
+            </button>
+          </div>
         </div>
+
+        {/* Dot Indicators */}
+        {totalSlides > 1 && (
+          <div className="mt-8 flex items-center justify-center gap-3">
+            {Array.from({ length: totalSlides }).map((_, index) => (
+              <button
+                key={index}
+                onClick={() => handleGoTo(index)}
+                className={`h-1 rounded-full transition-all ${
+                  index === activeIndex ? 'w-8 bg-[#003057]' : 'w-6 bg-gray-300 hover:bg-gray-400'
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

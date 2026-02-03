@@ -75,13 +75,13 @@ export const Default = (props: SiteplanSectionProps): JSX.Element => {
 
         {/* Description */}
         {fields.Description && (
-          <div className="mx-auto mb-8 max-w-2xl text-center text-[#4a4a4a]">
+          <div className="text-foreground-light mx-auto mb-8 max-w-2xl text-center">
             <RichText field={fields.Description} />
           </div>
         )}
 
         {/* Siteplan Container */}
-        <div className="relative flex min-h-[400px] items-center justify-center overflow-hidden rounded-lg bg-gray-100 md:min-h-[500px]">
+        <div className="relative flex min-h-100 items-center justify-center overflow-hidden rounded-lg bg-gray-100 md:min-h-125">
           {/* Loading Spinner */}
           {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
@@ -97,7 +97,7 @@ export const Default = (props: SiteplanSectionProps): JSX.Element => {
               onLoad={() => setIsLoading(false)}
             />
           ) : (
-            <div className="text-center text-[#4a4a4a]">
+            <div className="text-foreground-light text-center">
               <p className="text-lg">Interactive Siteplan</p>
               <p className="text-sm">Map integration required</p>
             </div>
