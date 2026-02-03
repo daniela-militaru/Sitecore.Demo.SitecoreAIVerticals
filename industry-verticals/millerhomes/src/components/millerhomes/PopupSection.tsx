@@ -115,7 +115,9 @@ export const Default = (props: PopupSectionProps): JSX.Element => {
           <div className="flex items-center justify-between text-gray-500">
             <div>
               <div className="text-sm font-medium">Popup Section</div>
-              <div className="text-xs">Popup will appear as modal after {timeout}ms on the live site</div>
+              <div className="text-xs">
+                Popup will appear as modal after {timeout}ms on the live site
+              </div>
             </div>
             <button
               onClick={() => setIsOpen(true)}
@@ -128,7 +130,7 @@ export const Default = (props: PopupSectionProps): JSX.Element => {
 
         {/* Modal overlay for editing - contains the Placeholder */}
         {/* Using relative positioning instead of fixed so Sitecore can still edit */}
-        <div 
+        <div
           className={`${isOpen ? 'block' : 'hidden'} fixed inset-0 z-[9999] flex items-center justify-center`}
           style={{ pointerEvents: isOpen ? 'auto' : 'none' }}
         >
@@ -150,9 +152,7 @@ export const Default = (props: PopupSectionProps): JSX.Element => {
               <div className="flex items-center justify-between p-6 pb-0">
                 {/* Logo */}
                 <div className="flex items-center gap-1">
-                  <span className="text-2xl font-light text-white">
-                    {fields.LogoPrefix?.value}
-                  </span>
+                  <span className="text-2xl font-light text-white">{fields.LogoPrefix?.value}</span>
                   <span className="text-2xl font-bold text-white">{fields.LogoText?.value}</span>
                   <span className="text-2xl font-light text-[#0072CE]">
                     {fields.LogoHighlight?.value}

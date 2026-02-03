@@ -144,7 +144,7 @@ export const Default = (props: HouseTypesSectionProps): JSX.Element => {
 
         {/* Subtitle */}
         {fields.Subtitle && (
-          <p className="mx-auto mb-8 max-w-2xl text-center text-foreground-light">
+          <p className="text-foreground-light mx-auto mb-8 max-w-2xl text-center">
             <Text field={fields.Subtitle} />
           </p>
         )}
@@ -153,7 +153,7 @@ export const Default = (props: HouseTypesSectionProps): JSX.Element => {
         <div className="mb-8">
           {/* Show Availability Toggle */}
           <div className="mb-4 flex justify-center gap-4">
-            <label className="flex cursor-pointer items-center gap-2 text-sm text-foreground-light">
+            <label className="text-foreground-light flex cursor-pointer items-center gap-2 text-sm">
               <input type="checkbox" className="h-4 w-4 accent-[#0072CE]" />
               Show Availability
             </label>
