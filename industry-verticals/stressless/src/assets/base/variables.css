@@ -1,0 +1,43 @@
+@theme {
+  /* **Foregounds** */
+  --color-foreground: #2a2a2a; /* Darker neutral for text */
+  --color-foreground-light: #555555; /* Slightly lighter for secondary text */
+  --color-foreground-muted: #888888; /* Muted neutral for less emphasis */
+
+  /* **Backgrounds** */
+  --color-background: #f7f5f2; /* Soft warm off-white / natural tone */
+  --color-background-accent: #b6d2c8; /* Warm ivory accent */
+  --color-background-muted: #ded7d0; /* Light neutral for surfaces */
+  --color-background-muted-light: #bcb6b0; /* Slightly deeper neutral */
+  --color-background-muted-dark: #8f8a86; /* Earthy neutral dark */
+  --color-background-surface: #f2eee9; /* Calm surface background */
+
+  /* **Primary Accent** */
+  --color-accent: #b59b6e; /* Warm golden/brown (natural, luxurious) */
+
+  /* **Feedback Colors** */
+  --color-success: #5a8f7b; /* Muted teal/green for success */
+  --color-danger: #c66b63; /* Muted clay-red for errors */
+
+  /* **Borders** */
+  --color-border: #ccc2b8; /* Soft neutral border */
+
+  /* **Fonts** */
+  --font-heading: 'Source Sans 3', sans-serif;
+  --font-body: 'Source Sans 3', sans-serif;
+
+  /* **Border Radius** */
+  --radius-base: 0.5rem;
+  /*
+  This does not show in the theme editor
+  but is used to override the defaults based on the user's selection for radius-base
+  */
+  --radius-xs: calc(var(--radius-base) * 0.25);
+  --radius-sm: calc(var(--radius-base) * 0.5);
+  --radius-md: var(--radius-base);
+  --radius-lg: calc(var(--radius-base) * 1.5);
+  --radius-xl: calc(var(--radius-base) * 2);
+  --radius-2xl: calc(var(--radius-base) * 3);
+  --radius-3xl: calc(var(--radius-base) * 4);
+  --radius-4xl: calc(var(--radius-base) * 5);
+}

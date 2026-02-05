@@ -1,0 +1,2641 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8" data-next-head="" />
+    <meta name="viewport" content="width=device-width" data-next-head="" />
+    <title data-next-head="">jbe</title>
+    <style type="text/css">
+      :root,
+      :host {
+        --fa-font-solid: normal 900 1em/1 'Font Awesome 7 Free';
+        --fa-font-regular: normal 400 1em/1 'Font Awesome 7 Free';
+        --fa-font-light: normal 300 1em/1 'Font Awesome 7 Pro';
+        --fa-font-thin: normal 100 1em/1 'Font Awesome 7 Pro';
+        --fa-font-duotone: normal 900 1em/1 'Font Awesome 7 Duotone';
+        --fa-font-duotone-regular: normal 400 1em/1 'Font Awesome 7 Duotone';
+        --fa-font-duotone-light: normal 300 1em/1 'Font Awesome 7 Duotone';
+        --fa-font-duotone-thin: normal 100 1em/1 'Font Awesome 7 Duotone';
+        --fa-font-brands: normal 400 1em/1 'Font Awesome 7 Brands';
+        --fa-font-sharp-solid: normal 900 1em/1 'Font Awesome 7 Sharp';
+        --fa-font-sharp-regular: normal 400 1em/1 'Font Awesome 7 Sharp';
+        --fa-font-sharp-light: normal 300 1em/1 'Font Awesome 7 Sharp';
+        --fa-font-sharp-thin: normal 100 1em/1 'Font Awesome 7 Sharp';
+        --fa-font-sharp-duotone-solid: normal 900 1em/1 'Font Awesome 7 Sharp Duotone';
+        --fa-font-sharp-duotone-regular: normal 400 1em/1 'Font Awesome 7 Sharp Duotone';
+        --fa-font-sharp-duotone-light: normal 300 1em/1 'Font Awesome 7 Sharp Duotone';
+        --fa-font-sharp-duotone-thin: normal 100 1em/1 'Font Awesome 7 Sharp Duotone';
+        --fa-font-slab-regular: normal 400 1em/1 'Font Awesome 7 Slab';
+        --fa-font-slab-press-regular: normal 400 1em/1 'Font Awesome 7 Slab Press';
+        --fa-font-whiteboard-semibold: normal 600 1em/1 'Font Awesome 7 Whiteboard';
+        --fa-font-thumbprint-light: normal 300 1em/1 'Font Awesome 7 Thumbprint';
+        --fa-font-notdog-solid: normal 900 1em/1 'Font Awesome 7 Notdog';
+        --fa-font-notdog-duo-solid: normal 900 1em/1 'Font Awesome 7 Notdog Duo';
+        --fa-font-etch-solid: normal 900 1em/1 'Font Awesome 7 Etch';
+        --fa-font-jelly-regular: normal 400 1em/1 'Font Awesome 7 Jelly';
+        --fa-font-jelly-fill-regular: normal 400 1em/1 'Font Awesome 7 Jelly Fill';
+        --fa-font-jelly-duo-regular: normal 400 1em/1 'Font Awesome 7 Jelly Duo';
+        --fa-font-chisel-regular: normal 400 1em/1 'Font Awesome 7 Chisel';
+        --fa-font-utility-semibold: normal 600 1em/1 'Font Awesome 7 Utility';
+        --fa-font-utility-duo-semibold: normal 600 1em/1 'Font Awesome 7 Utility Duo';
+        --fa-font-utility-fill-semibold: normal 600 1em/1 'Font Awesome 7 Utility Fill';
+      }
+
+      .svg-inline--fa {
+        box-sizing: content-box;
+        display: var(--fa-display, inline-block);
+        height: 1em;
+        overflow: visible;
+        vertical-align: -0.125em;
+        width: var(--fa-width, 1.25em);
+      }
+      .svg-inline--fa.fa-2xs {
+        vertical-align: 0.1em;
+      }
+      .svg-inline--fa.fa-xs {
+        vertical-align: 0em;
+      }
+      .svg-inline--fa.fa-sm {
+        vertical-align: -0.0714285714em;
+      }
+      .svg-inline--fa.fa-lg {
+        vertical-align: -0.2em;
+      }
+      .svg-inline--fa.fa-xl {
+        vertical-align: -0.25em;
+      }
+      .svg-inline--fa.fa-2xl {
+        vertical-align: -0.3125em;
+      }
+      .svg-inline--fa.fa-pull-left,
+      .svg-inline--fa .fa-pull-start {
+        float: inline-start;
+        margin-inline-end: var(--fa-pull-margin, 0.3em);
+      }
+      .svg-inline--fa.fa-pull-right,
+      .svg-inline--fa .fa-pull-end {
+        float: inline-end;
+        margin-inline-start: var(--fa-pull-margin, 0.3em);
+      }
+      .svg-inline--fa.fa-li {
+        width: var(--fa-li-width, 2em);
+        inset-inline-start: calc(-1 * var(--fa-li-width, 2em));
+        inset-block-start: 0.25em; /* syncing vertical alignment with Web Font rendering */
+      }
+
+      .fa-layers-counter,
+      .fa-layers-text {
+        display: inline-block;
+        position: absolute;
+        text-align: center;
+      }
+
+      .fa-layers {
+        display: inline-block;
+        height: 1em;
+        position: relative;
+        text-align: center;
+        vertical-align: -0.125em;
+        width: var(--fa-width, 1.25em);
+      }
+      .fa-layers .svg-inline--fa {
+        inset: 0;
+        margin: auto;
+        position: absolute;
+        transform-origin: center center;
+      }
+
+      .fa-layers-text {
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        transform-origin: center center;
+      }
+
+      .fa-layers-counter {
+        background-color: var(--fa-counter-background-color, #ff253a);
+        border-radius: var(--fa-counter-border-radius, 1em);
+        box-sizing: border-box;
+        color: var(--fa-inverse, #fff);
+        line-height: var(--fa-counter-line-height, 1);
+        max-width: var(--fa-counter-max-width, 5em);
+        min-width: var(--fa-counter-min-width, 1.5em);
+        overflow: hidden;
+        padding: var(--fa-counter-padding, 0.25em 0.5em);
+        right: var(--fa-right, 0);
+        text-overflow: ellipsis;
+        top: var(--fa-top, 0);
+        transform: scale(var(--fa-counter-scale, 0.25));
+        transform-origin: top right;
+      }
+
+      .fa-layers-bottom-right {
+        bottom: var(--fa-bottom, 0);
+        right: var(--fa-right, 0);
+        top: auto;
+        transform: scale(var(--fa-layers-scale, 0.25));
+        transform-origin: bottom right;
+      }
+
+      .fa-layers-bottom-left {
+        bottom: var(--fa-bottom, 0);
+        left: var(--fa-left, 0);
+        right: auto;
+        top: auto;
+        transform: scale(var(--fa-layers-scale, 0.25));
+        transform-origin: bottom left;
+      }
+
+      .fa-layers-top-right {
+        top: var(--fa-top, 0);
+        right: var(--fa-right, 0);
+        transform: scale(var(--fa-layers-scale, 0.25));
+        transform-origin: top right;
+      }
+
+      .fa-layers-top-left {
+        left: var(--fa-left, 0);
+        right: auto;
+        top: var(--fa-top, 0);
+        transform: scale(var(--fa-layers-scale, 0.25));
+        transform-origin: top left;
+      }
+
+      .fa-1x {
+        font-size: 1em;
+      }
+
+      .fa-2x {
+        font-size: 2em;
+      }
+
+      .fa-3x {
+        font-size: 3em;
+      }
+
+      .fa-4x {
+        font-size: 4em;
+      }
+
+      .fa-5x {
+        font-size: 5em;
+      }
+
+      .fa-6x {
+        font-size: 6em;
+      }
+
+      .fa-7x {
+        font-size: 7em;
+      }
+
+      .fa-8x {
+        font-size: 8em;
+      }
+
+      .fa-9x {
+        font-size: 9em;
+      }
+
+      .fa-10x {
+        font-size: 10em;
+      }
+
+      .fa-2xs {
+        font-size: calc(
+          10 / 16 * 1em
+        ); /* converts a 10px size into an em-based value that's relative to the scale's 16px base */
+        line-height: calc(
+          1 / 10 * 1em
+        ); /* sets the line-height of the icon back to that of it's parent */
+        vertical-align: calc(
+          (6 / 10 - 0.375) * 1em
+        ); /* vertically centers the icon taking into account the surrounding text's descender */
+      }
+
+      .fa-xs {
+        font-size: calc(
+          12 / 16 * 1em
+        ); /* converts a 12px size into an em-based value that's relative to the scale's 16px base */
+        line-height: calc(
+          1 / 12 * 1em
+        ); /* sets the line-height of the icon back to that of it's parent */
+        vertical-align: calc(
+          (6 / 12 - 0.375) * 1em
+        ); /* vertically centers the icon taking into account the surrounding text's descender */
+      }
+
+      .fa-sm {
+        font-size: calc(
+          14 / 16 * 1em
+        ); /* converts a 14px size into an em-based value that's relative to the scale's 16px base */
+        line-height: calc(
+          1 / 14 * 1em
+        ); /* sets the line-height of the icon back to that of it's parent */
+        vertical-align: calc(
+          (6 / 14 - 0.375) * 1em
+        ); /* vertically centers the icon taking into account the surrounding text's descender */
+      }
+
+      .fa-lg {
+        font-size: calc(
+          20 / 16 * 1em
+        ); /* converts a 20px size into an em-based value that's relative to the scale's 16px base */
+        line-height: calc(
+          1 / 20 * 1em
+        ); /* sets the line-height of the icon back to that of it's parent */
+        vertical-align: calc(
+          (6 / 20 - 0.375) * 1em
+        ); /* vertically centers the icon taking into account the surrounding text's descender */
+      }
+
+      .fa-xl {
+        font-size: calc(
+          24 / 16 * 1em
+        ); /* converts a 24px size into an em-based value that's relative to the scale's 16px base */
+        line-height: calc(
+          1 / 24 * 1em
+        ); /* sets the line-height of the icon back to that of it's parent */
+        vertical-align: calc(
+          (6 / 24 - 0.375) * 1em
+        ); /* vertically centers the icon taking into account the surrounding text's descender */
+      }
+
+      .fa-2xl {
+        font-size: calc(
+          32 / 16 * 1em
+        ); /* converts a 32px size into an em-based value that's relative to the scale's 16px base */
+        line-height: calc(
+          1 / 32 * 1em
+        ); /* sets the line-height of the icon back to that of it's parent */
+        vertical-align: calc(
+          (6 / 32 - 0.375) * 1em
+        ); /* vertically centers the icon taking into account the surrounding text's descender */
+      }
+
+      .fa-width-auto {
+        --fa-width: auto;
+      }
+
+      .fa-fw,
+      .fa-width-fixed {
+        --fa-width: 1.25em;
+      }
+
+      .fa-ul {
+        list-style-type: none;
+        margin-inline-start: var(--fa-li-margin, 2.5em);
+        padding-inline-start: 0;
+      }
+      .fa-ul > li {
+        position: relative;
+      }
+
+      .fa-li {
+        inset-inline-start: calc(-1 * var(--fa-li-width, 2em));
+        position: absolute;
+        text-align: center;
+        width: var(--fa-li-width, 2em);
+        line-height: inherit;
+      }
+
+      /* Heads Up: Bordered Icons will not be supported in the future!
+  - This feature will be deprecated in the next major release of Font Awesome (v8)!
+  - You may continue to use it in this version *v7), but it will not be supported in Font Awesome v8.
+*/
+      /* Notes:
+* --@{v.$css-prefix}-border-width = 1/16 by default (to render as ~1px based on a 16px default font-size)
+* --@{v.$css-prefix}-border-padding =
+  ** 3/16 for vertical padding (to give ~2px of vertical whitespace around an icon considering it's vertical alignment)
+  ** 4/16 for horizontal padding (to give ~4px of horizontal whitespace around an icon)
+*/
+      .fa-border {
+        border-color: var(--fa-border-color, #eee);
+        border-radius: var(--fa-border-radius, 0.1em);
+        border-style: var(--fa-border-style, solid);
+        border-width: var(--fa-border-width, 0.0625em);
+        box-sizing: var(--fa-border-box-sizing, content-box);
+        padding: var(--fa-border-padding, 0.1875em 0.25em);
+      }
+
+      .fa-pull-left,
+      .fa-pull-start {
+        float: inline-start;
+        margin-inline-end: var(--fa-pull-margin, 0.3em);
+      }
+
+      .fa-pull-right,
+      .fa-pull-end {
+        float: inline-end;
+        margin-inline-start: var(--fa-pull-margin, 0.3em);
+      }
+
+      .fa-beat {
+        animation-name: fa-beat;
+        animation-delay: var(--fa-animation-delay, 0s);
+        animation-direction: var(--fa-animation-direction, normal);
+        animation-duration: var(--fa-animation-duration, 1s);
+        animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+        animation-timing-function: var(--fa-animation-timing, ease-in-out);
+      }
+
+      .fa-bounce {
+        animation-name: fa-bounce;
+        animation-delay: var(--fa-animation-delay, 0s);
+        animation-direction: var(--fa-animation-direction, normal);
+        animation-duration: var(--fa-animation-duration, 1s);
+        animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+        animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.28, 0.84, 0.42, 1));
+      }
+
+      .fa-fade {
+        animation-name: fa-fade;
+        animation-delay: var(--fa-animation-delay, 0s);
+        animation-direction: var(--fa-animation-direction, normal);
+        animation-duration: var(--fa-animation-duration, 1s);
+        animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+        animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.4, 0, 0.6, 1));
+      }
+
+      .fa-beat-fade {
+        animation-name: fa-beat-fade;
+        animation-delay: var(--fa-animation-delay, 0s);
+        animation-direction: var(--fa-animation-direction, normal);
+        animation-duration: var(--fa-animation-duration, 1s);
+        animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+        animation-timing-function: var(--fa-animation-timing, cubic-bezier(0.4, 0, 0.6, 1));
+      }
+
+      .fa-flip {
+        animation-name: fa-flip;
+        animation-delay: var(--fa-animation-delay, 0s);
+        animation-direction: var(--fa-animation-direction, normal);
+        animation-duration: var(--fa-animation-duration, 1s);
+        animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+        animation-timing-function: var(--fa-animation-timing, ease-in-out);
+      }
+
+      .fa-shake {
+        animation-name: fa-shake;
+        animation-delay: var(--fa-animation-delay, 0s);
+        animation-direction: var(--fa-animation-direction, normal);
+        animation-duration: var(--fa-animation-duration, 1s);
+        animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+        animation-timing-function: var(--fa-animation-timing, linear);
+      }
+
+      .fa-spin {
+        animation-name: fa-spin;
+        animation-delay: var(--fa-animation-delay, 0s);
+        animation-direction: var(--fa-animation-direction, normal);
+        animation-duration: var(--fa-animation-duration, 2s);
+        animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+        animation-timing-function: var(--fa-animation-timing, linear);
+      }
+
+      .fa-spin-reverse {
+        --fa-animation-direction: reverse;
+      }
+
+      .fa-pulse,
+      .fa-spin-pulse {
+        animation-name: fa-spin;
+        animation-direction: var(--fa-animation-direction, normal);
+        animation-duration: var(--fa-animation-duration, 1s);
+        animation-iteration-count: var(--fa-animation-iteration-count, infinite);
+        animation-timing-function: var(--fa-animation-timing, steps(8));
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .fa-beat,
+        .fa-bounce,
+        .fa-fade,
+        .fa-beat-fade,
+        .fa-flip,
+        .fa-pulse,
+        .fa-shake,
+        .fa-spin,
+        .fa-spin-pulse {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+      @keyframes fa-beat {
+        0%,
+        90% {
+          transform: scale(1);
+        }
+        45% {
+          transform: scale(var(--fa-beat-scale, 1.25));
+        }
+      }
+      @keyframes fa-bounce {
+        0% {
+          transform: scale(1, 1) translateY(0);
+        }
+        10% {
+          transform: scale(var(--fa-bounce-start-scale-x, 1.1), var(--fa-bounce-start-scale-y, 0.9))
+            translateY(0);
+        }
+        30% {
+          transform: scale(var(--fa-bounce-jump-scale-x, 0.9), var(--fa-bounce-jump-scale-y, 1.1))
+            translateY(var(--fa-bounce-height, -0.5em));
+        }
+        50% {
+          transform: scale(var(--fa-bounce-land-scale-x, 1.05), var(--fa-bounce-land-scale-y, 0.95))
+            translateY(0);
+        }
+        57% {
+          transform: scale(1, 1) translateY(var(--fa-bounce-rebound, -0.125em));
+        }
+        64% {
+          transform: scale(1, 1) translateY(0);
+        }
+        100% {
+          transform: scale(1, 1) translateY(0);
+        }
+      }
+      @keyframes fa-fade {
+        50% {
+          opacity: var(--fa-fade-opacity, 0.4);
+        }
+      }
+      @keyframes fa-beat-fade {
+        0%,
+        100% {
+          opacity: var(--fa-beat-fade-opacity, 0.4);
+          transform: scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(var(--fa-beat-fade-scale, 1.125));
+        }
+      }
+      @keyframes fa-flip {
+        50% {
+          transform: rotate3d(
+            var(--fa-flip-x, 0),
+            var(--fa-flip-y, 1),
+            var(--fa-flip-z, 0),
+            var(--fa-flip-angle, -180deg)
+          );
+        }
+      }
+      @keyframes fa-shake {
+        0% {
+          transform: rotate(-15deg);
+        }
+        4% {
+          transform: rotate(15deg);
+        }
+        8%,
+        24% {
+          transform: rotate(-18deg);
+        }
+        12%,
+        28% {
+          transform: rotate(18deg);
+        }
+        16% {
+          transform: rotate(-22deg);
+        }
+        20% {
+          transform: rotate(22deg);
+        }
+        32% {
+          transform: rotate(-12deg);
+        }
+        36% {
+          transform: rotate(12deg);
+        }
+        40%,
+        100% {
+          transform: rotate(0deg);
+        }
+      }
+      @keyframes fa-spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      .fa-rotate-90 {
+        transform: rotate(90deg);
+      }
+
+      .fa-rotate-180 {
+        transform: rotate(180deg);
+      }
+
+      .fa-rotate-270 {
+        transform: rotate(270deg);
+      }
+
+      .fa-flip-horizontal {
+        transform: scale(-1, 1);
+      }
+
+      .fa-flip-vertical {
+        transform: scale(1, -1);
+      }
+
+      .fa-flip-both,
+      .fa-flip-horizontal.fa-flip-vertical {
+        transform: scale(-1, -1);
+      }
+
+      .fa-rotate-by {
+        transform: rotate(var(--fa-rotate-angle, 0));
+      }
+
+      .svg-inline--fa .fa-primary {
+        fill: var(--fa-primary-color, currentColor);
+        opacity: var(--fa-primary-opacity, 1);
+      }
+
+      .svg-inline--fa .fa-secondary {
+        fill: var(--fa-secondary-color, currentColor);
+        opacity: var(--fa-secondary-opacity, 0.4);
+      }
+
+      .svg-inline--fa.fa-swap-opacity .fa-primary {
+        opacity: var(--fa-secondary-opacity, 0.4);
+      }
+
+      .svg-inline--fa.fa-swap-opacity .fa-secondary {
+        opacity: var(--fa-primary-opacity, 1);
+      }
+
+      .svg-inline--fa mask .fa-primary,
+      .svg-inline--fa mask .fa-secondary {
+        fill: black;
+      }
+
+      .svg-inline--fa.fa-inverse {
+        fill: var(--fa-inverse, #fff);
+      }
+
+      .fa-stack {
+        display: inline-block;
+        height: 2em;
+        line-height: 2em;
+        position: relative;
+        vertical-align: middle;
+        width: 2.5em;
+      }
+
+      .fa-inverse {
+        color: var(--fa-inverse, #fff);
+      }
+
+      .svg-inline--fa.fa-stack-1x {
+        --fa-width: 1.25em;
+        height: 1em;
+        width: var(--fa-width);
+      }
+      .svg-inline--fa.fa-stack-2x {
+        --fa-width: 2.5em;
+        height: 2em;
+        width: var(--fa-width);
+      }
+
+      .fa-stack-1x,
+      .fa-stack-2x {
+        inset: 0;
+        margin: auto;
+        position: absolute;
+        z-index: var(--fa-stack-z-index, auto);
+      }
+    </style>
+    <link
+      rel="icon"
+      href="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/favicon.ico"
+      data-next-head=""
+    />
+    <link
+      rel="icon"
+      href="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/favicon.ico"
+      data-next-head=""
+    />
+    <meta property="og:title" content="Page" data-next-head="" />
+    <link
+      rel="preload"
+      href="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/_next/static/css/1831b9ccf7bf759f.css"
+      as="style"
+    />
+    <link
+      rel="stylesheet"
+      href="https://edge-platform.sitecorecloud.io/v1/files/pages/styles/content-styles.css?sitecoreContextId=78Q33L0duTEroR0y5vutjg"
+      data-next-head=""
+    />
+    <link
+      rel="stylesheet"
+      href="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/_next/static/css/1831b9ccf7bf759f.css"
+      data-n-g=""
+    />
+    <noscript data-n-css=""></noscript>
+    <script
+      defer=""
+      nomodule=""
+      src="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/_next/static/chunks/polyfills-42372ed130431b0a.js"
+    ></script>
+    <script
+      src="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/_next/static/chunks/webpack-7fb6e9c2b6ea0987.js"
+      defer=""
+    ></script>
+    <script
+      src="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/_next/static/chunks/framework-1492b273e2c4ac92.js"
+      defer=""
+    ></script>
+    <script
+      src="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/_next/static/chunks/main-448eab8ca07eb1e8.js"
+      defer=""
+    ></script>
+    <script
+      src="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/_next/static/chunks/pages/_app-4f8446622d1a6aba.js"
+      defer=""
+    ></script>
+    <script
+      src="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/_next/static/chunks/98bef5de-9dce91c859fbfff8.js"
+      defer=""
+    ></script>
+    <script
+      src="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/_next/static/chunks/cd97a040-c970de0b1d91d3f4.js"
+      defer=""
+    ></script>
+    <script
+      src="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/_next/static/chunks/239-349e41bfee46931f.js"
+      defer=""
+    ></script>
+    <script
+      src="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/_next/static/chunks/280-c4f67d523ad84f47.js"
+      defer=""
+    ></script>
+    <script
+      src="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/_next/static/chunks/898-03c67a2001dc26cd.js"
+      defer=""
+    ></script>
+    <script
+      src="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/_next/static/chunks/pages/%5B%5B...path%5D%5D-713e66ea8ae60e29.js"
+      defer=""
+    ></script>
+    <script
+      src="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/_next/static/CKa7lGXJTwmjI5T0XQ10F/_buildManifest.js"
+      defer=""
+    ></script>
+    <script
+      src="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/_next/static/CKa7lGXJTwmjI5T0XQ10F/_ssgManifest.js"
+      defer=""
+    ></script>
+  </head>
+  <body class="">
+    <link
+      rel="preload"
+      as="image"
+      href="https://xmc-sitecoresaa3f04-jbeindustry3baf-productiona27d.sitecorecloud.io/-/media/Project/industry-verticals/stressless/Stressless/StresslessLogo_transparent.webp?h=332&amp;iar=0&amp;w=600&amp;ttc=63903893981&amp;tt=31A47644F1EAD80118C59594481E0214&amp;hash=3505AAAB362A8604A937025CE03FB853"
+    />
+    <div id="__next">
+      <byoc-registration components="[]" datasources="[]"></byoc-registration>
+      <div class="prod-mode">
+        <header>
+          <div id="header">
+            <!--$--><!--$-->
+            <div class="component header bg-background col-12">
+              <div class="container flex items-center gap-3 lg:gap-5">
+                <div class="max-lg:order-1 lg:flex-[1_1]">
+                  <!--$-->
+                  <div class="component image col-12">
+                    <div class="component-content">
+                      <img
+                        alt=""
+                        loading="lazy"
+                        width="600"
+                        height="332"
+                        decoding="async"
+                        data-nimg="1"
+                        style="color: transparent"
+                        src="https://xmc-sitecoresaa3f04-jbeindustry3baf-productiona27d.sitecorecloud.io/-/jssmedia/Project/industry-verticals/stressless/Stressless/StresslessLogo_transparent.webp?h=332&amp;iar=0&amp;w=600&amp;ttc=63903893981&amp;tt=31A47644F1EAD80118C59594481E0214&amp;hash=3505AAAB362A8604A937025CE03FB853"
+                      />
+                    </div>
+                  </div>
+                  <!--/$-->
+                </div>
+                <div class="max-lg:order-0 max-lg:mr-auto max-lg:w-2/3 lg:flex-[4_1]">
+                  <!--$-->
+                  <div class="component navigation bg-background col-12">
+                    <div
+                      class="[.component.header_&amp;]:grid-cols-2 [.component.header_&amp;]:px-0 [.component.header_&amp;]:max-lg:grid relative z-150 container flex flex-row-reverse items-center justify-between py-4 lg:hidden"
+                    >
+                      <div
+                        class="navigation-mobile-trigger [.component.header_&amp;]:-order-1 relative h-4 w-6 cursor-pointer"
+                        role="button"
+                        aria-label="Open menu"
+                        aria-expanded="false"
+                        tabindex="0"
+                      >
+                        <span
+                          class="bg-foreground absolute top-0 right-0 left-0 h-0.5 transition-all duration-300 ease-out"
+                        ></span
+                        ><span
+                          class="bg-foreground absolute top-1/2 right-0 left-0 h-0.5 transition-all duration-100 ease-out"
+                        ></span
+                        ><span
+                          class="bg-foreground absolute top-full right-0 left-0 h-0.5 transition-all duration-300 ease-out"
+                        ></span>
+                      </div>
+                    </div>
+                    <nav
+                      class="bg-background z-100 flex duration-300 max-lg:fixed max-lg:inset-0 max-lg:-translate-y-full max-lg:opacity-0"
+                    >
+                      <ul
+                        role="menubar"
+                        class="container flex flex-col items-center justify-center gap-x-8 gap-y-4 py-6 text-lg lg:flex-row xl:gap-x-16"
+                      >
+                        <li
+                          tabindex="0"
+                          role="menuitem"
+                          class="level1 item0 odd first relative flex flex-col gap-x-8 gap-y-4 xl:gap-x-14"
+                        >
+                          <div class="flex items-center justify-center gap-1">
+                            <a
+                              title="Furniture"
+                              class="hover:text-foreground-light whitespace-nowrap transition-colors"
+                              href="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/en/Furniture"
+                              >Furniture</a
+                            >
+                          </div>
+                        </li>
+                        <li
+                          tabindex="0"
+                          role="menuitem"
+                          class="level1 item1 even relative flex flex-col gap-x-8 gap-y-4 xl:gap-x-14"
+                        >
+                          <div class="flex items-center justify-center gap-1">
+                            <a
+                              title="Decor"
+                              class="hover:text-foreground-light whitespace-nowrap transition-colors"
+                              href="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/en/Decor"
+                              >Decor</a
+                            >
+                          </div>
+                        </li>
+                        <li
+                          tabindex="0"
+                          role="menuitem"
+                          class="level0 submenu item0 odd first last relative flex flex-col gap-x-8 gap-y-4 lg:flex-row xl:gap-x-14"
+                        >
+                          <div class="flex items-center justify-center gap-1">
+                            <a
+                              title="Home"
+                              class="hover:text-foreground-light whitespace-nowrap transition-colors"
+                              href="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/en"
+                              >Home</a
+                            >
+                          </div>
+                        </li>
+                        <li
+                          tabindex="0"
+                          role="menuitem"
+                          class="level1 item2 odd relative flex flex-col gap-x-8 gap-y-4 xl:gap-x-14"
+                        >
+                          <div class="flex items-center justify-center gap-1">
+                            <a
+                              title="About us"
+                              class="hover:text-foreground-light whitespace-nowrap transition-colors"
+                              href="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/en/About-Us"
+                              >About us</a
+                            >
+                          </div>
+                        </li>
+                        <li
+                          tabindex="0"
+                          role="menuitem"
+                          class="level1 item3 even last relative flex flex-col gap-x-8 gap-y-4 xl:gap-x-14"
+                        >
+                          <div class="flex items-center justify-center gap-1">
+                            <a
+                              title="Contact"
+                              class="hover:text-foreground-light whitespace-nowrap transition-colors"
+                              href="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/en/Contact"
+                              >Contact</a
+                            >
+                          </div>
+                        </li>
+                      </ul>
+                    </nav>
+                  </div>
+                  <!--/$-->
+                </div>
+                <div class="max-lg:order-2 lg:flex-[1_1]">
+                  <!--$-->
+                  <div class="component language-switcher col-12">
+                    <button
+                      type="button"
+                      role="combobox"
+                      aria-controls="radix-_R_3mp6_"
+                      aria-expanded="false"
+                      aria-autocomplete="none"
+                      dir="ltr"
+                      data-state="closed"
+                      data-slot="select-trigger"
+                      data-size="default"
+                      class="data-[placeholder]:text-foreground-light [&amp;_svg:not([class*='text-'])]:text-foreground focus-visible:border-accent focus-visible:ring-accent/50 [&amp;_svg]:pointer-events-none [&amp;_svg]:shrink-0 [&amp;_svg:not([class*='size-'])]:size-4 [&amp;&gt;svg]:hidden [.component.header_&amp;]:px-1 flex w-fit items-center justify-between gap-2 rounded-md border-0 bg-transparent px-3 py-2 text-sm whitespace-nowrap shadow-none transition-[color,box-shadow] disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:h-9 data-[size=sm]:h-8 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-2"
+                      id="language-select"
+                      aria-label="Current Language: en"
+                    >
+                      <div class="flex items-center gap-2">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="lucide lucide-globe size-5"
+                          aria-hidden="true"
+                        >
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+                          <path d="M2 12h20"></path></svg
+                        ><span class="max-lg:hidden"
+                          ><span data-slot="select-value" style="pointer-events: none"
+                            ><span>EN | USD</span></span
+                          ></span
+                        >
+                      </div>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="lucide lucide-chevron-down size-4 opacity-50"
+                        aria-hidden="true"
+                      >
+                        <path d="m6 9 6 6 6-6"></path>
+                      </svg>
+                    </button>
+                  </div>
+                  <!--/$--><!--$-->
+                  <div class="component navigation-icons col-12">
+                    <div
+                      class="[.component.header_&amp;]:justify-end [.component.header_&amp;]:px-0 flex items-center gap-3 p-4 lg:gap-5"
+                    >
+                      <button
+                        type="button"
+                        aria-haspopup="dialog"
+                        aria-expanded="false"
+                        aria-controls="radix-_R_dmp6_"
+                        data-state="closed"
+                        data-slot="popover-trigger"
+                        class="text-foreground hover:text-accent data-[state=open]:text-accent transition-colors"
+                        aria-label="Account"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="lucide lucide-user size-5"
+                          aria-hidden="true"
+                        >
+                          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                          <circle cx="12" cy="7" r="4"></circle>
+                        </svg></button
+                      ><button
+                        type="button"
+                        aria-haspopup="dialog"
+                        aria-expanded="false"
+                        aria-controls="radix-_R_tmp6_"
+                        data-state="closed"
+                        data-slot="popover-trigger"
+                        class="text-foreground hover:text-accent data-[state=open]:text-accent transition-colors"
+                        aria-label="Cart"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="lucide lucide-shopping-cart size-5"
+                          aria-hidden="true"
+                        >
+                          <circle cx="8" cy="21" r="1"></circle>
+                          <circle cx="19" cy="21" r="1"></circle>
+                          <path
+                            d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"
+                          ></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                  <!--/$-->
+                </div>
+              </div>
+            </div>
+            <!--/$--><!--$-->
+            <div class="component offers container-color-background col-12">
+              <div class="mx-auto flex w-full max-w-3xl items-center justify-center gap-5 p-2">
+                <button
+                  class="swiper-btn-prev-179e4bb3-022a-4996-9809-08c6e19830c4"
+                  aria-label="Previous offer"
+                  name="previous-offer"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-chevron-left"
+                    aria-hidden="true"
+                  >
+                    <path d="m15 18-6-6 6-6"></path>
+                  </svg>
+                </button>
+                <div
+                  class="swiper swiper-initialized swiper-horizontal swiper-autoheight mx-0! w-full transition-all"
+                >
+                  <div
+                    class="swiper-wrapper"
+                    style="
+                      height: 24px;
+                      transition-duration: 0ms;
+                      transform: translate3d(-1992px, 0px, 0px);
+                      transition-delay: 0ms;
+                    "
+                  >
+                    <div
+                      class="swiper-slide swiper-slide-next no-swiping text-center"
+                      data-swiper-slide-index="2"
+                      style="width: 664px"
+                    >
+                      <div>
+                        <div class="ck-content">
+                          <p style="text-align: center">
+                            Get inspired! View the
+                            <a href="http://www.stressless.com/en/services/catalog"
+                              >Stressless<sup>®</sup> 2025 catalog!</a
+                            ><a href="https://www.stressless.com"></a>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="swiper-slide swiper-slide-visible swiper-slide-fully-visible no-swiping text-center"
+                      data-swiper-slide-index="3"
+                      style="width: 664px"
+                    >
+                      <div>
+                        <div class="ck-content">
+                          <p style="text-align: center">
+                            <a href="https://www.stressless.com/en/promotions/us/p5%20charity"
+                              ><span
+                                >Make a difference and save this holiday season across the
+                                range</span
+                              ></a
+                            >
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="swiper-slide swiper-slide-prev no-swiping text-center"
+                      data-swiper-slide-index="0"
+                      style="width: 664px"
+                    >
+                      <div>
+                        <div class="ck-content">
+                          <p style="text-align: center">
+                            <a href="https://www.stressless.com/en/services/requestasample"
+                              >Order your FREE leather samples today!</a
+                            >
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="swiper-slide swiper-slide-active no-swiping text-center"
+                      data-swiper-slide-index="1"
+                      style="width: 664px"
+                    >
+                      <div>
+                        <div class="ck-content">
+                          <p style="text-align: center">
+                            A new era of comfort –
+                            <a href="https://www.stressless.com/en/products/stresslessadam"
+                              >click to meet Stressless<sup>®</sup> Adam</a
+                            >
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  class="swiper-btn-next-179e4bb3-022a-4996-9809-08c6e19830c4"
+                  aria-label="Next offer"
+                  name="next-offer"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-chevron-right"
+                    aria-hidden="true"
+                  >
+                    <path d="m9 18 6-6-6-6"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <!--/$--><!--$-->
+            <nav aria-label="breadcrumb" class="component breadcrumb bg-background-muted col-12">
+              <ol class="container flex items-center gap-4 overflow-auto py-4 lg:py-7">
+                <li class="text-foreground-light flex items-center gap-4">
+                  <a
+                    title="Home"
+                    class="hover:text-foreground whitespace-nowrap transition-colors"
+                    href="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/"
+                    ><span class="hidden max-md:inline"
+                      ><svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        class="lucide lucide-house size-4"
+                        aria-label="Home"
+                      >
+                        <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path>
+                        <path
+                          d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+                        ></path></svg></span
+                    ><span class="inline max-md:hidden">Home</span></a
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-chevron-right size-4"
+                    aria-hidden="true"
+                  >
+                    <path d="m9 18 6-6-6-6"></path>
+                  </svg>
+                </li>
+                <li class="text-foreground-light flex items-center gap-4">
+                  <a
+                    title="Landing Pages"
+                    class="hover:text-foreground whitespace-nowrap transition-colors"
+                    href="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/Landing-Pages"
+                    >Landing Pages</a
+                  ><svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="lucide lucide-chevron-right size-4"
+                    aria-hidden="true"
+                  >
+                    <path d="m9 18 6-6-6-6"></path>
+                  </svg>
+                </li>
+                <li
+                  class="border-foreground border-l py-2 pl-4 whitespace-nowrap lg:ml-4 lg:pl-8"
+                  title="{{title}}"
+                >
+                  {{title}}
+                </li>
+              </ol>
+            </nav>
+            <!--/$--><!--/$-->
+          </div>
+        </header>
+        <main>
+          <div id="content">
+            <!--$-->
+            <div
+              class="component hero-banner container-dark-background relative col-12 flex items-center"
+            >
+              <div class="absolute inset-0 z-0">
+                <video
+                  class="h-full w-full object-cover"
+                  autoplay=""
+                  muted=""
+                  loop=""
+                  playsinline=""
+                >
+                  <source
+                    src="https://xmc-sitecoresaa3f04-jbeindustry3baf-productiona27d.sitecorecloud.io/-/media/Project/industry-verticals/stressless/Stressless/homepage.mp4?ttc=63903893981&amp;tt=51C0B0E00E19069B8FF6E328D12EA984"
+                    type="video/webm"
+                  />
+                </video>
+                <div
+                  class="absolute inset-0 bg-gradient-to-b from-transparent from-85% to-white"
+                ></div>
+              </div>
+              <div class="relative w-full">
+                <div class="container mx-auto px-4">
+                  <div class="flex min-h-238 w-full py-10 lg:ml-auto lg:w-1/2 lg:items-center">
+                    <div class="max-w-182">
+                      <div class="">
+                        <h1
+                          class="text-center text-5xl leading-[110%] font-bold capitalize md:text-7xl md:leading-[130%] lg:text-left xl:text-[80px]"
+                        >
+                          {{title}}<svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 441 25"
+                            fill="none"
+                            class="text-accent mx-auto mt-1 block !h-5 h-[0.5em] w-[7ch] w-[9ch] max-w-full group-[.text-center]/heading:mx-auto group-[.text-right]/heading:ml-auto lg:mx-0"
+                            preserveAspectRatio="none"
+                          >
+                            <path
+                              d="M3 22C93.4059 7.66215 306.974 -12.4108 438 22"
+                              stroke="currentColor"
+                              stroke-width="6"
+                              stroke-linecap="round"
+                            ></path>
+                          </svg>
+                        </h1>
+                        <div class="mt-7 text-xl md:text-2xl">
+                          <div class="text-center lg:text-left">
+                            <div class="ck-content">
+                              <p>{{banner_content}}</p>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="mt-6 flex w-full justify-center lg:justify-start">
+                          <a
+                            title=""
+                            target=""
+                            class="rounded-4xl border-2 p-4 font-bold"
+                            href="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/en"
+                            >{{banner_link_title}}</a
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--/$--><!--$-->
+            <section class="col-12 py-20">
+              <div class="container grid grid-cols-1 place-items-center gap-10 lg:grid-cols-12">
+                <div class="relative col-span-full w-full lg:col-span-6">
+                  <div
+                    class="bg-background-muted absolute top-0 left-0 z-0 aspect-6/5 w-2/3 rounded-2xl"
+                  ></div>
+                  <div>
+                    <div class="m-4 md:m-9 md:mb-6 xl:m-15 xl:mb-8">
+                      <div
+                        class="bg-background-muted absolute top-1/2 right-0 z-0 aspect-5/3 w-3/4 -translate-y-1/2 transform rounded-2xl"
+                      ></div>
+                      <div
+                        class="relative z-10 aspect-4/3 w-full max-w-4xl overflow-hidden rounded-2xl shadow-2xl"
+                      >
+                        <img
+                          alt="Stressless_Wing_SignatureMPal_MushroomSmoked_Oak-PolishedGM3_960x960"
+                          loading="lazy"
+                          width="960"
+                          height="960"
+                          decoding="async"
+                          data-nimg="1"
+                          class="h-full w-full object-cover"
+                          style="color: transparent"
+                          src="https://xmc-sitecoresaa3f04-jbeindustry3baf-productiona27d.sitecorecloud.io/-/jssmedia/Project/industry-verticals/stressless/Stressless/Stressless_Wing_SignatureMPal_MushroomSmoked_Oak-PolishedGM3_960x960.webp?h=960&amp;iar=0&amp;w=960&amp;ttc=63903893981&amp;tt=973DDCAC5C1CEEA17FD182D8A2476E30&amp;hash=6AE91E52CE48F56734C17A18F5F94D9E"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-span-full lg:col-span-6">
+                  <div class="space-y-5">
+                    <div class="eyebrow">{{eyebrow}}</div>
+                    <h2 class="inline-block max-w-md">
+                      {{subtitle}}<svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 441 25"
+                        fill="none"
+                        class="text-accent mt-1 block h-[0.5em] w-[7ch] w-full max-w-full max-w-xs group-[.text-center]/heading:mx-auto group-[.text-right]/heading:ml-auto"
+                        preserveAspectRatio="none"
+                      >
+                        <path
+                          d="M3 22C93.4059 7.66215 306.974 -12.4108 438 22"
+                          stroke="currentColor"
+                          stroke-width="6"
+                          stroke-linecap="round"
+                        ></path>
+                      </svg>
+                    </h2>
+                    <div class="max-w-lg text-lg">
+                      <div>
+                        <div class="ck-content">
+                          <p>
+                            <meta charset="utf-8" /><span style="white-space: pre-wrap">
+                              {{description}}
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <a
+                      href="http://"
+                      class="rounded-4xl border-0 bg-black p-4 font-bold text-white"
+                      title=""
+                      target=""
+                      >{{moreinfo_link}}</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </section>
+            <!--/$--><!--$-->
+            <section class="col-12 py-20">
+              <div class="container grid grid-cols-1 place-items-center gap-10 lg:grid-cols-12">
+                <div class="relative col-span-full w-full lg:col-span-6">
+                  <div
+                    class="bg-background-muted absolute top-0 left-0 z-0 aspect-6/5 w-2/3 rounded-2xl"
+                  ></div>
+                  <div>
+                    <div class="m-4 md:m-9 md:mb-6 xl:m-15 xl:mb-8">
+                      <div
+                        class="bg-background-muted absolute top-1/2 right-0 z-0 aspect-5/3 w-3/4 -translate-y-1/2 transform rounded-2xl"
+                      ></div>
+                      <div
+                        class="relative z-10 aspect-4/3 w-full max-w-4xl overflow-hidden rounded-2xl shadow-2xl"
+                      >
+                        <img
+                          alt=""
+                          loading="lazy"
+                          width="360"
+                          height="360"
+                          decoding="async"
+                          data-nimg="1"
+                          class="h-full w-full object-cover"
+                          style="color: transparent"
+                          src="https://xmc-sitecoresaa3f04-jbeindustry3baf-productiona27d.sitecorecloud.io/-/jssmedia/Project/industry-verticals/stressless/Stressless/laurel_dining_family_960x960.jpg?h=360&amp;iar=0&amp;w=360&amp;ttc=63903893981&amp;tt=83011004E498B18BE2225D8282EB6219&amp;hash=4C18CE96C74F928AB9A4D301D3BC0EB4"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-span-full lg:col-span-6">
+                  <div class="space-y-5">
+                    <div class="eyebrow"></div>
+                    <h2 class="inline-block max-w-md">
+                      Find your style&nbsp;<svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 441 25"
+                        fill="none"
+                        class="text-accent mt-1 block h-[0.5em] w-[7ch] w-full max-w-full max-w-xs group-[.text-center]/heading:mx-auto group-[.text-right]/heading:ml-auto"
+                        preserveAspectRatio="none"
+                      >
+                        <path
+                          d="M3 22C93.4059 7.66215 306.974 -12.4108 438 22"
+                          stroke="currentColor"
+                          stroke-width="6"
+                          stroke-linecap="round"
+                        ></path>
+                      </svg>
+                    </h2>
+                    <div class="max-w-lg text-lg">
+                      <div>
+                        <div class="ck-content">
+                          <p>
+                            <meta charset="utf-8" /><span style="white-space: pre-wrap"
+                              >The aim of Stressless® designers is always to refine our winning
+                              formula: A combination of aesthetics and functions that provides the
+                              best looks and comfort available.
+                            </span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <a
+                      title=""
+                      target=""
+                      class="rounded-4xl border-0 bg-black p-4 font-bold text-white"
+                      href="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/en/Products"
+                      >Find your style</a
+                    >
+                  </div>
+                </div>
+              </div>
+            </section>
+            <!--/$-->
+          </div>
+        </main>
+        <footer>
+          <div id="footer">
+            <!--$--><!--$-->
+            <section class="component footer relative col-12 overflow-hidden">
+              <div class="bg-black">
+                <div class="container grid gap-12 py-28.5 lg:grid-cols-[1fr_3fr]">
+                  <div class="flex flex-col gap-7">
+                    <div class="sm:max-w-34">
+                      <img
+                        alt=""
+                        width="600"
+                        height="332"
+                        src="https://xmc-sitecoresaa3f04-jbeindustry3baf-productiona27d.sitecorecloud.io/-/media/Project/industry-verticals/stressless/Stressless/StresslessLogo_transparent.webp?h=332&amp;iar=0&amp;w=600&amp;ttc=63903893981&amp;tt=31A47644F1EAD80118C59594481E0214&amp;hash=3505AAAB362A8604A937025CE03FB853"
+                      />
+                    </div>
+                  </div>
+                  <div class="grid gap-13 sm:grid-cols-3 lg:grid-cols-5 lg:gap-5 xl:gap-12">
+                    <div>
+                      <div class="mb-8 text-lg font-bold text-white">Furniture</div>
+                      <div class="space-y-4 text-gray-200">
+                        <!--$-->
+                        <div class="component link-list list-vertical col-12">
+                          <div class="component-content">
+                            <ul>
+                              <li class="item0 odd first">
+                                <div class="field-link">
+                                  <a href="http://" class="" title="" target="">Bed</a>
+                                </div>
+                              </li>
+                              <li class="item1 even">
+                                <div class="field-link">
+                                  <a href="http://" class="" title="" target="">Chair</a>
+                                </div>
+                              </li>
+                              <li class="item2 odd last">
+                                <div class="field-link">
+                                  <a href="http://" class="" title="" target="">All</a>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        <!--/$-->
+                      </div>
+                    </div>
+                    <div>
+                      <div class="mb-8 text-lg font-bold text-white">Services</div>
+                      <div class="space-y-4 text-gray-200">
+                        <!--$-->
+                        <div class="component link-list list-vertical col-12">
+                          <div class="component-content">
+                            <ul>
+                              <li class="item0 odd first">
+                                <div class="field-link">
+                                  <a href="http://" class="" title="" target="">Email Marketing</a>
+                                </div>
+                              </li>
+                              <li class="item1 even">
+                                <div class="field-link">
+                                  <a href="http://" class="" title="" target="">Campaigns</a>
+                                </div>
+                              </li>
+                              <li class="item2 odd">
+                                <div class="field-link">
+                                  <a href="http://" class="" title="" target="">Branding</a>
+                                </div>
+                              </li>
+                              <li class="item3 even last">
+                                <div class="field-link">
+                                  <a
+                                    title=""
+                                    target=""
+                                    class=""
+                                    href="https://xmc-2hiyq6tmtexfbjjclgw9u5-eh.sitecorecloud.io/en/Landing-Pages"
+                                    >Landing Pages</a
+                                  >
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        <!--/$-->
+                      </div>
+                    </div>
+                    <div>
+                      <div class="mb-8 text-lg font-bold text-white">Support</div>
+                      <div class="space-y-4 text-gray-200">
+                        <!--$-->
+                        <div class="component link-list list-vertical col-12">
+                          <div class="component-content">
+                            <ul>
+                              <li class="item0 odd first">
+                                <div class="field-link">
+                                  <a href="http://" class="" title="" target="">Help Center</a>
+                                </div>
+                              </li>
+                              <li class="item1 even">
+                                <div class="field-link">
+                                  <a href="http://" class="" title="" target="">Safety Center</a>
+                                </div>
+                              </li>
+                              <li class="item2 odd last">
+                                <div class="field-link">
+                                  <a href="http://" target="">Community Guidelines</a>
+                                </div>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        <!--/$-->
+                      </div>
+                    </div>
+                    <div>
+                      <div class="mb-8 text-lg font-bold text-white">Follow Us</div>
+                      <div class="space-y-4 text-gray-200">
+                        <!--$-->
+                        <div class="component social-follow col-12">
+                          <div class="flex flex-col gap-y-4">
+                            <div class="flex items-center gap-2">
+                              <svg
+                                data-prefix="fab"
+                                data-icon="facebook-f"
+                                class="svg-inline--fa fa-facebook-f text-xl text-gray-200"
+                                role="img"
+                                viewBox="0 0 320 512"
+                                aria-hidden="true"
+                              >
+                                <path
+                                  fill="currentColor"
+                                  d="M80 299.3l0 212.7 116 0 0-212.7 86.5 0 18-97.8-104.5 0 0-34.6c0-51.7 20.3-71.5 72.7-71.5 16.3 0 29.4 .4 37 1.2l0-88.7C291.4 4 256.4 0 236.2 0 129.3 0 80 50.5 80 159.4l0 42.1-66 0 0 97.8 66 0z"
+                                ></path></svg
+                              ><a
+                                href="http://"
+                                class="text-gray-200 hover:underline"
+                                title=""
+                                target=""
+                                >Facebook</a
+                              >
+                            </div>
+                            <div class="flex items-center gap-2">
+                              <svg
+                                data-prefix="fab"
+                                data-icon="twitter"
+                                class="svg-inline--fa fa-twitter text-xl text-gray-200"
+                                role="img"
+                                viewBox="0 0 512 512"
+                                aria-hidden="true"
+                              >
+                                <path
+                                  fill="currentColor"
+                                  d="M459.4 151.7c.3 4.5 .3 9.1 .3 13.6 0 138.7-105.6 298.6-298.6 298.6-59.5 0-114.7-17.2-161.1-47.1 8.4 1 16.6 1.3 25.3 1.3 49.1 0 94.2-16.6 130.3-44.8-46.1-1-84.8-31.2-98.1-72.8 6.5 1 13 1.6 19.8 1.6 9.4 0 18.8-1.3 27.6-3.6-48.1-9.7-84.1-52-84.1-103l0-1.3c14 7.8 30.2 12.7 47.4 13.3-28.3-18.8-46.8-51-46.8-87.4 0-19.5 5.2-37.4 14.3-53 51.7 63.7 129.3 105.3 216.4 109.8-1.6-7.8-2.6-15.9-2.6-24 0-57.8 46.8-104.9 104.9-104.9 30.2 0 57.5 12.7 76.7 33.1 23.7-4.5 46.5-13.3 66.6-25.3-7.8 24.4-24.4 44.8-46.1 57.8 21.1-2.3 41.6-8.1 60.4-16.2-14.3 20.8-32.2 39.3-52.6 54.3z"
+                                ></path></svg
+                              ><a
+                                href="http://"
+                                class="text-gray-200 hover:underline"
+                                title=""
+                                target=""
+                                >Twitter</a
+                              >
+                            </div>
+                            <div class="flex items-center gap-2">
+                              <svg
+                                data-prefix="fab"
+                                data-icon="instagram"
+                                class="svg-inline--fa fa-instagram text-xl text-gray-200"
+                                role="img"
+                                viewBox="0 0 448 512"
+                                aria-hidden="true"
+                              >
+                                <path
+                                  fill="currentColor"
+                                  d="M224.3 141a115 115 0 1 0 -.6 230 115 115 0 1 0 .6-230zm-.6 40.4a74.6 74.6 0 1 1 .6 149.2 74.6 74.6 0 1 1 -.6-149.2zm93.4-45.1a26.8 26.8 0 1 1 53.6 0 26.8 26.8 0 1 1 -53.6 0zm129.7 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM399 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
+                                ></path></svg
+                              ><a href="http://" class="text-gray-200 hover:underline">Instagram</a>
+                            </div>
+                            <div class="flex items-center gap-2"></div>
+                            <div class="flex items-center gap-2"></div>
+                          </div>
+                        </div>
+                        <!--/$-->
+                      </div>
+                    </div>
+                    <div>
+                      <div class="mb-8 text-lg font-bold text-white">Install App</div>
+                      <div class="space-y-4 text-gray-200">
+                        <!--$-->
+                        <div class="component rich-text col-12">
+                          <div class="component-content">
+                            <div>
+                              <div class="ck-content">
+                                <figure class="image">
+                                  <img
+                                    style="aspect-ratio: 162/48"
+                                    src="https://xmc-sitecoresaa3f04-jbeindustry3baf-productiona27d.sitecorecloud.io/-/media/Project/industry-verticals/forma-lux/Logos/Google-Play.svg?ttc=63903893981&amp;tt=F023385662D6FC5022A1690498FBA8CF"
+                                    alt=""
+                                    width="162"
+                                    height="48"
+                                  />
+                                </figure>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!--/$--><!--$-->
+                        <div class="component rich-text col-12">
+                          <div class="component-content">
+                            <div>
+                              <div class="ck-content">
+                                <figure class="image">
+                                  <img
+                                    style="aspect-ratio: 162/48"
+                                    src="https://xmc-sitecoresaa3f04-jbeindustry3baf-productiona27d.sitecorecloud.io/-/media/Project/industry-verticals/forma-lux/Logos/Apple-Store.svg?ttc=63903893981&amp;tt=13105B16E4F1F17259A517B9302678AD"
+                                    alt=""
+                                    width="162"
+                                    height="48"
+                                  />
+                                </figure>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!--/$-->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="bg-background">
+                <div
+                  class="container flex items-center justify-between py-8.5 max-sm:flex-col max-sm:items-start max-sm:gap-10"
+                >
+                  <div class="max-sm:order-2">Copyright © 2025</div>
+                  <div
+                    class="flex items-center justify-between gap-20 max-lg:gap-10 max-sm:order-1 max-sm:flex-col max-sm:items-start max-sm:gap-5"
+                  >
+                    <a href="http://" class="hover:underline" title="" target=""
+                      >Terms &amp; Conditions</a
+                    ><a href="http://" class="hover:underline" title="" target="">Privacy Policy</a>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <!--/$--><!--/$-->
+          </div>
+        </footer>
+      </div>
+    </div>
+    <script>
+      requestAnimationFrame(function () {
+        $RT = performance.now();
+      });
+    </script>
+    <script>
+      $RB = [];
+      $RV = function (a) {
+        $RT = performance.now();
+        for (var b = 0; b < a.length; b += 2) {
+          var c = a[b],
+            e = a[b + 1];
+          null !== e.parentNode && e.parentNode.removeChild(e);
+          var f = c.parentNode;
+          if (f) {
+            var g = c.previousSibling,
+              h = 0;
+            do {
+              if (c && 8 === c.nodeType) {
+                var d = c.data;
+                if ('/$' === d || '/&' === d)
+                  if (0 === h) break;
+                  else h--;
+                else ('$' !== d && '$?' !== d && '$~' !== d && '$!' !== d && '&' !== d) || h++;
+              }
+              d = c.nextSibling;
+              f.removeChild(c);
+              c = d;
+            } while (c);
+            for (; e.firstChild; ) f.insertBefore(e.firstChild, c);
+            g.data = '$';
+            g._reactRetry && requestAnimationFrame(g._reactRetry);
+          }
+        }
+        a.length = 0;
+      };
+      $RC = function (a, b) {
+        if ((b = document.getElementById(b)))
+          (a = document.getElementById(a))
+            ? ((a.previousSibling.data = '$~'),
+              $RB.push(a, b),
+              2 === $RB.length &&
+                ('number' !== typeof $RT
+                  ? requestAnimationFrame($RV.bind(null, $RB))
+                  : ((a = performance.now()),
+                    setTimeout(
+                      $RV.bind(null, $RB),
+                      2300 > a && 2e3 < a ? 2300 - a : $RT + 300 - a
+                    ))))
+            : b.parentNode.removeChild(b);
+      };
+      $RC('B:0', 'S:0');
+    </script>
+    <script>
+      $RC('B:1', 'S:1');
+    </script>
+    <script>
+      $RC('B:2', 'S:2');
+    </script>
+    <script>
+      $RC('B:3', 'S:3');
+    </script>
+    <script id="__NEXT_DATA__" type="application/json">
+      {
+        "props": {
+          "pageProps": {
+            "page": {
+              "locale": "en",
+              "layout": {
+                "sitecore": {
+                  "context": {
+                    "pageEditing": false,
+                    "site": { "name": "stressless" },
+                    "pageState": "normal",
+                    "editMode": "chromes",
+                    "language": "en",
+                    "itemPath": "/Landing-Pages/jbe",
+                    "variantId": "_default"
+                  },
+                  "route": {
+                    "name": "jbe",
+                    "displayName": "jbe",
+                    "fields": {
+                      "Content": { "value": "" },
+                      "Title": { "value": "jbe" },
+                      "metadataKeywords": { "value": "" },
+                      "metadataTitle": { "value": "" },
+                      "ogImage": { "value": {} },
+                      "pageSummary": { "value": "" },
+                      "metadataDescription": { "value": "" },
+                      "NavigationTitle": { "value": "jbe" },
+                      "NavigationClass": null,
+                      "NavigationFilter": [],
+                      "Page Design": null,
+                      "SxaTags": []
+                    },
+                    "databaseName": "master",
+                    "deviceId": "fe5d7fdf-89c0-4d99-9aa3-b5fbd009c9f3",
+                    "itemId": "193c9759-8ed2-4d16-9ad5-bddda5e0dd92",
+                    "itemLanguage": "en",
+                    "itemVersion": 1,
+                    "layoutId": "96e5f4ba-a2cf-4a4c-a4e7-64da88226362",
+                    "templateId": "98e60957-0783-4a9a-85cc-77dad30e9711",
+                    "templateName": "Page",
+                    "placeholders": {
+                      "headless-header": [
+                        {
+                          "uid": "651cb904-9d03-45a5-a59f-ccdd1df2099a",
+                          "componentName": "PartialDesignDynamicPlaceholder",
+                          "dataSource": "",
+                          "params": {
+                            "sid": "{651CB904-9D03-45A5-A59F-CCDD1DF2099A}",
+                            "ph": "headless-header",
+                            "sig": "sxa-header"
+                          },
+                          "placeholders": {
+                            "sxa-header": [
+                              {
+                                "uid": "1f84053f-b53a-4fac-8ece-c06d1a03b3f2",
+                                "componentName": "Header",
+                                "dataSource": "",
+                                "params": {
+                                  "GridParameters": "col-12",
+                                  "DynamicPlaceholderId": "1",
+                                  "FieldNames": "Default"
+                                },
+                                "placeholders": {
+                                  "header-left-1": [
+                                    {
+                                      "uid": "de59c958-1ffa-4a98-9f63-7bba6a0858d1",
+                                      "componentName": "Image",
+                                      "dataSource": "/sitecore/content/industry-verticals/stressless/Presentation/Partial Designs/Header/Data/Image 1",
+                                      "params": {
+                                        "GridParameters": "col-12",
+                                        "FieldNames": "Default",
+                                        "DynamicPlaceholderId": "4"
+                                      },
+                                      "fields": {
+                                        "Image": {
+                                          "value": {
+                                            "src": "https://xmc-sitecoresaa3f04-jbeindustry3baf-productiona27d.sitecorecloud.io/-/media/Project/industry-verticals/stressless/Stressless/StresslessLogo_transparent.webp?h=332\u0026iar=0\u0026w=600\u0026ttc=63903893981\u0026tt=31A47644F1EAD80118C59594481E0214\u0026hash=3505AAAB362A8604A937025CE03FB853",
+                                            "alt": "",
+                                            "width": "600",
+                                            "height": "332"
+                                          }
+                                        },
+                                        "TargetUrl": { "value": { "href": "" } },
+                                        "ImageCaption": { "value": "" }
+                                      }
+                                    }
+                                  ],
+                                  "header-nav-1": [
+                                    {
+                                      "uid": "7b29f928-62b7-4c22-82b6-9b81488a5990",
+                                      "componentName": "Navigation",
+                                      "dataSource": "C4F439F2-A571-4D54-94DD-545DAD7F6574",
+                                      "params": {
+                                        "GridParameters": "col-12",
+                                        "FieldNames": "Default",
+                                        "LevelFrom": "{1BB88840-5FB3-4353-AD8D-81136F6FF75A}",
+                                        "LevelTo": "{A59325BB-5A27-46F9-8110-9D499715F3BE}",
+                                        "Filter": "{D063E9D1-C7B5-4B1E-B31E-69886C9C59F5}",
+                                        "AddRoot": "1"
+                                      },
+                                      "fields": [
+                                        {
+                                          "Id": "c4f439f2-a571-4d54-94dd-545dad7f6574",
+                                          "Styles": [
+                                            "level0",
+                                            "submenu",
+                                            "item0",
+                                            "odd",
+                                            "first",
+                                            "last"
+                                          ],
+                                          "Href": "/en/",
+                                          "Querystring": "",
+                                          "NavigationTitle": {
+                                            "value": "Home",
+                                            "editable": "Home"
+                                          },
+                                          "Children": [
+                                            {
+                                              "Id": "bdb13b64-58b4-423f-b342-0cbfce436e90",
+                                              "Styles": ["level1", "item0", "odd", "first"],
+                                              "Href": "/en/Furniture",
+                                              "Querystring": "",
+                                              "NavigationTitle": {
+                                                "value": "Furniture",
+                                                "editable": "Furniture"
+                                              }
+                                            },
+                                            {
+                                              "Id": "7205ce3a-ddb8-4635-a8ce-420a4271d0de",
+                                              "Styles": ["level1", "item1", "even"],
+                                              "Href": "/en/Decor",
+                                              "Querystring": "",
+                                              "NavigationTitle": {
+                                                "value": "Decor",
+                                                "editable": "Decor"
+                                              }
+                                            },
+                                            {
+                                              "Id": "dbed16c4-9edd-4831-8743-6864af185961",
+                                              "Styles": ["level1", "item2", "odd"],
+                                              "Href": "/en/About-Us",
+                                              "Querystring": "",
+                                              "NavigationTitle": {
+                                                "value": "About us",
+                                                "editable": "About us"
+                                              }
+                                            },
+                                            {
+                                              "Id": "76681a4f-159e-497b-bd53-e1eeca8e8d95",
+                                              "Styles": ["level1", "item3", "even", "last"],
+                                              "Href": "/en/Contact",
+                                              "Querystring": "",
+                                              "NavigationTitle": {
+                                                "value": "Contact",
+                                                "editable": "Contact"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ],
+                                  "header-right-1": [
+                                    {
+                                      "uid": "af7d44cf-5b1f-4d08-b346-a0bb3e08d156",
+                                      "componentName": "LanguageSwitcher",
+                                      "dataSource": "",
+                                      "params": {
+                                        "GridParameters": "col-12",
+                                        "DynamicPlaceholderId": "2",
+                                        "FieldNames": "Default"
+                                      }
+                                    },
+                                    {
+                                      "uid": "e8c57b5b-eb79-4af0-bbd4-ba850c81b1b2",
+                                      "componentName": "NavigationIcons",
+                                      "dataSource": "2B3AEF8A-D4FB-496F-9173-5F75C7E0798F",
+                                      "params": {
+                                        "GridParameters": "col-12",
+                                        "HideWishlistIcon": "1",
+                                        "DynamicPlaceholderId": "3",
+                                        "FieldNames": "Default"
+                                      },
+                                      "fields": {
+                                        "CheckoutPage": {
+                                          "value": {
+                                            "class": "",
+                                            "querystring": "",
+                                            "id": "2AC515C5-58F9-48AF-9DEF-F17FF5AFA337",
+                                            "anchor": "",
+                                            "target": "",
+                                            "title": "",
+                                            "linktype": "internal",
+                                            "text": "Go to Checkout",
+                                            "url": "/industry-verticals/forma-lux/Home/Checkout",
+                                            "href": "/en/Checkout"
+                                          }
+                                        },
+                                        "AccountPage": { "value": { "href": "" } },
+                                        "WishlistPage": { "value": { "href": "" } }
+                                      },
+                                      "placeholders": { "container-{*}": [] }
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "uid": "179e4bb3-022a-4996-9809-08c6e19830c4",
+                                "componentName": "Offers",
+                                "dataSource": "A9E54C10-5E8D-4968-B77D-9F56D7DF9B16",
+                                "params": {
+                                  "GridParameters": "col-12",
+                                  "Autoplay": "1",
+                                  "Styles": "container-color-background",
+                                  "FieldNames": "Default"
+                                },
+                                "fields": {
+                                  "Offers": [
+                                    {
+                                      "id": "7a5aaff5-2168-4e3c-a766-85a0943083f5",
+                                      "url": "/en/Data/Offer-List/Offer-1",
+                                      "name": "Offer 1",
+                                      "displayName": "Offer 1",
+                                      "fields": {
+                                        "OfferText": {
+                                          "value": "\u003cdiv class=\"ck-content\"\u003e\u003cp style=\"text-align:center;\"\u003e\u003ca href=\"https://www.stressless.com/en/services/requestasample\"\u003eOrder your FREE leather samples today!\u003c/a\u003e\u003c/p\u003e\u003c/div\u003e"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "id": "493e5886-eebe-4daa-933b-96fcdce19ea0",
+                                      "url": "/en/Data/Offer-List/Offer-2",
+                                      "name": "Offer 2",
+                                      "displayName": "Offer 2",
+                                      "fields": {
+                                        "OfferText": {
+                                          "value": "\u003cdiv class=\"ck-content\"\u003e\u003cp style=\"text-align:center;\"\u003eA new era of comfort – \u003ca href=\"https://www.stressless.com/en/products/stresslessadam\"\u003eclick to meet Stressless\u003csup\u003e®\u003c/sup\u003e Adam\u003c/a\u003e\u003c/p\u003e\u003c/div\u003e"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "id": "6b59fe32-8637-4120-82b3-876a90eabd14",
+                                      "url": "/en/Data/Offer-List/Offer-3",
+                                      "name": "Offer 3",
+                                      "displayName": "Offer 3",
+                                      "fields": {
+                                        "OfferText": {
+                                          "value": "\u003cdiv class=\"ck-content\"\u003e\u003cp style=\"text-align:center;\"\u003e\n                        Get inspired! View the \u003ca href=\"http://www.stressless.com/en/services/catalog\"\u003eStressless\u003csup\u003e®\u003c/sup\u003e 2025 catalog!\u003c/a\u003e\u003ca href=\"https://www.stressless.com\"\u003e\u003c/a\u003e\n\n\u003c/p\u003e\u003c/div\u003e"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "id": "c4cadb58-2f25-476c-a08f-e2b4ecc63da1",
+                                      "url": "/en/Data/Offer-List/Offer-4",
+                                      "name": "Offer 4",
+                                      "displayName": "Offer 4",
+                                      "fields": {
+                                        "OfferText": {
+                                          "value": "\u003cdiv class=\"ck-content\"\u003e\u003cp style=\"text-align:center;\"\u003e\u003ca href=\"https://www.stressless.com/en/promotions/us/p5%20charity\"\u003e\u003cspan\u003eMake a difference and save this holiday season across the range\u003c/span\u003e\u003c/a\u003e\u003c/p\u003e\u003c/div\u003e"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              {
+                                "uid": "7848af20-533f-462e-95f7-7d9bf2cd3c5a",
+                                "componentName": "Breadcrumb",
+                                "dataSource": "",
+                                "params": {
+                                  "GridParameters": "col-12",
+                                  "LevelFrom": "{1BB88840-5FB3-4353-AD8D-81136F6FF75A}",
+                                  "LevelTo": "{A59325BB-5A27-46F9-8110-9D499715F3BE}",
+                                  "Filter": "{E0A2A027-0932-4878-A7D6-0416D5263EFB}",
+                                  "NavFilter": "Breadcrumb Navigation",
+                                  "NavigationFilter": "Breadcrumb Navigation",
+                                  "FieldNames": "Default"
+                                },
+                                "fields": {
+                                  "data": {
+                                    "datasource": {
+                                      "id": "193C97598ED24D169AD5BDDDA5E0DD92",
+                                      "name": "jbe",
+                                      "title": { "jsonValue": { "value": "jbe" } },
+                                      "navigationTitle": { "jsonValue": { "value": "jbe" } },
+                                      "url": { "href": "/Landing-Pages/jbe" },
+                                      "navigationFilter": { "jsonValue": [] },
+                                      "ancestors": [
+                                        {
+                                          "id": "7FE42F975202449A94DE95204D77FC34",
+                                          "name": "Landing Pages",
+                                          "title": { "jsonValue": { "value": "Landing Pages" } },
+                                          "navigationTitle": {
+                                            "jsonValue": { "value": "Landing Pages" }
+                                          },
+                                          "url": { "href": "/Landing-Pages" },
+                                          "navigationFilter": {
+                                            "jsonValue": [
+                                              {
+                                                "id": "d063e9d1-c7b5-4b1e-b31e-69886c9c59f5",
+                                                "url": "https://xmc-sitecoresaa3f04-jbeindustry3baf-productiona27d.sitecorecloud.io/en/sitecore/system/Settings/Foundation/Experience-Accelerator/Navigation/Navigation-Filters/Main-Navigation",
+                                                "name": "Main Navigation",
+                                                "displayName": "Main Navigation",
+                                                "fields": { "Key": { "value": "main" } }
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          "id": "C4F439F2A5714D5494DD545DAD7F6574",
+                                          "name": "Home",
+                                          "title": { "jsonValue": { "value": "Stressless" } },
+                                          "navigationTitle": { "jsonValue": { "value": "Home" } },
+                                          "url": { "href": "/" },
+                                          "navigationFilter": { "jsonValue": [] }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "headless-main": [
+                        {
+                          "uid": "5c9a6314-770d-4c7a-92df-00f0648f476a",
+                          "componentName": "HeroBanner",
+                          "dataSource": "098e2617-eedf-478a-8f76-6b593f5dd748",
+                          "params": {
+                            "GridParameters": "col-12",
+                            "FieldNames": "Default",
+                            "Styles": "container-dark-background",
+                            "DynamicPlaceholderId": "2"
+                          },
+                          "fields": {
+                            "Description": {
+                              "value": "\u003cdiv class=\"ck-content\"\u003e\u003cp\u003eA curated collection of modern pieces that blend elegance and functionality.\u003c/p\u003e\u003c/div\u003e"
+                            },
+                            "Image": { "value": {} },
+                            "Title": { "value": "Discover Design" },
+                            "Video": {
+                              "value": {
+                                "src": "https://xmc-sitecoresaa3f04-jbeindustry3baf-productiona27d.sitecorecloud.io/-/media/Project/industry-verticals/stressless/Stressless/homepage.mp4?ttc=63903893981\u0026tt=51C0B0E00E19069B8FF6E328D12EA984",
+                                "name": "homepage",
+                                "displayName": "homepage",
+                                "title": "",
+                                "keywords": "",
+                                "description": "",
+                                "extension": "mp4",
+                                "mimeType": "video/mp4",
+                                "size": "14128450"
+                              }
+                            },
+                            "CtaLink": {
+                              "value": {
+                                "class": "",
+                                "querystring": "",
+                                "id": "C4F439F2-A571-4D54-94DD-545DAD7F6574",
+                                "anchor": "",
+                                "target": "",
+                                "title": "",
+                                "linktype": "internal",
+                                "text": "See what's new",
+                                "url": "/industry-verticals/forma-lux/Home",
+                                "href": "/en/"
+                              }
+                            }
+                          },
+                          "placeholders": { "hero-banner-search-bar-{*}": [] }
+                        },
+                        {
+                          "uid": "f59c0386-19c4-4681-912f-479e34dfb589",
+                          "componentName": "Promo",
+                          "dataSource": "51c11a3d-189d-4e61-918e-653d738d839e",
+                          "params": {
+                            "GridParameters": "col-12",
+                            "FieldNames": "Default",
+                            "DynamicPlaceholderId": "1"
+                          },
+                          "fields": {
+                            "PromoDescription": {
+                              "value": "\u003cdiv class=\"ck-content\"\u003e\u003cp\u003e\u003cmeta charset=\"utf-8\" /\u003e\u003cspan style=\"white-space:pre-wrap;\"\u003eA Stressless® recliner is the ultimate place to take a conscious pause. A comfort zone that allows you to fully recharge so you can return to your life ready to give your best self. A moment to rest is where ideas bloom, stress fades and ambition takes root. For those that know that rest is what ultimately fuels them. It’s the place that moves you. ​\n\u003c/span\u003e\u003c/p\u003e\u003c/div\u003e"
+                            },
+                            "PromoImageOne": {
+                              "value": {
+                                "src": "https://xmc-sitecoresaa3f04-jbeindustry3baf-productiona27d.sitecorecloud.io/-/media/Project/industry-verticals/stressless/Stressless/Stressless_Wing_SignatureMPal_MushroomSmoked_Oak-PolishedGM3_960x960.webp?h=960\u0026iar=0\u0026w=960\u0026ttc=63903893981\u0026tt=973DDCAC5C1CEEA17FD182D8A2476E30\u0026hash=6AE91E52CE48F56734C17A18F5F94D9E",
+                                "alt": "Stressless_Wing_SignatureMPal_MushroomSmoked_Oak-PolishedGM3_960x960",
+                                "width": "960",
+                                "height": "960"
+                              }
+                            },
+                            "PromoImageThree": {
+                              "value": {
+                                "src": "https://xmc-sitecoresaa3f04-jbeindustry3baf-productiona27d.sitecorecloud.io/-/media/Project/industry-verticals/stressless/PromoImages/3c8ea705dfc44b8035ebd10cd5adaafc9278179e.jpg?h=1853\u0026iar=0\u0026w=2500\u0026ttc=63903893981\u0026tt=F84C3F7202688A31FDB9B6D78A6EBC64\u0026hash=176B1FBA266EE5EB12DD0AF4EAB0E6F0",
+                                "alt": "3c8ea705dfc44b8035ebd10cd5adaafc9278179e",
+                                "width": "2500",
+                                "height": "1853"
+                              }
+                            },
+                            "PromoImageTwo": {
+                              "value": {
+                                "src": "https://xmc-sitecoresaa3f04-jbeindustry3baf-productiona27d.sitecorecloud.io/-/media/Project/industry-verticals/stressless/PromoImages/443cef5f2c32d6f28e6923d590e9c7a89b1297f7.jpg?h=1667\u0026iar=0\u0026w=2500\u0026ttc=63903893981\u0026tt=5088AFFE90D22394055B1E17A4A172AB\u0026hash=D376CA32E4881523C1FE38FC19A625D4",
+                                "alt": "443cef5f2c32d6f28e6923d590e9c7a89b1297f7",
+                                "width": "2500",
+                                "height": "1667"
+                              }
+                            },
+                            "PromoMoreInfo": {
+                              "value": {
+                                "href": "http://",
+                                "linktype": "external",
+                                "url": "",
+                                "target": "",
+                                "text": "More Info",
+                                "title": "",
+                                "class": ""
+                              }
+                            },
+                            "PromoSubTitle": { "value": "STRESSLESS® RECLINERS" },
+                            "PromoTitle": { "value": "Our recliner collection " }
+                          },
+                          "placeholders": { "promo-content-{*}": [] }
+                        },
+                        {
+                          "uid": "0b3464da-b705-4f5f-adcd-79a84d6b2b04",
+                          "componentName": "Promo",
+                          "dataSource": "caa5f1eb-3cae-4dfa-bedc-9016d30a9713",
+                          "params": {
+                            "GridParameters": "col-12",
+                            "FieldNames": "Default",
+                            "DynamicPlaceholderId": "3"
+                          },
+                          "fields": {
+                            "PromoDescription": {
+                              "value": "\u003cdiv class=\"ck-content\"\u003e\u003cp\u003e\u003cmeta charset=\"utf-8\" /\u003e\u003cspan style=\"white-space:pre-wrap;\"\u003eThe aim of Stressless® designers is always to refine our winning formula: A combination of aesthetics and functions that provides the best looks and comfort available.\n        \u003c/span\u003e\u003c/p\u003e\u003c/div\u003e"
+                            },
+                            "PromoImageOne": {
+                              "value": {
+                                "src": "https://xmc-sitecoresaa3f04-jbeindustry3baf-productiona27d.sitecorecloud.io/-/media/Project/industry-verticals/stressless/Stressless/laurel_dining_family_960x960.jpg?h=360\u0026iar=0\u0026w=360\u0026ttc=63903893981\u0026tt=83011004E498B18BE2225D8282EB6219\u0026hash=4C18CE96C74F928AB9A4D301D3BC0EB4",
+                                "alt": "",
+                                "width": "360",
+                                "height": "360"
+                              }
+                            },
+                            "PromoImageThree": {
+                              "value": {
+                                "src": "https://xmc-sitecoresaa3f04-jbeindustry3baf-productiona27d.sitecorecloud.io/-/media/Project/industry-verticals/stressless/PromoImages/3c8ea705dfc44b8035ebd10cd5adaafc9278179e.jpg?h=1853\u0026iar=0\u0026w=2500\u0026ttc=63903893981\u0026tt=F84C3F7202688A31FDB9B6D78A6EBC64\u0026hash=176B1FBA266EE5EB12DD0AF4EAB0E6F0",
+                                "alt": "3c8ea705dfc44b8035ebd10cd5adaafc9278179e",
+                                "width": "2500",
+                                "height": "1853"
+                              }
+                            },
+                            "PromoImageTwo": {
+                              "value": {
+                                "src": "https://xmc-sitecoresaa3f04-jbeindustry3baf-productiona27d.sitecorecloud.io/-/media/Project/industry-verticals/stressless/PromoImages/443cef5f2c32d6f28e6923d590e9c7a89b1297f7.jpg?h=1667\u0026iar=0\u0026w=2500\u0026ttc=63903893981\u0026tt=5088AFFE90D22394055B1E17A4A172AB\u0026hash=D376CA32E4881523C1FE38FC19A625D4",
+                                "alt": "443cef5f2c32d6f28e6923d590e9c7a89b1297f7",
+                                "width": "2500",
+                                "height": "1667"
+                              }
+                            },
+                            "PromoMoreInfo": {
+                              "value": {
+                                "linktype": "internal",
+                                "id": "3a7078b0-0b92-4219-af36-1801241ce90f",
+                                "anchor": "",
+                                "querystring": "",
+                                "target": "",
+                                "class": "",
+                                "text": "Find your style",
+                                "title": "",
+                                "href": "/en/Products"
+                              }
+                            },
+                            "PromoSubTitle": { "value": "" },
+                            "PromoTitle": { "value": "Find your style " }
+                          },
+                          "placeholders": { "promo-content-{*}": [] }
+                        }
+                      ],
+                      "headless-footer": [
+                        {
+                          "uid": "780d03c4-76a6-48cd-b8aa-332c61000e18",
+                          "componentName": "PartialDesignDynamicPlaceholder",
+                          "dataSource": "",
+                          "params": {
+                            "sid": "{780D03C4-76A6-48CD-B8AA-332C61000E18}",
+                            "ph": "headless-footer",
+                            "sig": "sxa-footer"
+                          },
+                          "placeholders": {
+                            "sxa-footer": [
+                              {
+                                "uid": "773ecdc7-d3ea-4c55-a524-c915d07c96e6",
+                                "componentName": "Footer",
+                                "dataSource": "27AEB11D-6468-4456-BC7C-CA3E5F7878F4",
+                                "params": {
+                                  "GridParameters": "col-12",
+                                  "DynamicPlaceholderId": "7",
+                                  "FieldNames": "Default"
+                                },
+                                "fields": {
+                                  "Description": {
+                                    "value": "\u003cspan\u003eLive Boldly. Style Deeply.\u003c/span\u003e"
+                                  },
+                                  "Logo": {
+                                    "value": {
+                                      "src": "https://xmc-sitecoresaa3f04-jbeindustry3baf-productiona27d.sitecorecloud.io/-/media/Project/industry-verticals/stressless/Stressless/StresslessLogo_transparent.webp?h=332\u0026iar=0\u0026w=600\u0026ttc=63903893981\u0026tt=31A47644F1EAD80118C59594481E0214\u0026hash=3505AAAB362A8604A937025CE03FB853",
+                                      "alt": "",
+                                      "width": "600",
+                                      "height": "332"
+                                    }
+                                  },
+                                  "LogoDark": { "value": {} },
+                                  "CopyrightText": { "value": "Copyright © 2025" },
+                                  "PolicyText": {
+                                    "value": {
+                                      "href": "http://",
+                                      "linktype": "external",
+                                      "url": "",
+                                      "target": "",
+                                      "text": "Privacy Policy",
+                                      "title": "",
+                                      "class": ""
+                                    }
+                                  },
+                                  "TermsText": {
+                                    "value": {
+                                      "href": "http://",
+                                      "linktype": "external",
+                                      "url": "",
+                                      "target": "",
+                                      "text": "Terms \u0026 Conditions",
+                                      "title": "",
+                                      "class": ""
+                                    }
+                                  },
+                                  "TitleTwo": { "value": "Services" },
+                                  "TitleFive": { "value": "Install App" },
+                                  "TitleFour": { "value": "Follow Us" },
+                                  "TitleOne": { "value": "Furniture" },
+                                  "TitleThree": { "value": "Support" }
+                                },
+                                "placeholders": {
+                                  "footer-list-first-7": [
+                                    {
+                                      "uid": "0fd6a3c6-2c0c-45b6-ad72-9e0ace0b2d84",
+                                      "componentName": "LinkList",
+                                      "dataSource": "E157E363-FA01-4112-B868-CD277D19C57D",
+                                      "params": {
+                                        "GridParameters": "col-12",
+                                        "FieldNames": "Default",
+                                        "Styles": "list-vertical"
+                                      },
+                                      "fields": {
+                                        "data": {
+                                          "datasource": {
+                                            "children": {
+                                              "results": [
+                                                {
+                                                  "field": {
+                                                    "link": {
+                                                      "value": {
+                                                        "href": "http://",
+                                                        "linktype": "external",
+                                                        "url": "",
+                                                        "target": "",
+                                                        "text": "Bed",
+                                                        "title": "",
+                                                        "class": ""
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "field": {
+                                                    "link": {
+                                                      "value": {
+                                                        "href": "http://",
+                                                        "linktype": "external",
+                                                        "url": "",
+                                                        "target": "",
+                                                        "text": "Chair",
+                                                        "title": "",
+                                                        "class": ""
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "field": {
+                                                    "link": {
+                                                      "value": {
+                                                        "href": "http://",
+                                                        "linktype": "external",
+                                                        "url": "",
+                                                        "target": "",
+                                                        "text": "All",
+                                                        "title": "",
+                                                        "class": ""
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              ]
+                                            },
+                                            "field": { "title": { "value": "" } }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  ],
+                                  "footer-list-second-7": [
+                                    {
+                                      "uid": "13324683-d198-4c91-9ff1-62a20e3bbe97",
+                                      "componentName": "LinkList",
+                                      "dataSource": "F255A415-CD01-4A6B-A101-B1EB68C49C95",
+                                      "params": {
+                                        "GridParameters": "col-12",
+                                        "FieldNames": "Default",
+                                        "Styles": "list-vertical"
+                                      },
+                                      "fields": {
+                                        "data": {
+                                          "datasource": {
+                                            "children": {
+                                              "results": [
+                                                {
+                                                  "field": {
+                                                    "link": {
+                                                      "value": {
+                                                        "href": "http://",
+                                                        "linktype": "external",
+                                                        "url": "",
+                                                        "target": "",
+                                                        "text": "Email Marketing",
+                                                        "title": "",
+                                                        "class": ""
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "field": {
+                                                    "link": {
+                                                      "value": {
+                                                        "href": "http://",
+                                                        "linktype": "external",
+                                                        "url": "",
+                                                        "target": "",
+                                                        "text": "Campaigns",
+                                                        "title": "",
+                                                        "class": ""
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "field": {
+                                                    "link": {
+                                                      "value": {
+                                                        "href": "http://",
+                                                        "linktype": "external",
+                                                        "url": "",
+                                                        "target": "",
+                                                        "text": "Branding",
+                                                        "title": "",
+                                                        "class": ""
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "field": {
+                                                    "link": {
+                                                      "value": {
+                                                        "linktype": "internal",
+                                                        "id": "7FE42F97-5202-449A-94DE-95204D77FC34",
+                                                        "anchor": "",
+                                                        "querystring": "",
+                                                        "target": "",
+                                                        "class": "",
+                                                        "text": "Landing Pages",
+                                                        "title": "",
+                                                        "href": "/en/Landing-Pages"
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              ]
+                                            },
+                                            "field": { "title": { "value": "" } }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  ],
+                                  "footer-list-third-7": [
+                                    {
+                                      "uid": "585de5dc-d1a3-4b4f-aa52-63adbe037b9e",
+                                      "componentName": "LinkList",
+                                      "dataSource": "6DF3E359-A49F-4556-AE3B-9FCE856A5725",
+                                      "params": {
+                                        "GridParameters": "col-12",
+                                        "FieldNames": "Default",
+                                        "Styles": "list-vertical"
+                                      },
+                                      "fields": {
+                                        "data": {
+                                          "datasource": {
+                                            "children": {
+                                              "results": [
+                                                {
+                                                  "field": {
+                                                    "link": {
+                                                      "value": {
+                                                        "href": "http://",
+                                                        "linktype": "external",
+                                                        "url": "",
+                                                        "target": "",
+                                                        "text": "Help Center",
+                                                        "title": "",
+                                                        "class": ""
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "field": {
+                                                    "link": {
+                                                      "value": {
+                                                        "href": "http://",
+                                                        "linktype": "external",
+                                                        "url": "",
+                                                        "target": "",
+                                                        "text": "Safety Center",
+                                                        "title": "",
+                                                        "class": ""
+                                                      }
+                                                    }
+                                                  }
+                                                },
+                                                {
+                                                  "field": {
+                                                    "link": {
+                                                      "value": {
+                                                        "href": "http://",
+                                                        "text": "Community Guidelines",
+                                                        "linktype": "external",
+                                                        "url": "",
+                                                        "anchor": "",
+                                                        "target": ""
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              ]
+                                            },
+                                            "field": { "title": { "value": "" } }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  ],
+                                  "footer-list-fourth-7": [
+                                    {
+                                      "uid": "8f0c22c2-40a3-4b27-8b13-29955e8704aa",
+                                      "componentName": "SocialFollow",
+                                      "dataSource": "A04838BC-CBE8-41A3-877B-C27D74417561",
+                                      "params": {
+                                        "GridParameters": "col-12",
+                                        "FieldNames": "Default",
+                                        "DynamicPlaceholderId": "8"
+                                      },
+                                      "fields": {
+                                        "FacebookLink": {
+                                          "value": {
+                                            "href": "http://",
+                                            "linktype": "external",
+                                            "url": "",
+                                            "target": "",
+                                            "text": "Facebook",
+                                            "title": "",
+                                            "class": ""
+                                          }
+                                        },
+                                        "InstagramLink": {
+                                          "value": {
+                                            "href": "http://",
+                                            "linktype": "external",
+                                            "url": "",
+                                            "text": "Instagram"
+                                          }
+                                        },
+                                        "LinkedinLink": { "value": { "href": "" } },
+                                        "SocialTitle": { "value": "" },
+                                        "TwitterLink": {
+                                          "value": {
+                                            "href": "http://",
+                                            "linktype": "external",
+                                            "url": "",
+                                            "target": "",
+                                            "text": "Twitter",
+                                            "title": "",
+                                            "class": ""
+                                          }
+                                        },
+                                        "YoutubeLink": { "value": { "href": "" } }
+                                      }
+                                    }
+                                  ],
+                                  "footer-list-fifth-7": [
+                                    {
+                                      "uid": "93695171-0fa0-4582-a61e-82276598006e",
+                                      "componentName": "RichText",
+                                      "dataSource": "/sitecore/content/industry-verticals/stressless/Presentation/Partial Designs/Footer/Data/Text 3",
+                                      "params": {
+                                        "GridParameters": "col-12",
+                                        "FieldNames": "Default",
+                                        "DynamicPlaceholderId": "10"
+                                      },
+                                      "fields": {
+                                        "Text": {
+                                          "value": "\u003cdiv class=\"ck-content\"\u003e\u003cfigure class=\"image\"\u003e\u003cimg style=\"aspect-ratio:162/48;\" src=\"https://xmc-sitecoresaa3f04-jbeindustry3baf-productiona27d.sitecorecloud.io/-/media/Project/industry-verticals/forma-lux/Logos/Google-Play.svg?ttc=63903893981\u0026tt=F023385662D6FC5022A1690498FBA8CF\" alt=\"\" width=\"162\" height=\"48\" /\u003e\u003c/figure\u003e\u003c/div\u003e"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "uid": "cab1334e-064e-476c-8f49-14222014da7f",
+                                      "componentName": "RichText",
+                                      "dataSource": "/sitecore/content/industry-verticals/stressless/Presentation/Partial Designs/Footer/Data/Text 4",
+                                      "params": {
+                                        "GridParameters": "col-12",
+                                        "FieldNames": "Default",
+                                        "DynamicPlaceholderId": "11"
+                                      },
+                                      "fields": {
+                                        "Text": {
+                                          "value": "\u003cdiv class=\"ck-content\"\u003e\u003cfigure class=\"image\"\u003e\u003cimg style=\"aspect-ratio:162/48;\" src=\"https://xmc-sitecoresaa3f04-jbeindustry3baf-productiona27d.sitecorecloud.io/-/media/Project/industry-verticals/forma-lux/Logos/Apple-Store.svg?ttc=63903893981\u0026tt=13105B16E4F1F17259A517B9302678AD\" alt=\"\" width=\"162\" height=\"48\" /\u003e\u003c/figure\u003e\u003c/div\u003e"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              "siteName": "stressless",
+              "mode": {
+                "name": "preview",
+                "isNormal": false,
+                "isPreview": true,
+                "isEditing": false,
+                "isDesignLibrary": false,
+                "designLibrary": { "isVariantGeneration": false }
+              }
+            },
+            "dictionary": {
+              "read_more_btn_text": "Read More",
+              "categories_text": "Categories",
+              "pagination_next_btn_text": "Next",
+              "pagination_prev_btn_text": "Prev",
+              "show_all_text": "Show All",
+              "city": "City*",
+              "contact_form": "Contact form",
+              "email": "Email*",
+              "first_name": "First name*",
+              "last_name": "Last name*",
+              "message": "Message",
+              "submit_text": "Send message ",
+              "account-empty": "You are not logged in.",
+              "cart-empty": "Your cart is empty.",
+              "wishlist-empty": "Your wishlist is empty.",
+              "no_reviews_label": "No reviews available for this product.",
+              "all_products_category": "All",
+              "cart_btn_text": "Add to Cart",
+              "product_category_label": "Category",
+              "product_color_label": "Color",
+              "compare_btn_text": "Compare",
+              "depth_label": "Depth",
+              "description_tab_label": "Description",
+              "dimensions_tab_label": "Additional Information",
+              "height_label": "Height",
+              "leg_height_label": "Leg Height",
+              "no_description_text": "No description available",
+              "no_dimensions_text": "No dimensions available",
+              "product_quantity_label": "Quantity",
+              "reviews_tab_label": "Reviews",
+              "seat_height_label": "Seat Height",
+              "product_share_label": "Share",
+              "product_size_label": "Size",
+              "product_sku_label": "SKU",
+              "product_tags_label": "Tags",
+              "weight_label": "Weight",
+              "width_label": "Width",
+              "product-listing-of": "of",
+              "product-listing-results": "results",
+              "product-listing-show": "Show",
+              "product-listing-showing": "Showing",
+              "product-listing-sort-by": "Sort by",
+              "product-listing-sort-default": "Default",
+              "product-listing-sort-price-asc": "Price: Low to High",
+              "product-listing-sort-price-desc": "Price: High to Low",
+              "product-listing-sort-name-asc": "Name: A to Z",
+              "product-listing-sort-name-desc": "Name: Z to A",
+              "shopping_cart_label": "Shopping Cart",
+              "subtotal_label": "Subtotal:",
+              "total_label": "Total:",
+              "vat_label": "VAT (20%):",
+              "button_text": "Subscribe",
+              "enter_email": "Enter your email",
+              "your_email": "E.g. your@email.com"
+            },
+            "componentProps": {}
+          },
+          "__N_PREVIEW": true,
+          "__N_SSP": true
+        },
+        "page": "/[[...path]]",
+        "query": { "path": ["Landing-Pages", "jbe"] },
+        "buildId": "CKa7lGXJTwmjI5T0XQ10F",
+        "isFallback": false,
+        "isExperimentalCompile": false,
+        "gsp": true,
+        "locale": "en",
+        "locales": ["en", "fr-FR", "es-ES"],
+        "defaultLocale": "en",
+        "isPreview": true,
+        "scriptLoader": []
+      }
+    </script>
+    <next-route-announcer
+      ><p
+        aria-live="assertive"
+        id="__next-route-announcer__"
+        role="alert"
+        style="
+          border: 0px;
+          clip: rect(0px, 0px, 0px, 0px);
+          height: 1px;
+          margin: -1px;
+          overflow: hidden;
+          padding: 0px;
+          position: absolute;
+          top: 0px;
+          width: 1px;
+          white-space: nowrap;
+          overflow-wrap: normal;
+        "
+      ></p
+    ></next-route-announcer>
+  </body>
+</html>
