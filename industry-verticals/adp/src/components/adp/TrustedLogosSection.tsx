@@ -1,44 +1,28 @@
 'use client';
 
-import React, { type JSX, useState, useEffect } from 'react';
-import {
-  TextField,
-  Text,
-  ImageField,
-  Image as SitecoreImage,
-  Placeholder,
-} from '@sitecore-content-sdk/nextjs';
+import React, { type JSX, useState, useEffect, useRef } from 'react';
+import { TextField, Text, Placeholder } from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from '@/lib/component-props';
 
 /**
  * TrustedLogosSection Component
  * "Trusted payroll and HR Services for over a million companies worldwide"
- * Displays client logos in a carousel/row
+ *
+ * Logo items are dropped via <Placeholder> as TrustedLogoCard components.
+ * The section discovers `.trusted-logo-card` children via MutationObserver,
+ * shows them in a row on desktop and a carousel on mobile.
  *
  * Layout:
  * - Desktop: Title + row of logos side by side
- * - Mobile: Title + carousel of logos with dot indicators
- * - Light/white background
+ * - Mobile: Title + single-slide carousel with dot indicators + autoplay
  */
 
 interface Fields {
   Title: TextField;
-  Logo1: ImageField;
-  Logo2: ImageField;
-  Logo3: ImageField;
-  Logo4: ImageField;
-  Logo5: ImageField;
-  Logo6: ImageField;
 }
 
 const defaultFields: Fields = {
   Title: { value: 'Trusted payroll and HR Services for over a million companies worldwide' },
-  Logo1: { value: { src: '/logos/fujifilm.svg', alt: 'Fujifilm' } },
-  Logo2: { value: { src: '/logos/paypal.svg', alt: 'PayPal' } },
-  Logo3: { value: { src: '/logos/innocent.svg', alt: 'Innocent' } },
-  Logo4: { value: { src: '/logos/cocacola.svg', alt: 'Coca-Cola' } },
-  Logo5: { value: { src: '/logos/amazon.svg', alt: 'Amazon' } },
-  Logo6: { value: { src: '/logos/bs.svg', alt: 'B&S' } },
 };
 
 export type TrustedLogosSectionProps = ComponentProps & {
@@ -50,17 +34,26 @@ export const Default = (props: TrustedLogosSectionProps): JSX.Element => {
   const { styles, DynamicPlaceholderId } = props.params;
   const fields = props.fields || defaultFields;
 
-  const logos = [
-    fields.Logo1,
-    fields.Logo2,
-    fields.Logo3,
-    fields.Logo4,
-    fields.Logo5,
-    fields.Logo6,
-  ].filter((logo) => logo?.value?.src);
-
+  const phLogos = `trustedLogos-${DynamicPlaceholderId}`;
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [totalLogos, setTotalLogos] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
-  const totalLogos = logos.length;
+
+  // Discover .trusted-logo-card children via MutationObserver
+  useEffect(() => {
+    const container = trackRef.current;
+    if (!container) return;
+
+    const countCards = () => {
+      const cards = container.querySelectorAll('.trusted-logo-card');
+      setTotalLogos(cards.length);
+    };
+
+    countCards();
+    const observer = new MutationObserver(countCards);
+    observer.observe(container, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, []);
 
   // Autoplay for mobile carousel
   useEffect(() => {
@@ -70,8 +63,6 @@ export const Default = (props: TrustedLogosSectionProps): JSX.Element => {
     }, 3000);
     return () => clearInterval(interval);
   }, [totalLogos]);
-
-  const phLogos = `trusted-logos-${DynamicPlaceholderId}`;
 
   return (
     <section
@@ -83,39 +74,28 @@ export const Default = (props: TrustedLogosSectionProps): JSX.Element => {
           <Text field={fields.Title} />
         </h2>
 
-        {/* Desktop: Row of logos */}
-        <div className="hidden items-center justify-center gap-10 lg:flex lg:gap-16">
-          {logos.map((logo, i) => (
-            <div key={i} className="flex items-center justify-center">
-              <SitecoreImage
-                field={logo}
-                className="h-8 max-w-35 object-contain grayscale lg:h-10"
-              />
-            </div>
-          ))}
+        {/* Desktop: Row of logos side by side */}
+        <div className="hidden lg:block">
+          <div ref={trackRef} className="flex items-center justify-center gap-10 lg:gap-16">
+            <Placeholder name={phLogos} rendering={props.rendering} />
+          </div>
         </div>
 
-        {/* Mobile: Carousel */}
+        {/* Mobile: Single-slide carousel */}
         <div className="lg:hidden">
           <div className="overflow-hidden">
             <div
-              className="flex transition-transform duration-500 ease-out"
-              style={{
-                transform: `translateX(-${activeIndex * 100}%)`,
-              }}
+              className="trusted-logos-mobile-track flex transition-transform duration-500 ease-out"
+              style={{ transform: `translateX(-${activeIndex * 100}%)` }}
             >
-              {logos.map((logo, i) => (
-                <div key={i} className="flex w-full shrink-0 items-center justify-center py-4">
-                  <SitecoreImage field={logo} className="h-10 max-w-40 object-contain" />
-                </div>
-              ))}
+              <Placeholder name={phLogos} rendering={props.rendering} />
             </div>
           </div>
 
           {/* Dot Indicators */}
           {totalLogos > 1 && (
             <div className="mt-4 flex items-center justify-center gap-2">
-              {logos.map((_, i) => (
+              {Array.from({ length: totalLogos }).map((_, i) => (
                 <button
                   key={i}
                   onClick={() => setActiveIndex(i)}
@@ -128,12 +108,25 @@ export const Default = (props: TrustedLogosSectionProps): JSX.Element => {
             </div>
           )}
         </div>
-
-        {/* Placeholder for additional logos */}
-        <div className="trusted-logos-extra hidden">
-          <Placeholder name={phLogos} rendering={props.rendering} />
-        </div>
       </div>
+
+      {/* Scoped styles for responsive logo display */}
+      <style jsx>{`
+        /* Desktop: logos sit inline in the flex row */
+        @media (min-width: 1024px) {
+          .trusted-logos-section :global(.trusted-logo-card) {
+            width: auto;
+            flex-shrink: 0;
+          }
+        }
+        /* Mobile: each logo is a full-width slide */
+        @media (max-width: 1023px) {
+          .trusted-logos-mobile-track :global(.trusted-logo-card) {
+            width: 100%;
+            flex-shrink: 0;
+          }
+        }
+      `}</style>
     </section>
   );
 };

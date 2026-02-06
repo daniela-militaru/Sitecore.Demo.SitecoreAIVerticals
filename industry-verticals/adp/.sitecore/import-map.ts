@@ -21,7 +21,7 @@ import ProductCarousel from 'src/components/non-sitecore/ProductCarousel';
 import { CommonStyles, LayoutStyles, PromoFlags, HeroBannerStyles } from '@/types/styleFlags';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Pagination, Navigation, A11y, Keyboard } from 'swiper/modules';
-import { ArrowRight, ChevronLeft, ChevronRight, ChevronDown, Heart, Plus, Star, User, X, Check, Loader2, LoaderCircle, ShoppingCart, Search, ArrowLeft, Phone, Globe, MoreHorizontal, Home } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, ChevronDown, Heart, Plus, Star, User, X, Check, Loader2, LoaderCircle, ShoppingCart, Search, Globe, MoreHorizontal, Home, Phone, Menu } from 'lucide-react';
 import Link_a258c208ba01265ca0aa9c7abae745cc7141aa63 from 'next/link';
 import { cn } from '@/shadcn/lib/utils';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -90,6 +90,7 @@ import { pageView } from '@sitecore-cloudsdk/events/browser';
 import config from 'sitecore.config';
 import { faUser, faCalendar, faTag } from '@fortawesome/free-solid-svg-icons';
 import { sortByDateDesc, getCategoryCounts } from '@/helpers/articleUtils';
+import { login } from '@/lib/auth';
 
 const importMap = [
   {
@@ -218,11 +219,11 @@ const importMap = [
       { name: 'LoaderCircle', value: LoaderCircle },
       { name: 'ShoppingCart', value: ShoppingCart },
       { name: 'Search', value: Search },
-      { name: 'ArrowLeft', value: ArrowLeft },
-      { name: 'Phone', value: Phone },
       { name: 'Globe', value: Globe },
       { name: 'MoreHorizontal', value: MoreHorizontal },
       { name: 'Home', value: Home },
+      { name: 'Phone', value: Phone },
+      { name: 'Menu', value: Menu },
     ]
   },
   {
@@ -683,6 +684,12 @@ const importMap = [
     exports: [
       { name: 'sortByDateDesc', value: sortByDateDesc },
       { name: 'getCategoryCounts', value: getCategoryCounts },
+    ]
+  },
+  {
+    module: '@/lib/auth',
+    exports: [
+      { name: 'login', value: login },
     ]
   }
 ] as ImportEntry[];

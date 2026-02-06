@@ -72,7 +72,7 @@ IMPORTANT execution rules:
    It must inherit from: - {{StandardTemplate}} - {{PerSiteStandardValues}}
    Store as {{GeneratedDataTemplate}}
    2.2 Add "Data" section underneath the item {{GeneratedDataTemplate}} . The section inherits from {{TemplateSectionTemplate}}.
-   With fields: - All the fields that were created inside the component (most of common is that those fields are defined in an interface inside the tsx component called Fields). The field items that are created need to inherit from {{TemplateFieldTemplate}}
+   With fields: - All the fields that were created inside the component (most of common is that those fields are defined in an interface inside the tsx component called Fields). The field items that are created need to inherit from {{TemplateFieldTemplate}}. Set the Type field to the of field. If it is a General Link or an Image set the Shared field to true.
    2.4 Under the {{GeneratedDataTemplate}}, create a "**Standard Values"
    item that inherits from {{GeneratedDataTemplate}}. Store as {{GeneratedDataTemplateStandardValuesItem}}.
    In the {{GeneratedDataTemplate}}, set the "**Standard values" field, to point to the {{GeneratedDataTemplateStandardValuesItem}}.
@@ -124,4 +124,8 @@ IMPORTANT execution rules:
    Store as {{GeneratedRenderingItem}}
    7.2 Retrieve {{GeneratedRenderingFolderItem}} and {{GeneratedRenderingItem}} to confirm they exist and have correct templates and field values.
 
-8. If the component contains placeholders, then under {{PlaceholdersPath}} , a new item that inherits from {{PlaceholderTemplate}} needs to be created. Store as {{PlaceholderItem}} The placeholder Key field needs to be set to the name const of the placeholder used inside the component. But the ${DynamicPlaceholderId} inside the const value needs to be replace with {\*}. Then field "Layout Service Placeholders" needs to include the {{PlaceholderItem}}
+8. If the component contains placeholders, then under {{PlaceholdersPath}} , a new item that inherits from {{PlaceholderTemplate}} needs to be created. Store as {{PlaceholderItem}}
+   The Placeholder Key field needs to be set to the value of:
+   The value of const that defines the placeholder name inside the component. But the ${DynamicPlaceholderId} needs to be replace with {\*}.
+
+   Then field "Layout Service Placeholders" of the {{GeneratedRenderingItem}} needs to include the {{PlaceholderItem}}
