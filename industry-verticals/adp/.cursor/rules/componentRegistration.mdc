@@ -1,4 +1,4 @@
-This task must be executed using the Sitecore Marketer MCP server.
+This task must be executed using the marketer MCP server.
 
 Replace variables with these values:
 {{TemplateName}} = "{{ComponentName}} Template"

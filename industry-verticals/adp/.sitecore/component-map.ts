@@ -53,35 +53,37 @@ import * as Breadcrumb from 'src/components/breadcrumb/Breadcrumb';
 import * as ArticleListing from 'src/components/article-listing/ArticleListing';
 import * as ArticleDetails from 'src/components/article-details/ArticleDetails';
 import * as AllProductsCarousel from 'src/components/all-products-carousel/AllProductsCarousel';
-import * as CtaBarSection from 'src/components/adp/CtaBarSection';
-import * as ServicesSection from 'src/components/adp/ServicesSection';
-import * as TestimonialCarouselSection from 'src/components/adp/TestimonialCarouselSection';
-import * as BenefitsSection from 'src/components/adp/BenefitsSection';
-import * as HeroSection from 'src/components/adp/HeroSection';
-import * as ContentBlockSection from 'src/components/adp/ContentBlockSection';
-import * as FaqSection from 'src/components/adp/FaqSection';
-import * as ArticlesCarouselSection from 'src/components/adp/ArticlesCarouselSection';
-import * as CtaBannerSection from 'src/components/adp/CtaBannerSection';
-import * as ContactFormSection from 'src/components/adp/ContactFormSection';
-import * as AdpArticleCard from 'src/components/adp/ArticleCard';
-import * as AwardsSection from 'src/components/adp/AwardsSection';
-import * as BenefitCard from 'src/components/adp/BenefitCard';
-import * as BusinessSizeCard from 'src/components/adp/BusinessSizeCard';
-import * as BusinessSizeSection from 'src/components/adp/BusinessSizeSection';
-import * as CaseStudySection from 'src/components/adp/CaseStudySection';
-import * as CtaLinkCard from 'src/components/adp/CtaLinkCard';
-import * as FooterSection from 'src/components/adp/FooterSection';
-import * as HeaderSection from 'src/components/adp/HeaderSection';
-import * as IntroWithTabsSection from 'src/components/adp/IntroWithTabsSection';
-import * as LoginSection from 'src/components/adp/LoginSection';
-import * as PromoBannerSection from 'src/components/adp/PromoBannerSection';
-import * as SearchFilterSection from 'src/components/adp/SearchFilterSection';
-import * as ServiceCard from 'src/components/adp/ServiceCard';
-import * as TabCard from 'src/components/adp/TabCard';
-import * as TestimonialCard from 'src/components/adp/TestimonialCard';
 import * as TrustedLogosSection from 'src/components/adp/TrustedLogosSection';
 import * as TrustedLogoCard from 'src/components/adp/TrustedLogoCard';
+import * as TitleAndDescriptionCard from 'src/components/adp/TitleAndDescriptionCard';
+import * as TestimonialCarouselSection from 'src/components/adp/TestimonialCarouselSection';
+import * as TestimonialCard from 'src/components/adp/TestimonialCard';
+import * as TabsSection from 'src/components/adp/TabsSection';
+import * as TabCard from 'src/components/adp/TabCard';
+import * as TabBenefitCard from 'src/components/adp/TabBenefitCard';
+import * as ServicesSection from 'src/components/adp/ServicesSection';
+import * as ServiceCard from 'src/components/adp/ServiceCard';
+import * as SearchFilterSection from 'src/components/adp/SearchFilterSection';
+import * as PromoBannerSection from 'src/components/adp/PromoBannerSection';
+import * as LoginSection from 'src/components/adp/LoginSection';
+import * as HeroSection from 'src/components/adp/HeroSection';
+import * as HeaderSection from 'src/components/adp/HeaderSection';
+import * as FooterSection from 'src/components/adp/FooterSection';
+import * as FaqSection from 'src/components/adp/FaqSection';
 import * as FaqCard from 'src/components/adp/FaqCard';
+import * as CtaLinkCard from 'src/components/adp/CtaLinkCard';
+import * as CtaBarSection from 'src/components/adp/CtaBarSection';
+import * as CtaBannerSection from 'src/components/adp/CtaBannerSection';
+import * as ContentBlockSection from 'src/components/adp/ContentBlockSection';
+import * as ContactFormSection from 'src/components/adp/ContactFormSection';
+import * as CaseStudySection from 'src/components/adp/CaseStudySection';
+import * as BusinessSizeSection from 'src/components/adp/BusinessSizeSection';
+import * as BusinessSizeCard from 'src/components/adp/BusinessSizeCard';
+import * as BenefitsSection from 'src/components/adp/BenefitsSection';
+import * as BenefitCard from 'src/components/adp/BenefitCard';
+import * as AwardsSection from 'src/components/adp/AwardsSection';
+import * as ArticlesCarouselSection from 'src/components/adp/ArticlesCarouselSection';
+import * as AdpArticleCard from 'src/components/adp/AdpArticleCard';
 
 export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['BYOCWrapper', BYOCWrapper],
@@ -136,35 +138,37 @@ export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['ArticleListing', { ...ArticleListing }],
   ['ArticleDetails', { ...ArticleDetails }],
   ['AllProductsCarousel', { ...AllProductsCarousel }],
-  ['CtaBarSection', { ...CtaBarSection, componentType: 'client' }],
-  ['ServicesSection', { ...ServicesSection, componentType: 'client' }],
-  ['TestimonialCarouselSection', { ...TestimonialCarouselSection, componentType: 'client' }],
-  ['BenefitsSection', { ...BenefitsSection, componentType: 'client' }],
-  ['HeroSection', { ...HeroSection, componentType: 'client' }],
-  ['ContentBlockSection', { ...ContentBlockSection, componentType: 'client' }],
-  ['FaqSection', { ...FaqSection, componentType: 'client' }],
-  ['ArticlesCarouselSection', { ...ArticlesCarouselSection, componentType: 'client' }],
-  ['CtaBannerSection', { ...CtaBannerSection, componentType: 'client' }],
-  ['ContactFormSection', { ...ContactFormSection, componentType: 'client' }],
-  ['AdpArticleCard', { ...AdpArticleCard, componentType: 'client' }],
-  ['AwardsSection', { ...AwardsSection, componentType: 'client' }],
-  ['BenefitCard', { ...BenefitCard, componentType: 'client' }],
-  ['BusinessSizeCard', { ...BusinessSizeCard, componentType: 'client' }],
-  ['BusinessSizeSection', { ...BusinessSizeSection, componentType: 'client' }],
-  ['CaseStudySection', { ...CaseStudySection, componentType: 'client' }],
-  ['CtaLinkCard', { ...CtaLinkCard, componentType: 'client' }],
-  ['FooterSection', { ...FooterSection, componentType: 'client' }],
-  ['HeaderSection', { ...HeaderSection, componentType: 'client' }],
-  ['IntroWithTabsSection', { ...IntroWithTabsSection, componentType: 'client' }],
-  ['LoginSection', { ...LoginSection, componentType: 'client' }],
-  ['PromoBannerSection', { ...PromoBannerSection, componentType: 'client' }],
-  ['SearchFilterSection', { ...SearchFilterSection, componentType: 'client' }],
-  ['ServiceCard', { ...ServiceCard, componentType: 'client' }],
-  ['TabCard', { ...TabCard, componentType: 'client' }],
-  ['TestimonialCard', { ...TestimonialCard, componentType: 'client' }],
   ['TrustedLogosSection', { ...TrustedLogosSection, componentType: 'client' }],
   ['TrustedLogoCard', { ...TrustedLogoCard, componentType: 'client' }],
+  ['TitleAndDescriptionCard', { ...TitleAndDescriptionCard, componentType: 'client' }],
+  ['TestimonialCarouselSection', { ...TestimonialCarouselSection, componentType: 'client' }],
+  ['TestimonialCard', { ...TestimonialCard, componentType: 'client' }],
+  ['TabsSection', { ...TabsSection, componentType: 'client' }],
+  ['TabCard', { ...TabCard, componentType: 'client' }],
+  ['TabBenefitCard', { ...TabBenefitCard, componentType: 'client' }],
+  ['ServicesSection', { ...ServicesSection, componentType: 'client' }],
+  ['ServiceCard', { ...ServiceCard, componentType: 'client' }],
+  ['SearchFilterSection', { ...SearchFilterSection, componentType: 'client' }],
+  ['PromoBannerSection', { ...PromoBannerSection, componentType: 'client' }],
+  ['LoginSection', { ...LoginSection, componentType: 'client' }],
+  ['HeroSection', { ...HeroSection, componentType: 'client' }],
+  ['HeaderSection', { ...HeaderSection, componentType: 'client' }],
+  ['FooterSection', { ...FooterSection, componentType: 'client' }],
+  ['FaqSection', { ...FaqSection, componentType: 'client' }],
   ['FaqCard', { ...FaqCard, componentType: 'client' }],
+  ['CtaLinkCard', { ...CtaLinkCard, componentType: 'client' }],
+  ['CtaBarSection', { ...CtaBarSection, componentType: 'client' }],
+  ['CtaBannerSection', { ...CtaBannerSection, componentType: 'client' }],
+  ['ContentBlockSection', { ...ContentBlockSection, componentType: 'client' }],
+  ['ContactFormSection', { ...ContactFormSection, componentType: 'client' }],
+  ['CaseStudySection', { ...CaseStudySection, componentType: 'client' }],
+  ['BusinessSizeSection', { ...BusinessSizeSection, componentType: 'client' }],
+  ['BusinessSizeCard', { ...BusinessSizeCard, componentType: 'client' }],
+  ['BenefitsSection', { ...BenefitsSection, componentType: 'client' }],
+  ['BenefitCard', { ...BenefitCard, componentType: 'client' }],
+  ['AwardsSection', { ...AwardsSection, componentType: 'client' }],
+  ['ArticlesCarouselSection', { ...ArticlesCarouselSection, componentType: 'client' }],
+  ['AdpArticleCard', { ...AdpArticleCard, componentType: 'client' }],
 ]);
 
 export default componentMap;

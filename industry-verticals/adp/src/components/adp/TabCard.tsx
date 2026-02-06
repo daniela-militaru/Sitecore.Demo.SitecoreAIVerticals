@@ -1,59 +1,44 @@
 'use client';
 
-import React, { type JSX } from 'react';
+import type { JSX } from 'react';
 import {
   TextField,
-  RichTextField,
-  Text,
-  RichText,
   ImageField,
+  Text,
   Image as SitecoreImage,
+  Placeholder,
 } from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from '@/lib/component-props';
 
 /**
  * TabCard Component
- * A droppable card representing one tab inside IntroWithTabsSection.
+ * Droppable card for the TabsSection placeholder.
  *
- * Each TabCard provides:
- * - A TabLabel (used by the parent section to render the pill button)
- * - Two benefit items (icon + title + description) shown when this tab is active
+ * Renders two distinct parts controlled by the parent section:
+ *   1. `.tab-card-trigger` -- the tab label (contains an editable <Text> field)
+ *   2. `.tab-card-content` -- the image + a placeholder for TabBenefitCard items
  *
- * The parent IntroWithTabsSection uses a MutationObserver to detect .tab-card
- * children, reads their data-tab-label for the pill buttons, and toggles
- * a data-tab-active attribute to control visibility.
+ * Desktop: The section arranges all triggers in a horizontal red bar and
+ *          shows the active card's content in a bordered panel.
+ * Mobile:  Each card acts as an accordion item (trigger + collapsible content).
  *
- * Layout:
- * - When active: 2-column grid of benefit items on desktop, single column on mobile
- * - When inactive: hidden via CSS
+ * The tab label is rendered with <Text> inside the card itself so that
+ * Sitecore editors can click and edit it in Experience Editor.
+ *
+ * Benefit items are NOT hard-coded -- they are dropped as TabBenefitCard
+ * components into the `tabBenefits-{DynamicPlaceholderId}` placeholder.
  */
 
 interface Fields {
-  TabLabel: TextField;
-  Benefit1Icon: ImageField;
-  Benefit1Title: TextField;
-  Benefit1Description: RichTextField;
-  Benefit2Icon: ImageField;
-  Benefit2Title: TextField;
-  Benefit2Description: RichTextField;
+  /** Tab button label -- editable via <Text> */
+  Label: TextField;
+  /** Optional image shown beside the benefits */
+  Image: ImageField;
 }
 
 const defaultFields: Fields = {
-  TabLabel: { value: 'Save money' },
-  Benefit1Icon: { value: { src: '/icons/lower-costs.svg', alt: 'Lower costs' } },
-  Benefit1Title: { value: 'Lower costs' },
-  Benefit1Description: {
-    value:
-      '<p>Streamline your HCM software into a centralised payroll data source. This makes it easier to optimise budgets and manage costs.</p>',
-  },
-  Benefit2Icon: {
-    value: { src: '/icons/service-level.svg', alt: 'Access the right service level' },
-  },
-  Benefit2Title: { value: 'Access the right service level' },
-  Benefit2Description: {
-    value:
-      '<p>Our solutions provide the product or service at the right service level that is suitably priced to give you the best value.</p>',
-  },
+  Label: { value: 'Bespaar geld' },
+  Image: { value: { src: '/tab-image.jpg', alt: 'Tab visual' } },
 };
 
 export type TabCardProps = ComponentProps & {
@@ -61,48 +46,52 @@ export type TabCardProps = ComponentProps & {
 };
 
 export const Default = (props: TabCardProps): JSX.Element => {
+  const id = props.params.RenderingIdentifier;
+  const { styles, DynamicPlaceholderId } = props.params;
   const fields = props.fields || defaultFields;
+
+  const phBenefits = `tabBenefitCards-${DynamicPlaceholderId}`;
 
   return (
     <div
-      className="tab-card hidden"
-      data-tab-label={fields.TabLabel?.value || ''}
-      data-tab-active="false"
+      className={`tab-card ${styles || ''}`}
+      id={id}
+      data-tab-label={fields.Label?.value as string}
     >
-      <div className="grid gap-8 md:grid-cols-2">
-        {/* Benefit 1 */}
-        {fields.Benefit1Title?.value && (
-          <div className="flex flex-col items-start gap-3">
-            {fields.Benefit1Icon?.value?.src && (
-              <div className="flex h-10 w-10 items-center justify-center">
-                <SitecoreImage field={fields.Benefit1Icon} className="h-8 w-8 object-contain" />
-              </div>
-            )}
-            <h3 className="text-lg font-bold text-[#1A1A2E]">
-              <Text field={fields.Benefit1Title} />
-            </h3>
-            <div className="text-sm leading-relaxed text-[#555]">
-              <RichText field={fields.Benefit1Description} />
-            </div>
-          </div>
-        )}
+      {/* ===== TRIGGER (tab label) ===== */}
+      <button
+        type="button"
+        className="tab-card-trigger flex w-full items-center justify-between"
+        aria-expanded="false"
+      >
+        <span className="tab-card-label">
+          <Text field={fields.Label} />
+        </span>
+        {/* Chevron -- only visible on mobile via the section's styles */}
+        <svg
+          className="tab-card-chevron h-5 w-5 shrink-0 transition-transform duration-300"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
 
-        {/* Benefit 2 */}
-        {fields.Benefit2Title?.value && (
-          <div className="flex flex-col items-start gap-3">
-            {fields.Benefit2Icon?.value?.src && (
-              <div className="flex h-10 w-10 items-center justify-center">
-                <SitecoreImage field={fields.Benefit2Icon} className="h-8 w-8 object-contain" />
-              </div>
-            )}
-            <h3 className="text-lg font-bold text-[#1A1A2E]">
-              <Text field={fields.Benefit2Title} />
-            </h3>
-            <div className="text-sm leading-relaxed text-[#555]">
-              <RichText field={fields.Benefit2Description} />
-            </div>
+      {/* ===== CONTENT (image + benefits placeholder) ===== */}
+      <div className="tab-card-content">
+        <div className="flex flex-col gap-6 md:flex-row md:items-start md:gap-10">
+          {/* Benefits column -- populated via placeholder */}
+          <div className="order-2 flex flex-1 flex-col gap-6 md:order-1">
+            <Placeholder name={phBenefits} rendering={props.rendering} />
           </div>
-        )}
+
+          {/* Image column */}
+          <div className="order-1 w-full shrink-0 md:order-2 md:w-[45%]">
+            <SitecoreImage field={fields.Image} className="h-auto w-full rounded object-cover" />
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -36,10 +36,6 @@ interface Fields {
   CTAText: TextField;
   CTALink: LinkField;
   HeroImage: ImageField;
-  /** Optional floating badges on the hero image */
-  Badge1Text: TextField;
-  Badge2Text: TextField;
-  Badge3Text: TextField;
 }
 
 const defaultFields: Fields = {
@@ -51,9 +47,6 @@ const defaultFields: Fields = {
   CTAText: { value: 'Get Pricing' },
   CTALink: { value: { href: '/get-pricing' } },
   HeroImage: { value: { src: '/hero-image.jpg', alt: 'ADP Payroll and HR Solutions' } },
-  Badge1Text: { value: 'Local to global solutions' },
-  Badge2Text: { value: 'Millions served' },
-  Badge3Text: { value: 'Trusted industry leader' },
 };
 
 export type HeroSectionProps = ComponentProps & {
@@ -107,28 +100,7 @@ export const Default = (props: HeroSectionProps): JSX.Element => {
           {/* Hero Image */}
           <div className="relative flex-1">
             <div className="relative overflow-hidden rounded-lg">
-              {fields.HeroImage?.value?.src && (
-                <SitecoreImage field={fields.HeroImage} className="h-auto w-full object-cover" />
-              )}
-
-              {/* Floating badges overlay */}
-              <div className="absolute top-4 right-4 flex flex-col gap-2">
-                {fields.Badge1Text?.value && (
-                  <div className="rounded-full bg-white/90 px-3 py-1.5 text-xs font-medium text-[#333] shadow-md">
-                    <Text field={fields.Badge1Text} />
-                  </div>
-                )}
-                {fields.Badge2Text?.value && (
-                  <div className="rounded-full bg-white/90 px-3 py-1.5 text-xs font-medium text-[#333] shadow-md">
-                    <Text field={fields.Badge2Text} />
-                  </div>
-                )}
-                {fields.Badge3Text?.value && (
-                  <div className="rounded-full bg-white/90 px-3 py-1.5 text-xs font-medium text-[#333] shadow-md">
-                    <Text field={fields.Badge3Text} />
-                  </div>
-                )}
-              </div>
+              <SitecoreImage field={fields.HeroImage} className="h-auto w-full object-cover" />
             </div>
           </div>
         </div>
