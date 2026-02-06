@@ -13,9 +13,12 @@ Replace variables with these values:
 {{DataFolderName}} = Take the plural of {{ComponentName}}
 
 {{ComponentTemplatesPath}} = "/sitecore/templates/Project/adp/"
-{{DataTemplatesPath}} = "/sitecore/templates/Project/adp/" (not used in this task)a
+{{DataTemplatesPath}} = "/sitecore/templates/Project/adp/" (not used in this task)
+
+{{PlaceholdersPath}} = "/sitecore/layout/Placeholder Settings/Project/adp"
 
 {{RootWebsitePath}} = "/sitecore/content/industry-verticals/adp"
+{{HomeWebsitePath}} = "/sitecore/content/industry-verticals/adp/home"
 {{ComponentsFolder}} = "/sitecore/layout/Renderings/Project/adp"
 
 {{DataTemplateIcon}} = ""
@@ -24,6 +27,7 @@ Replace variables with these values:
 {{StandardTemplate}} = "/sitecore/templates/System/Templates/Standard template"
 {{TemplateSectionTemplate}} = "/sitecore/templates/System/Templates/Template section"
 {{TemplateFieldTemplate}} = "/sitecore/templates/System/Templates/Template field"
+{{PlaceholderTemplate}} = "/sitecore/templates/System/Layout/Placeholder"
 
 {{PerSiteStandardValues}} = "/sitecore/templates/Foundation/Experience Accelerator/StandardValues/\_PerSiteStandardValues"
 {{FolderBaseTemplate}} = "/sitecore/templates/Common/Folder"
@@ -45,6 +49,8 @@ IMPORTANT execution rules:
 
 - Before executing, check whether each target item already exists at its intended path.
   If any exist, STOP and report which paths exist. Do not modify existing items.
+- In all standard values items, if there is a LinkField, the standard value should always be set to point to the home item {{HomeWebsitePath}}
+- In all standard value items and data items that are created. If there is an image field. No value should be set.
 - After creating any item/template, immediately retrieve it and verify it exists.
 - Always return the created item’s ID and full path.
 - Keep and reference these outputs in later steps:
@@ -117,3 +123,5 @@ IMPORTANT execution rules:
    "query:$site/*[@@name='Data']/*[@@name='{{DataFolderName}}']|query:$sharedSites/_[@@name='Data']/_[@@name='{{DataFolderName}}']"
    Store as {{GeneratedRenderingItem}}
    7.2 Retrieve {{GeneratedRenderingFolderItem}} and {{GeneratedRenderingItem}} to confirm they exist and have correct templates and field values.
+
+8. If the component contains placeholders, then under {{PlaceholdersPath}} , a new item that inherits from {{PlaceholderTemplate}} needs to be created. Store as {{PlaceholderItem}} The placeholder Key field needs to be set to the name const of the placeholder used inside the component. But the ${DynamicPlaceholderId} inside the const value needs to be replace with {\*}. Then field "Layout Service Placeholders" needs to include the {{PlaceholderItem}}
