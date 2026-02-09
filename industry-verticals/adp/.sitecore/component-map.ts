@@ -65,6 +65,7 @@ import * as ServicesSection from 'src/components/adp/ServicesSection';
 import * as ServiceCard from 'src/components/adp/ServiceCard';
 import * as SearchFilterSection from 'src/components/adp/SearchFilterSection';
 import * as PromoCtaSection from 'src/components/adp/PromoCtaSection';
+import * as Logo from 'src/components/adp/Logo';
 import * as LoginSection from 'src/components/adp/LoginSection';
 import * as HeroSection from 'src/components/adp/HeroSection';
 import * as HeaderSection from 'src/components/adp/HeaderSection';
@@ -150,6 +151,7 @@ export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['ServiceCard', { ...ServiceCard, componentType: 'client' }],
   ['SearchFilterSection', { ...SearchFilterSection, componentType: 'client' }],
   ['PromoCtaSection', { ...PromoCtaSection, componentType: 'client' }],
+  ['Logo', { ...Logo }],
   ['LoginSection', { ...LoginSection, componentType: 'client' }],
   ['HeroSection', { ...HeroSection, componentType: 'client' }],
   ['HeaderSection', { ...HeaderSection, componentType: 'client' }],
@@ -163,7 +165,7 @@ export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['ContactFormSection', { ...ContactFormSection, componentType: 'client' }],
   ['CaseStudySection', { ...CaseStudySection, componentType: 'client' }],
   ['BusinessSizeSection', { ...BusinessSizeSection, componentType: 'client' }],
-  ['BusinessSizeCard', { ...BusinessSizeCard, componentType: 'client' }],
+  ['BusinessSizeCard', { ...BusinessSizeCard }],
   ['BenefitsSection', { ...BenefitsSection, componentType: 'client' }],
   ['BenefitCard', { ...BenefitCard, componentType: 'client' }],
   ['AwardsSection', { ...AwardsSection, componentType: 'client' }],

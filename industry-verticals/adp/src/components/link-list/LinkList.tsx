@@ -74,7 +74,11 @@ export const Default = ({ params, fields }: LinkListProps) => {
 
     return (
       <>
-        <Text tag="h3" field={datasource.field?.title} />
+        <Text
+          tag="h4"
+          field={datasource.field?.title}
+          className="mb-4 text-base font-bold text-[#1A1A2E]! lg:text-lg"
+        />
         <ul>{links}</ul>
       </>
     );
