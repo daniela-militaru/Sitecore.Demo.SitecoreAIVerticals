@@ -162,7 +162,7 @@ export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['CtaSection', { ...CtaSection, componentType: 'client' }],
   ['CtaLinkCard', { ...CtaLinkCard, componentType: 'client' }],
   ['CtaBarSection', { ...CtaBarSection, componentType: 'client' }],
-  ['ContentImageSection', { ...ContentImageSection }],
+  ['ContentImageSection', { ...ContentImageSection, componentType: 'client' }],
   ['ContentBlockSection', { ...ContentBlockSection, componentType: 'client' }],
   ['ContactFormSection', { ...ContactFormSection, componentType: 'client' }],
   ['CaseStudySection', { ...CaseStudySection, componentType: 'client' }],
