@@ -63,7 +63,10 @@ export const Default = (props: ContentImageSectionProps): JSX.Element => {
               className="mb-6 text-3xl leading-tight font-bold text-[#1A1A2E] lg:text-4xl"
               field={fields.Heading}
             />
-            <RichText field={fields.Content} className="prose prose-lg max-w-none text-[#1A1A2E]" />
+            <RichText
+              field={fields.Content}
+              className="contentimagesection-content prose prose-lg max-w-none text-[#1A1A2E]"
+            />
           </div>
 
           {/* Image Column */}
@@ -73,6 +76,19 @@ export const Default = (props: ContentImageSectionProps): JSX.Element => {
             </div>
           </div>
         </div>
+
+        <style jsx>{`
+          .contentimagesection-content :global(a),
+          .contentimagesection-content :global(strong) {
+            color: #d0271d;
+          }
+          .contentimagesection-content :global(a) {
+            text-decoration: none;
+          }
+          .contentimagesection-content :global(a:hover) {
+            text-decoration: underline;
+          }
+        `}</style>
       </div>
     </section>
   );
@@ -104,9 +120,23 @@ export const Reversed = (props: ContentImageSectionProps): JSX.Element => {
               className="mb-6 text-3xl leading-tight font-bold text-[#1A1A2E] lg:text-4xl"
               field={fields.Heading}
             />
-            <RichText field={fields.Content} className="prose prose-lg max-w-none text-[#1A1A2E]" />
+            <RichText field={fields.Content} className="contentimagesection-content prose prose-lg max-w-none text-[#1A1A2E]" />
           </div>
         </div>
+
+        <style jsx>{`
+          .contentimagesection-content :global(a),
+          .contentimagesection-content :global(strong) {
+            color: #d0271d;
+          }
+          .contentimagesection-content :global(a) {
+            text-decoration: none;
+          }
+          .contentimagesection-content :global(a:hover) {
+            text-decoration: underline;
+          }
+        `}</style>
+
       </div>
     </section>
   );
