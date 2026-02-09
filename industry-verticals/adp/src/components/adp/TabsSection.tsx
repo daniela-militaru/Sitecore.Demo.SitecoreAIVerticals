@@ -110,7 +110,7 @@ export const Default = (props: IntroWithTabsSectionProps): JSX.Element => {
         {/* ===== DESKTOP: Tab bar overlapping the content panel top border ===== */}
         <div className="intro-tabs-desktop-bar hidden justify-center md:flex">
           <nav
-            className="relative z-10 mb-[-28px] inline-flex items-center rounded-lg bg-[#D0271D] p-2.5"
+            className="relative z-10 -mb-7 inline-flex items-center rounded-lg bg-[#D0271D] p-2.5"
             role="tablist"
             aria-label="Tabs"
           >

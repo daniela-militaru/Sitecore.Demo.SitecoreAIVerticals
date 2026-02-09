@@ -56,7 +56,7 @@ export const Default = (props: FaqCardProps): JSX.Element => {
           <Text field={fields.Question} />
         </span>
         <svg
-          className="faq-card-chevron h-5 w-5 flex-shrink-0 text-[#555] transition-transform duration-200"
+          className="faq-card-chevron h-5 w-5 shrink-0 text-[#555] transition-transform duration-200"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
