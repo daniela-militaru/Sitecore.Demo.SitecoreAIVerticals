@@ -64,16 +64,16 @@ import * as TabBenefitCard from 'src/components/adp/TabBenefitCard';
 import * as ServicesSection from 'src/components/adp/ServicesSection';
 import * as ServiceCard from 'src/components/adp/ServiceCard';
 import * as SearchFilterSection from 'src/components/adp/SearchFilterSection';
-import * as PromoBannerSection from 'src/components/adp/PromoBannerSection';
+import * as PromoCtaSection from 'src/components/adp/PromoCtaSection';
 import * as LoginSection from 'src/components/adp/LoginSection';
 import * as HeroSection from 'src/components/adp/HeroSection';
 import * as HeaderSection from 'src/components/adp/HeaderSection';
 import * as FooterSection from 'src/components/adp/FooterSection';
 import * as FaqSection from 'src/components/adp/FaqSection';
 import * as FaqCard from 'src/components/adp/FaqCard';
+import * as CtaSection from 'src/components/adp/CtaSection';
 import * as CtaLinkCard from 'src/components/adp/CtaLinkCard';
 import * as CtaBarSection from 'src/components/adp/CtaBarSection';
-import * as CtaBannerSection from 'src/components/adp/CtaBannerSection';
 import * as ContentBlockSection from 'src/components/adp/ContentBlockSection';
 import * as ContactFormSection from 'src/components/adp/ContactFormSection';
 import * as CaseStudySection from 'src/components/adp/CaseStudySection';
@@ -149,16 +149,16 @@ export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['ServicesSection', { ...ServicesSection, componentType: 'client' }],
   ['ServiceCard', { ...ServiceCard, componentType: 'client' }],
   ['SearchFilterSection', { ...SearchFilterSection, componentType: 'client' }],
-  ['PromoBannerSection', { ...PromoBannerSection, componentType: 'client' }],
+  ['PromoCtaSection', { ...PromoCtaSection, componentType: 'client' }],
   ['LoginSection', { ...LoginSection, componentType: 'client' }],
   ['HeroSection', { ...HeroSection, componentType: 'client' }],
   ['HeaderSection', { ...HeaderSection, componentType: 'client' }],
   ['FooterSection', { ...FooterSection, componentType: 'client' }],
   ['FaqSection', { ...FaqSection, componentType: 'client' }],
   ['FaqCard', { ...FaqCard, componentType: 'client' }],
+  ['CtaSection', { ...CtaSection, componentType: 'client' }],
   ['CtaLinkCard', { ...CtaLinkCard, componentType: 'client' }],
   ['CtaBarSection', { ...CtaBarSection, componentType: 'client' }],
-  ['CtaBannerSection', { ...CtaBannerSection, componentType: 'client' }],
   ['ContentBlockSection', { ...ContentBlockSection, componentType: 'client' }],
   ['ContactFormSection', { ...ContactFormSection, componentType: 'client' }],
   ['CaseStudySection', { ...CaseStudySection, componentType: 'client' }],

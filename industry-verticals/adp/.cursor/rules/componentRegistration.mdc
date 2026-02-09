@@ -118,9 +118,10 @@ IMPORTANT execution rules:
    The item name must be "{{ComponentName}}".
    Set the "Component Name" field to "{{TSXComponentName}}"
    Set the "Parameters Template" field to {{GeneratedRenderingTemplate}} (use template ID)
-   Set the "Datasource Template" field to {{GeneratedDataTemplate}} (use template ID)
+   Set the "Datasource Template" field to the template path: {{ComponentTemplatesPath}}{{ComponentName}}/{{TemplateName}} (e.g. /sitecore/templates/Project/adp/CtaBarSection/CtaBarSection Template)
    Set the "Datasource Location" field to:
-   "query:$site/*[@@name='Data']/*[@@name='{{DataFolderName}}']|query:$sharedSites/_[@@name='Data']/_[@@name='{{DataFolderName}}']"
+   "query:$site/*[@@name='Data']/*[@@templatename='{{ComponentName}} Folder']|query:$sharedSites/_[@@name='Data']/_[@@templatename='{{ComponentName}} Folder']"
+   (When using Marketer MCP, the API may expose the location field as "Data source"; set both "Datasource Location" and "Data source" to the same query if the UI shows empty.)
    Store as {{GeneratedRenderingItem}}
    7.2 Retrieve {{GeneratedRenderingFolderItem}} and {{GeneratedRenderingItem}} to confirm they exist and have correct templates and field values.
 

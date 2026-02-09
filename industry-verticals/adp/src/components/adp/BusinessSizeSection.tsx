@@ -60,38 +60,33 @@ export const Default = (props: BusinessSizeSectionProps): JSX.Element => {
       id={id}
     >
       <div className="mx-auto max-w-7xl px-4">
-        <h2 className="mb-4 text-center text-2xl font-bold text-[#1A1A2E] lg:text-3xl">
-          <Text field={fields.Title} />
-        </h2>
+        <Text
+          tag="h2"
+          className="mb-4 text-center text-2xl font-bold text-[#1A1A2E] lg:text-3xl"
+          field={fields.Title}
+        />
 
-        {fields.Description?.value && (
-          <div className="mx-auto mb-10 max-w-4xl text-center text-sm leading-relaxed text-[#555] lg:mb-12 lg:text-base">
-            <RichText field={fields.Description} />
-          </div>
-        )}
+        <RichText
+          className="mx-auto mb-10 max-w-4xl text-center text-sm leading-relaxed text-[#555] lg:mb-12 lg:text-base"
+          field={fields.Description}
+        />
 
-        {/* Grid of BusinessSizeCards */}
-        <div className="business-size-grid grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {/* Flex grid of BusinessSizeCards -- centered, max 4 per row on md+ */}
+        <div className="business-size-grid flex flex-wrap justify-center gap-6">
           <Placeholder name={phBusinessCards} rendering={props.rendering} />
         </div>
-
-        {/* Phone + CTA row */}
-        {fields.PhoneNumber?.value && (
-          <div className="mt-8 flex items-center justify-center gap-4">
-            <span className="text-sm font-semibold text-[#333]">
-              <Text field={fields.PhoneNumber} />
-            </span>
-            {fields.FreeQuoteText?.value && (
-              <a
-                href={fields.FreeQuoteLink?.value as string}
-                className="inline-flex items-center rounded border-2 border-[#D0271D] px-4 py-1.5 text-sm font-semibold text-[#D0271D] transition-colors hover:bg-[#D0271D] hover:text-white"
-              >
-                <Text field={fields.FreeQuoteText} />
-              </a>
-            )}
-          </div>
-        )}
       </div>
+
+      <style jsx>{`
+        .business-size-grid :global(> .business-size-card) {
+          width: 100%;
+        }
+        @media (min-width: 768px) {
+          .business-size-grid :global(> .business-size-card) {
+            width: calc(25% - 1.125rem);
+          }
+        }
+      `}</style>
     </section>
   );
 };

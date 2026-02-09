@@ -7,13 +7,15 @@ import {
   Text,
   RichText,
   ImageField,
+  LinkField,
+  Link as SitecoreLink,
   Image as SitecoreImage,
 } from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from '@/lib/component-props';
 
 /**
- * BenefitCard Component
- * Individual benefit card used inside BenefitsSection
+ * benefitCard Component
+ * Individual benefit card used inside benefitsSection
  * "Global implementation team", "Compliance-ready", "Trusted provider", etc.
  *
  * Layout:
@@ -27,6 +29,8 @@ interface Fields {
   Icon: ImageField;
   Title: TextField;
   Description: RichTextField;
+  Link: LinkField;
+  LinkText: TextField;
 }
 
 const defaultFields: Fields = {
@@ -36,13 +40,17 @@ const defaultFields: Fields = {
     value:
       '<p>Thousands of ADP professionals in 140 countries are on hand to advise and support your <strong>global payroll</strong> adoption.</p>',
   },
+  Link: {
+    value: { href: 'https://www.adp.com/what-we-offer/global-solutions/global-payroll.aspx' },
+  },
+  LinkText: { value: 'Learn more about our global payroll solutions' },
 };
 
-export type BenefitCardProps = ComponentProps & {
+export type benefitCardProps = ComponentProps & {
   fields: Fields;
 };
 
-export const Default = (props: BenefitCardProps): JSX.Element | null => {
+export const Default = (props: benefitCardProps): JSX.Element | null => {
   const id = props.params.RenderingIdentifier;
   const { styles } = props.params;
   const fields = props.fields || defaultFields;
@@ -51,27 +59,46 @@ export const Default = (props: BenefitCardProps): JSX.Element | null => {
   if (!hasContent) return null;
 
   return (
-    <div className={`component benefit-card ${styles || ''}`} id={id}>
-      <div className="flex h-full flex-col items-center rounded-lg border border-gray-200 bg-white p-6 text-center lg:p-8">
+    <div className={`component benefit-card w-full ${styles || ''}`} id={id}>
+      <div className="flex h-full flex-col items-center rounded-lg border border-[#d0d0d0] bg-white px-6 pt-8 pb-8 text-center lg:px-8 lg:pt-10 lg:pb-10">
         {/* Icon */}
-        {fields.Icon?.value?.src && (
-          <div className="mb-4 flex h-16 w-16 items-center justify-center">
-            <SitecoreImage field={fields.Icon} className="h-12 w-12 object-contain" />
-          </div>
-        )}
-
+        <div className="mb-5 flex h-16 w-16 items-center justify-center">
+          <SitecoreImage field={fields.Icon} className="h-14 w-14 object-contain" />
+        </div>
         {/* Title */}
-        <h3 className="mb-3 text-lg font-bold text-[#1A1A2E]">
-          <Text field={fields.Title} />
-        </h3>
-
-        {/* Description */}
-        {fields.Description?.value && (
-          <div className="text-sm leading-relaxed text-[#555]">
-            <RichText field={fields.Description} />
-          </div>
+        {fields.Link?.value?.href ? (
+          <SitecoreLink field={fields.Link}>
+            <Text
+              tag="h3"
+              field={fields.Title}
+              className="mb-3 text-lg font-bold text-[#D0271D] lg:text-xl"
+            />
+          </SitecoreLink>
+        ) : (
+          <Text
+            tag="h3"
+            field={fields.Title}
+            className="mb-3 text-lg font-bold text-[#D0271D] lg:text-xl"
+          />
         )}
+        {/* Description -- links and bold text styled red via scoped CSS */}
+        <div className="benefit-card-description text-sm leading-relaxed text-[#333]">
+          <RichText field={fields.Description} />
+        </div>
       </div>
+
+      <style jsx>{`
+        .benefit-card-description :global(a),
+        .benefit-card-description :global(strong) {
+          color: #d0271d;
+        }
+        .benefit-card-description :global(a) {
+          text-decoration: none;
+        }
+        .benefit-card-description :global(a:hover) {
+          text-decoration: underline;
+        }
+      `}</style>
     </div>
   );
 };

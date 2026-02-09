@@ -7,49 +7,50 @@ import {
   Text,
   RichText,
   ImageField,
-  Image as SitecoreImage,
   LinkField,
   Link as SitecoreLink,
+  Image as SitecoreImage,
 } from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from '@/lib/component-props';
 
 /**
- * ServiceCard Component
- * Individual service card used inside IndustryServicesSection
- * "Payroll Services", "HCM - Human Capital Management", "Time & Attendance", etc.
+ * serviceCard Component
+ * Individual service card used inside servicesSection
+ * "Global implementation team", "Compliance-ready", "Trusted provider", etc.
  *
  * Layout:
- * - Bordered square icon at top
- * - Bold title below
- * - Description paragraph
- * - Optional CTA link at bottom
- * - White card with border
+ * - Centered icon/illustration at top
+ * - Bold title
+ * - Description text with optional bold/linked keywords
+ * - White card with subtle border, centered content
  */
 
 interface Fields {
   Icon: ImageField;
   Title: TextField;
   Description: RichTextField;
-  CTAText: TextField;
-  CTALink: LinkField;
+  Link: LinkField;
+  LinkText: TextField;
 }
 
 const defaultFields: Fields = {
-  Icon: { value: { src: '/icons/payroll-services.svg', alt: 'Payroll Services' } },
-  Title: { value: 'Payroll Services' },
+  Icon: { value: { src: '/icons/global-team.svg', alt: 'Global implementation team' } },
+  Title: { value: 'Global implementation team' },
   Description: {
     value:
-      '<p>Whether your workforce is local or global, we offer fast, easy and accurate payroll so you save time and money.</p>',
+      '<p>Thousands of ADP professionals in 140 countries are on hand to advise and support your <strong>global payroll</strong> adoption.</p>',
   },
-  CTAText: { value: '' },
-  CTALink: { value: { href: '' } },
+  Link: {
+    value: { href: 'https://www.adp.com/what-we-offer/global-solutions/global-payroll.aspx' },
+  },
+  LinkText: { value: 'Learn more about our global payroll solutions' },
 };
 
-export type ServiceCardProps = ComponentProps & {
+export type serviceCardProps = ComponentProps & {
   fields: Fields;
 };
 
-export const Default = (props: ServiceCardProps): JSX.Element | null => {
+export const Default = (props: serviceCardProps): JSX.Element | null => {
   const id = props.params.RenderingIdentifier;
   const { styles } = props.params;
   const fields = props.fields || defaultFields;
@@ -58,39 +59,46 @@ export const Default = (props: ServiceCardProps): JSX.Element | null => {
   if (!hasContent) return null;
 
   return (
-    <div className={`component service-card ${styles || ''}`} id={id}>
-      <div className="flex h-full flex-col rounded-lg border border-gray-200 bg-white p-6 text-center lg:p-8">
+    <div className={`component service-card w-full ${styles || ''}`} id={id}>
+      <div className="flex h-full flex-col items-center rounded-lg border border-[#d0d0d0] bg-white px-6 pt-8 pb-8 text-center lg:px-8 lg:pt-10 lg:pb-10">
         {/* Icon */}
-        {fields.Icon?.value?.src && (
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg border border-gray-200">
-            <SitecoreImage field={fields.Icon} className="h-8 w-8 object-contain" />
-          </div>
-        )}
-
+        <div className="mb-5 flex h-16 w-16 items-center justify-center">
+          <SitecoreImage field={fields.Icon} className="h-14 w-14 object-contain" />
+        </div>
         {/* Title */}
-        <h3 className="mb-3 text-lg font-bold text-[#1A1A2E]">
-          <Text field={fields.Title} />
-        </h3>
-
-        {/* Description */}
-        {fields.Description?.value && (
-          <div className="mb-4 grow text-sm leading-relaxed text-[#555]">
-            <RichText field={fields.Description} />
-          </div>
+        {fields.Link?.value?.href ? (
+          <SitecoreLink field={fields.Link}>
+            <Text
+              tag="h3"
+              field={fields.Title}
+              className="mb-3 text-lg font-bold text-[#D0271D] lg:text-xl"
+            />
+          </SitecoreLink>
+        ) : (
+          <Text
+            tag="h3"
+            field={fields.Title}
+            className="mb-3 text-lg font-bold text-[#D0271D] lg:text-xl"
+          />
         )}
-
-        {/* Optional CTA */}
-        {fields.CTALink?.value?.href && fields.CTAText?.value && (
-          <div className="mt-auto">
-            <SitecoreLink
-              field={fields.CTALink}
-              className="text-sm font-semibold text-[#D0271D] transition-colors hover:underline"
-            >
-              <Text field={fields.CTAText} />
-            </SitecoreLink>
-          </div>
-        )}
+        {/* Description -- links and bold text styled red via scoped CSS */}
+        <div className="service-card-description text-sm leading-relaxed text-[#333]">
+          <RichText field={fields.Description} />
+        </div>
       </div>
+
+      <style jsx>{`
+        .service-card-description :global(a),
+        .service-card-description :global(strong) {
+          color: #d0271d;
+        }
+        .service-card-description :global(a) {
+          text-decoration: none;
+        }
+        .service-card-description :global(a:hover) {
+          text-decoration: underline;
+        }
+      `}</style>
     </div>
   );
 };

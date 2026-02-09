@@ -34,7 +34,7 @@ export const Default = (props: TrustedLogoCardProps): JSX.Element => {
       className={`trusted-logo-card flex w-full shrink-0 items-center justify-center py-4 ${styles || ''}`}
       id={id}
     >
-      <SitecoreImage field={fields.Logo} className="h-8 max-w-35 object-contain lg:h-10" />
+      <SitecoreImage field={fields.Logo} className="h-8 max-w-35 object-contain lg:h-15" />
     </div>
   );
 };

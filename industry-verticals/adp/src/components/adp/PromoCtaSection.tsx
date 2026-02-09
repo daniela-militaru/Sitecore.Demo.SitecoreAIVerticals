@@ -2,6 +2,8 @@
 
 import type { JSX } from 'react';
 import {
+  RichTextField,
+  RichText,
   TextField,
   Text,
   ImageField,
@@ -23,7 +25,7 @@ import { ComponentProps } from '@/lib/component-props';
  */
 
 interface Fields {
-  Title: TextField;
+  Title: RichTextField;
   CTAText: TextField;
   CTALink: LinkField;
   BackgroundColor: TextField;
@@ -59,28 +61,32 @@ export const Default = (props: PromoBannerSectionProps): JSX.Element => {
         <div className="flex flex-col items-center gap-6 py-10 lg:flex-row lg:justify-between lg:py-14">
           {/* Text Content */}
           <div className="flex-1 text-center lg:text-left">
-            <h2 className="mb-4 text-2xl font-black uppercase leading-tight text-white lg:text-4xl">
-              <Text field={fields.Title} />
-            </h2>
-            {fields.CTALink?.value?.href && (
+            <RichText
+              tag="h2"
+              className="mb-4 text-2xl leading-tight font-black uppercase lg:text-4xl"
+              field={fields.Title}
+            />
+            {fields.CTALink?.value?.href ? (
               <SitecoreLink
                 field={fields.CTALink}
                 className="inline-flex items-center rounded border-2 border-white px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-[#D0271D]"
               >
                 <Text field={fields.CTAText} />
               </SitecoreLink>
+            ) : (
+              <button className="inline-flex items-center rounded border-2 border-white px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-[#D0271D]">
+                <Text field={fields.CTAText} />
+              </button>
             )}
           </div>
 
           {/* Image */}
-          {fields.Image?.value?.src && (
-            <div className="shrink-0">
-              <SitecoreImage
-                field={fields.Image}
-                className="h-40 w-auto rounded object-cover lg:h-52"
-              />
-            </div>
-          )}
+          <div className="shrink-0">
+            <SitecoreImage
+              field={fields.Image}
+              className="h-40 w-auto rounded object-cover lg:h-52"
+            />
+          </div>
         </div>
       </div>
     </section>

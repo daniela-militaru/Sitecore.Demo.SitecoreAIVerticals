@@ -54,36 +54,39 @@ export const Default = (props: ArticleCardProps): JSX.Element | null => {
 
   return (
     <div
-      className={`component article-card w-full shrink-0 px-2 lg:w-[calc(33.333%-1rem)] ${styles || ''}`}
+      className={`component article-card w-full shrink-0 px-2 md:w-1/2 lg:w-1/3 ${styles || ''}`}
       id={id}
     >
-      <div className="flex h-full flex-col overflow-hidden rounded-lg border border-gray-200 bg-white">
+      <div className="flex h-full flex-col overflow-hidden border border-gray-200 bg-white shadow-sm">
         {/* Image */}
         {fields.Image?.value?.src && (
-          <div className="relative aspect-16/10 overflow-hidden">
+          <div className="relative aspect-[4/3] overflow-hidden bg-[#0A1F4A]">
             <SitecoreImage field={fields.Image} className="h-full w-full object-cover" />
           </div>
         )}
 
         {/* Content */}
-        <div className="flex grow flex-col p-5">
+        <div className="flex grow flex-col p-6 lg:p-8">
           {/* Tag */}
           {fields.Tag?.value && (
-            <p className="mb-2 text-xs font-bold tracking-wider text-[#555] uppercase">
+            <p className="mb-4 text-xs font-bold tracking-widest text-[#555] uppercase">
               <Text field={fields.Tag} />
             </p>
           )}
 
-          {/* Title */}
-          <h3 className="mb-4 grow text-lg leading-snug font-bold text-[#1A1A2E]">
+          {/* Title - Plain text */}
+          <h3 className="mb-auto text-xl leading-snug font-normal text-[#1A1A2E] lg:text-2xl">
             <Text field={fields.Title} />
           </h3>
+
+          {/* Separator line */}
+          <div className="my-8 border-t border-gray-300" />
 
           {/* CTA */}
           {fields.CTALink?.value?.href && (
             <SitecoreLink
               field={fields.CTALink}
-              className="inline-flex items-center gap-2 text-sm font-semibold text-[#D0271D] transition-colors hover:underline"
+              className="inline-flex items-center gap-2 text-base font-semibold text-[#D0271D] transition-colors hover:text-[#b8221a]"
             >
               <Text field={fields.CTAText} />
               <ArrowRight className="h-4 w-4" />

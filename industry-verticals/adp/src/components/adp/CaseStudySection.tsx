@@ -30,9 +30,7 @@ interface Fields {
   Title: TextField;
   Subtitle: RichTextField;
   ClientLogo: ImageField;
-  PhoneNumber: TextField;
-  FreeQuoteText: TextField;
-  FreeQuoteLink: LinkField;
+  Image: ImageField;
   Quote: RichTextField;
   QuoteAuthor: TextField;
   CTA1Text: TextField;
@@ -47,12 +45,10 @@ const defaultFields: Fields = {
     value: '<p>Learn how ADP is supporting Amazon on the payroll transformation journey</p>',
   },
   ClientLogo: { value: { src: '/logos/amazon-large.svg', alt: 'Amazon' } },
-  PhoneNumber: { value: '0800 1707 677' },
-  FreeQuoteText: { value: 'Free Quote' },
-  FreeQuoteLink: { value: { href: '/quote' } },
+  Image: { value: { src: '/images/amazon-workers.jpg', alt: 'Amazon delivery workers' } },
   Quote: {
     value:
-      '<p>"Our ADP team is knowledgeable and there to advise us and answer our questions. That, combined with ADP\'s robust and adaptable global technology, gives us confidence our employees are taken care of."</p>',
+      '<p>"Our ADP team is knowledgeable and there to advise us and answer our questions. That, combined with ADP\'s robust and adaptable global technology, gives us confidence that our employees are taken care of."</p>',
   },
   QuoteAuthor: { value: 'Greg Harmer, Global Head of Payroll, Amazon' },
   CTA1Text: { value: 'Watch Video' },
@@ -72,90 +68,75 @@ export const Default = (props: CaseStudySectionProps): JSX.Element => {
 
   return (
     <section
-      className={`component case-study-section bg-[#F7F7F7] py-12 lg:py-16 ${styles || ''}`}
+      className={`component case-study-section bg-white py-12 lg:py-16 ${styles || ''}`}
       id={id}
     >
-      <div className="mx-auto max-w-4xl px-4 text-center">
-        {/* Title */}
-        <h2 className="mb-3 text-2xl font-bold text-[#1A1A2E] lg:text-3xl">
-          <Text field={fields.Title} />
-        </h2>
-
-        {/* Subtitle */}
-        {fields.Subtitle?.value && (
-          <div className="mb-8 text-sm text-[#555] lg:text-base">
+      <div className="mx-auto max-w-7xl px-4">
+        {/* Title + Subtitle */}
+        <div className="mb-12 text-center">
+          <h2 className="mb-4 text-3xl font-bold text-[#1A1A2E] lg:text-4xl">
+            <Text field={fields.Title} />
+          </h2>
+          <div className="text-base text-[#555] lg:text-lg">
             <RichText field={fields.Subtitle} />
           </div>
-        )}
+        </div>
 
-        {/* Client Logo */}
-        {fields.ClientLogo?.value?.src && (
-          <div className="mb-8 flex justify-center">
+        {/* Two-column layout: image first on mobile, content left + image right on desktop */}
+        <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
+          {/* Image - First on mobile, right on desktop */}
+          <div className="flex items-center justify-center lg:order-2 lg:justify-end">
             <SitecoreImage
-              field={fields.ClientLogo}
-              className="h-12 w-auto object-contain lg:h-16"
+              field={fields.Image}
+              className="h-auto w-full max-w-lg rounded-lg object-cover lg:max-w-none"
             />
           </div>
-        )}
 
-        {/* Phone + Free Quote bar */}
-        {fields.PhoneNumber?.value && (
-          <div className="mb-8 flex items-center justify-center gap-4">
-            <span className="text-sm font-semibold text-[#333]">
-              <Text field={fields.PhoneNumber} />
-            </span>
-            {fields.FreeQuoteLink?.value?.href && (
+          {/* Content: Logo, Quote, Author, CTAs - Second on mobile, left on desktop */}
+          <div className="flex flex-col justify-center lg:order-1">
+            {/* Client Logo */}
+            <div className="mb-8">
+              <SitecoreImage
+                field={fields.ClientLogo}
+                className="h-16 w-auto object-contain lg:h-20"
+              />
+            </div>
+
+            {/* Quote */}
+            <div className="mb-6 text-lg leading-relaxed text-[#1A1A2E] lg:text-xl">
+              <RichText field={fields.Quote} />
+            </div>
+
+            {/* Quote Author */}
+            <p className="mb-8 text-sm font-semibold text-[#1A1A2E]">
+              <Text field={fields.QuoteAuthor} />
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
               <SitecoreLink
-                field={fields.FreeQuoteLink}
-                className="inline-flex items-center rounded border-2 border-[#D0271D] px-4 py-1.5 text-sm font-semibold text-[#D0271D] transition-colors hover:bg-[#D0271D] hover:text-white"
+                field={fields.CTA1Link}
+                className="inline-flex items-center justify-center rounded bg-[#D0271D] px-8 py-3 text-base font-semibold text-white transition-colors hover:bg-[#b8221a]"
               >
-                <Text field={fields.FreeQuoteText} />
+                <Text field={fields.CTA1Text} />
               </SitecoreLink>
-            )}
-          </div>
-        )}
-
-        {/* Quote */}
-        {fields.Quote?.value && (
-          <div className="mb-4 text-base leading-relaxed text-[#333] italic lg:text-lg">
-            <RichText field={fields.Quote} />
-          </div>
-        )}
-
-        {/* Quote Author */}
-        {fields.QuoteAuthor?.value && (
-          <p className="mb-8 text-sm text-[#555]">
-            <Text field={fields.QuoteAuthor} />
-          </p>
-        )}
-
-        {/* CTA Buttons */}
-        <div className="flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
-          {fields.CTA1Link?.value?.href && (
-            <SitecoreLink
-              field={fields.CTA1Link}
-              className="inline-flex min-w-40 items-center justify-center rounded bg-[#D0271D] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#b8221a]"
-            >
-              <Text field={fields.CTA1Text} />
-            </SitecoreLink>
-          )}
-          {fields.CTA2Link?.value?.href && (
-            <SitecoreLink
-              field={fields.CTA2Link}
-              className="inline-flex min-w-40 items-center justify-center rounded border-2 border-[#1A1A2E] px-6 py-3 text-sm font-semibold text-[#1A1A2E] transition-colors hover:bg-[#1A1A2E] hover:text-white"
-            >
-              <Text field={fields.CTA2Text} />
-              <svg
-                className="ml-2 h-4 w-4"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth={2}
+              <SitecoreLink
+                field={fields.CTA2Link}
+                className="inline-flex items-center gap-2 text-base font-semibold text-[#D0271D] transition-colors hover:text-[#b8221a]"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </SitecoreLink>
-          )}
+                <Text field={fields.CTA2Text} />
+                <svg
+                  className="h-4 w-4"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </SitecoreLink>
+            </div>
+          </div>
         </div>
       </div>
     </section>

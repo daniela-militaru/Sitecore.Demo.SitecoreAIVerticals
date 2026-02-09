@@ -45,7 +45,7 @@ export const Default = (props: CtaLinkCardProps): JSX.Element | null => {
   if (!fields.Link?.value?.href) return null;
 
   const baseClasses =
-    'inline-flex min-w-[180px] items-center justify-center rounded px-6 py-3 text-sm font-semibold transition-colors';
+    'inline-flex max-w-[200px] items-center justify-center rounded-lg px-8 py-4 text-base font-semibold transition-colors';
 
   const variantClasses =
     variant === 'secondary'
@@ -53,10 +53,12 @@ export const Default = (props: CtaLinkCardProps): JSX.Element | null => {
       : 'bg-[#D0271D] text-white hover:bg-[#b8221a]';
 
   return (
-    <div className={`component cta-link-card inline-block ${styles || ''}`} id={id}>
-      <SitecoreLink field={fields.Link} className={`${baseClasses} ${variantClasses}`}>
-        <Text field={fields.Label} />
-      </SitecoreLink>
-    </div>
+    <SitecoreLink
+      field={fields.Link}
+      className={`component cta-link-card inline-block ${styles || ''} ${baseClasses} ${variantClasses}`}
+      id={id}
+    >
+      <Text field={fields.Label} />
+    </SitecoreLink>
   );
 };
