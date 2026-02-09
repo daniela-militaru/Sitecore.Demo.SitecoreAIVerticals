@@ -75,6 +75,7 @@ import * as FaqCard from 'src/components/adp/FaqCard';
 import * as CtaSection from 'src/components/adp/CtaSection';
 import * as CtaLinkCard from 'src/components/adp/CtaLinkCard';
 import * as CtaBarSection from 'src/components/adp/CtaBarSection';
+import * as ContentImageSection from 'src/components/adp/ContentImageSection';
 import * as ContentBlockSection from 'src/components/adp/ContentBlockSection';
 import * as ContactFormSection from 'src/components/adp/ContactFormSection';
 import * as CaseStudySection from 'src/components/adp/CaseStudySection';
@@ -161,6 +162,7 @@ export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['CtaSection', { ...CtaSection, componentType: 'client' }],
   ['CtaLinkCard', { ...CtaLinkCard, componentType: 'client' }],
   ['CtaBarSection', { ...CtaBarSection, componentType: 'client' }],
+  ['ContentImageSection', { ...ContentImageSection }],
   ['ContentBlockSection', { ...ContentBlockSection, componentType: 'client' }],
   ['ContactFormSection', { ...ContactFormSection, componentType: 'client' }],
   ['CaseStudySection', { ...CaseStudySection, componentType: 'client' }],
