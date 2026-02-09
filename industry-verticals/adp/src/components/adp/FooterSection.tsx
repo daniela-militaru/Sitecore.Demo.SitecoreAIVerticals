@@ -282,7 +282,7 @@ export const Default = (props: FooterSectionProps): JSX.Element => {
           </div>
 
           {/* Copyright Text */}
-          <p className="mb-4 text-sm text-background-muted-dark">
+          <p className="text-background-muted-dark mb-4 text-sm">
             <Text field={fields.CopyrightText} />
           </p>
         </div>

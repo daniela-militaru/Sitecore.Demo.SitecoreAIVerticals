@@ -114,7 +114,7 @@ export const Default = (props: TrustedLogosSectionProps): JSX.Element => {
       }, 500); // matches CSS transition duration
       return () => clearTimeout(timeout);
     }
-    return () => clearTimeout (0); //avoid React warning about missing cleanup when activeIndex < realCount
+    return () => clearTimeout(0); //avoid React warning about missing cleanup when activeIndex < realCount
   }, [activeIndex, realCount]);
 
   // Autoplay: advance one logo every 3 seconds
