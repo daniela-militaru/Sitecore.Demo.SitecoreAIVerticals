@@ -104,7 +104,7 @@ export const Default = (props: TestimonialCarouselSectionProps): JSX.Element => 
     >
       <div className="mx-auto max-w-5xl px-4">
         {/* Label */}
-        <p className="mb-8 text-center text-xs font-bold uppercase tracking-widest text-[#1A1A2E]">
+        <p className="mb-8 text-center text-xs font-bold tracking-widest text-[#1A1A2E] uppercase">
           <Text field={fields.Label} />
         </p>
 
@@ -114,15 +114,10 @@ export const Default = (props: TestimonialCarouselSectionProps): JSX.Element => 
           {totalSlides >= 2 && (
             <button
               onClick={handlePrev}
-              className="absolute left-0 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[#D0271D] text-white transition-colors hover:bg-[#b8221a] lg:-left-16"
+              className="absolute top-1/2 left-0 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[#D0271D] text-white transition-colors hover:bg-[#b8221a] lg:-left-16"
               aria-label="Previous testimonial"
             >
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -139,9 +134,11 @@ export const Default = (props: TestimonialCarouselSectionProps): JSX.Element => 
               ref={carouselRef}
               className={`testimonial-carousel-track flex transition-transform duration-500 ease-out ${totalSlides === 1 ? 'justify-center' : ''}`}
               style={
-                totalSlides >= 2 ? ({
-                  '--slide-index': activeIndex,
-                } as React.CSSProperties) : undefined
+                totalSlides >= 2
+                  ? ({
+                      '--slide-index': activeIndex,
+                    } as React.CSSProperties)
+                  : undefined
               }
             >
               <Placeholder name={phTestimonialCards} rendering={props.rendering} />
@@ -152,15 +149,10 @@ export const Default = (props: TestimonialCarouselSectionProps): JSX.Element => 
           {totalSlides >= 2 && (
             <button
               onClick={handleNext}
-              className="absolute right-0 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[#D0271D] text-white transition-colors hover:bg-[#b8221a] lg:-right-16"
+              className="absolute top-1/2 right-0 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-[#D0271D] text-white transition-colors hover:bg-[#b8221a] lg:-right-16"
               aria-label="Next testimonial"
             >
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -174,17 +166,22 @@ export const Default = (props: TestimonialCarouselSectionProps): JSX.Element => 
         <style jsx>{`
           /* Mobile/Tablet: show 1 card at a time, full width */
           .testimonial-carousel-track {
-            ${totalSlides >= 2 ? 'transform: translateX(calc(-1 * var(--slide-index) * 100%));' : ''}
+            ${totalSlides >= 2
+              ? 'transform: translateX(calc(-1 * var(--slide-index) * 100%));'
+              : ''}
           }
           .testimonial-carousel-track :global(.testimonial-card) {
             width: 100%;
             padding: 1.5rem;
-            ${totalSlides < 2 ? 'background: white; opacity: 1; border-radius: 0.5rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);' : ''}
+            ${totalSlides < 2
+              ? 'background: white; opacity: 1; border-radius: 0.5rem; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);'
+              : ''}
           }
 
           /* Desktop layouts - single card centered for 1-2 cards */
           @media (min-width: 1024px) {
-            ${totalSlides === 1 ? `
+            ${totalSlides === 1
+              ? `
             /* 1 card: centered, no carousel */
             .testimonial-carousel-track :global(.testimonial-card) {
               max-width: 600px;
@@ -194,7 +191,9 @@ export const Default = (props: TestimonialCarouselSectionProps): JSX.Element => 
               border-radius: 0.5rem;
               box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
             }
-            ` : totalSlides === 2 ? `
+            `
+              : totalSlides === 2
+                ? `
             /* 2 cards: one centered at a time, carousel active */
             .testimonial-carousel-track {
               transform: translateX(calc(-1 * var(--slide-index) * 100%));
@@ -207,12 +206,14 @@ export const Default = (props: TestimonialCarouselSectionProps): JSX.Element => 
               border-radius: 0.5rem;
               box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
             }
-            ` : ''}
+            `
+                : ''}
           }
 
           /* XL+ Desktop: show 3 cards simultaneously for 3+ cards only at 1280px+ */
           @media (min-width: 1280px) {
-            ${totalSlides >= 3 ? `
+            ${totalSlides >= 3
+              ? `
             /* 3+ cards: show 3 simultaneously - center ~50% viewport, sides faded */
             .testimonial-carousel-track {
               /* Shift by activeIndex to center the active card */
@@ -241,7 +242,8 @@ export const Default = (props: TestimonialCarouselSectionProps): JSX.Element => 
               opacity: 1;
               box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
             }
-            ` : ''}
+            `
+              : ''}
           }
         `}</style>
 

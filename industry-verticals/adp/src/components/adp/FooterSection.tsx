@@ -149,7 +149,7 @@ export const Default = (props: FooterSectionProps): JSX.Element => {
             {/* Left: Logo + Country Selector */}
             <div className="flex flex-col gap-6">
               {/* ADP Logo */}
-                <SitecoreImage field={fields.Logo} className="h-8 w-auto" />
+              <SitecoreImage field={fields.Logo} className="h-8 w-auto" />
 
               {/* Country Selector */}
               <div className="flex flex-col gap-2">
@@ -165,10 +165,10 @@ export const Default = (props: FooterSectionProps): JSX.Element => {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
-                  <SitecoreLink
-                    field={fields.AllLocationsLink}
-                    className="text-sm text-[#1A1A2E] hover:text-[#D0271D]"
-                  />
+                <SitecoreLink
+                  field={fields.AllLocationsLink}
+                  className="text-sm text-[#1A1A2E] hover:text-[#D0271D]"
+                />
               </div>
             </div>
 
@@ -282,7 +282,7 @@ export const Default = (props: FooterSectionProps): JSX.Element => {
           </div>
 
           {/* Copyright Text */}
-          <p className="mb-4 text-sm text-[#666]">
+          <p className="mb-4 text-sm text-background-muted-dark">
             <Text field={fields.CopyrightText} />
           </p>
         </div>

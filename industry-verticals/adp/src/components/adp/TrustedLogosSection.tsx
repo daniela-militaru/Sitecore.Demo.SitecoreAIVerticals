@@ -70,7 +70,9 @@ export const Default = (props: TrustedLogosSectionProps): JSX.Element => {
       // Remove any previously added clones
       container.querySelectorAll('[data-clone="true"]').forEach((el) => el.remove());
 
-      const cards = Array.from(container.querySelectorAll('.trusted-logo-card:not([data-clone="true"])'));
+      const cards = Array.from(
+        container.querySelectorAll('.trusted-logo-card:not([data-clone="true"])')
+      );
       setRealCount(cards.length);
 
       if (cards.length === 0) return;
@@ -87,7 +89,9 @@ export const Default = (props: TrustedLogosSectionProps): JSX.Element => {
     setup();
     const observer = new MutationObserver(() => {
       // Only re-run if non-clone children changed
-      const currentReal = container.querySelectorAll('.trusted-logo-card:not([data-clone="true"])').length;
+      const currentReal = container.querySelectorAll(
+        '.trusted-logo-card:not([data-clone="true"])'
+      ).length;
       if (currentReal !== realCount) setup();
     });
     observer.observe(container, { childList: true, subtree: true });
@@ -110,6 +114,7 @@ export const Default = (props: TrustedLogosSectionProps): JSX.Element => {
       }, 500); // matches CSS transition duration
       return () => clearTimeout(timeout);
     }
+    return () => clearTimeout (0); //avoid React warning about missing cleanup when activeIndex < realCount
   }, [activeIndex, realCount]);
 
   // Autoplay: advance one logo every 3 seconds
@@ -118,7 +123,9 @@ export const Default = (props: TrustedLogosSectionProps): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    if (realCount <= perView) return; // no need to scroll
+    if (realCount <= perView) {
+      return;
+    }
     autoplayRef.current = setInterval(advance, 3000);
     return () => {
       if (autoplayRef.current) clearInterval(autoplayRef.current);
@@ -165,10 +172,17 @@ export const Default = (props: TrustedLogosSectionProps): JSX.Element => {
             <button
               type="button"
               onClick={goPrev}
-              className="absolute -left-2 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white text-[#1A1A2E] shadow-md transition-colors hover:bg-gray-100"
+              className="absolute top-1/2 -left-2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white text-[#1A1A2E] shadow-md transition-colors hover:bg-gray-100"
               aria-label="Previous logo"
             >
-              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg
+                width="20"
+                height="20"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
             </button>
@@ -193,10 +207,17 @@ export const Default = (props: TrustedLogosSectionProps): JSX.Element => {
             <button
               type="button"
               onClick={goNext}
-              className="absolute -right-2 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white text-[#1A1A2E] shadow-md transition-colors hover:bg-gray-100"
+              className="absolute top-1/2 -right-2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white text-[#1A1A2E] shadow-md transition-colors hover:bg-gray-100"
               aria-label="Next logo"
             >
-              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <svg
+                width="20"
+                height="20"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
               </svg>
             </button>
@@ -215,7 +236,7 @@ export const Default = (props: TrustedLogosSectionProps): JSX.Element => {
                   autoplayRef.current = setInterval(advance, 3000);
                 }}
                 className={`h-2 w-2 rounded-full transition-all ${
-                  (activeIndex % realCount) === i ? 'bg-[#D0271D] scale-125' : 'bg-gray-300'
+                  activeIndex % realCount === i ? 'scale-125 bg-[#D0271D]' : 'bg-gray-300'
                 }`}
                 aria-label={`Go to logo ${i + 1}`}
               />

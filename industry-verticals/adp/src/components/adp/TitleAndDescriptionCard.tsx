@@ -1,12 +1,7 @@
 'use client';
 
 import type { JSX } from 'react';
-import {
-  TextField,
-  RichTextField,
-  Text,
-  RichText,
-} from '@sitecore-content-sdk/nextjs';
+import { TextField, RichTextField, Text, RichText } from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from '@/lib/component-props';
 
 /**
@@ -29,8 +24,7 @@ interface Fields {
 
 const defaultFields: Fields = {
   Title: {
-    value:
-      'Simplify the complexity of HR to unlock the potential of your business and people.',
+    value: 'Simplify the complexity of HR to unlock the potential of your business and people.',
   },
   Description: {
     value:
@@ -47,12 +41,9 @@ export const Default = (props: TitleAndDescriptionCardProps): JSX.Element => {
   const fields = props.fields || defaultFields;
 
   return (
-    <div
-      className="title-and-description-card mb-10"
-      id={id}
-    >
+    <div className="title-and-description-card mb-10" id={id}>
       {/* Heading */}
-      <h2 className="mb-4 text-center text-2xl font-bold leading-snug text-[#1A1A2E] lg:text-3xl">
+      <h2 className="mb-4 text-center text-2xl leading-snug font-bold text-[#1A1A2E] lg:text-3xl">
         <Text field={fields.Title} />
       </h2>
 

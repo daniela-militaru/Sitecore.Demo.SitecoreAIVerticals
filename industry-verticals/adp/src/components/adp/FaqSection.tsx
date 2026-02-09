@@ -1,11 +1,7 @@
 'use client';
 
 import React, { type JSX, useEffect, useRef, useCallback } from 'react';
-import {
-  TextField,
-  Text,
-  Placeholder,
-} from '@sitecore-content-sdk/nextjs';
+import { TextField, Text, Placeholder } from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from '@/lib/component-props';
 
 /**
@@ -105,15 +101,12 @@ export const Default = (props: FaqSectionProps): JSX.Element => {
   }, [wireAccordion]);
 
   return (
-    <section
-      className={`component faq-section bg-white py-12 lg:py-16 ${styles || ''}`}
-      id={id}
-    >
+    <section className={`component faq-section bg-white py-12 lg:py-16 ${styles || ''}`} id={id}>
       <div className="mx-auto max-w-6xl px-4">
         <div className="flex flex-col gap-8 lg:flex-row lg:gap-16">
           {/* Title (left column on desktop) */}
           <div className="lg:w-1/3">
-            <h2 className="text-2xl font-bold leading-snug text-[#1A1A2E] lg:text-3xl">
+            <h2 className="text-2xl leading-snug font-bold text-[#1A1A2E] lg:text-3xl">
               <Text field={fields.Title} />
             </h2>
           </div>

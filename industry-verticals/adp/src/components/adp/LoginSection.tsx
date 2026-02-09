@@ -158,7 +158,7 @@ const Default = (props: LoginSectionProps): JSX.Element => {
           <div className="mb-6 flex items-center justify-between">
             {/* Lock icon */}
             <svg
-              className="hidden h-5 w-5 text-background-muted-dark md:block"
+              className="text-background-muted-dark hidden h-5 w-5 md:block"
               fill="none"
               stroke="currentColor"
               strokeWidth={1.5}
@@ -273,7 +273,7 @@ const Default = (props: LoginSectionProps): JSX.Element => {
             ) : (
               <div className="mb-6">
                 <div className="mb-4 flex items-center gap-2">
-                  <span className="text-sm text-background-muted-dark">{username}</span>
+                  <span className="text-background-muted-dark text-sm">{username}</span>
                   <button
                     type="button"
                     onClick={() => {
@@ -448,7 +448,7 @@ const Default = (props: LoginSectionProps): JSX.Element => {
               <Text field={fields.RequirementsLinkText} />
             </SitecoreLink>
           </div>
-          <p className="text-xs text-background-muted-dark md:ml-auto">
+          <p className="text-background-muted-dark text-xs md:ml-auto">
             <Text field={fields.CopyrightText} />
           </p>
         </div>

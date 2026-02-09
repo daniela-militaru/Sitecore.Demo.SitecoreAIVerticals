@@ -1,12 +1,7 @@
 'use client';
 
 import type { JSX } from 'react';
-import {
-  TextField,
-  RichTextField,
-  Text,
-  RichText,
-} from '@sitecore-content-sdk/nextjs';
+import { TextField, RichTextField, Text, RichText } from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from '@/lib/component-props';
 
 /**

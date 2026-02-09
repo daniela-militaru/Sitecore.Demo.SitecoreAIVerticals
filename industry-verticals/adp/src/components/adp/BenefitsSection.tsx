@@ -1,7 +1,13 @@
 'use client';
 
 import React, { type JSX } from 'react';
-import { TextField, Text, Placeholder, RichText, RichTextField } from '@sitecore-content-sdk/nextjs';
+import {
+  TextField,
+  Text,
+  Placeholder,
+  RichText,
+  RichTextField,
+} from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from '@/lib/component-props';
 
 /**
@@ -22,7 +28,9 @@ interface Fields {
 
 const defaultFields: Fields = {
   Title: { value: 'The benefits of choosing ADP' },
-  Description: { value: '<p>ADP provides a comprehensive suite of benefits to support your business needs.</p>' },
+  Description: {
+    value: '<p>ADP provides a comprehensive suite of benefits to support your business needs.</p>',
+  },
 };
 
 export type benefitsSectionProps = ComponentProps & {
@@ -58,7 +66,7 @@ export const Default = (props: benefitsSectionProps): JSX.Element => {
 
       <style jsx>{`
         .benefits-description :global(a) {
-          color: #D0271D;
+          color: #d0271d;
           text-decoration: none;
         }
         .benefits-description :global(a:hover) {

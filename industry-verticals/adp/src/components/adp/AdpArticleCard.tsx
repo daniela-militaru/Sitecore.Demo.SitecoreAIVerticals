@@ -60,7 +60,7 @@ export const Default = (props: ArticleCardProps): JSX.Element | null => {
       <div className="flex h-full flex-col overflow-hidden border border-gray-200 bg-white shadow-sm">
         {/* Image */}
         {fields.Image?.value?.src && (
-          <div className="relative aspect-[4/3] overflow-hidden bg-[#0A1F4A]">
+          <div className="relative aspect-4/3 overflow-hidden bg-[#0A1F4A]">
             <SitecoreImage field={fields.Image} className="h-full w-full object-cover" />
           </div>
         )}
