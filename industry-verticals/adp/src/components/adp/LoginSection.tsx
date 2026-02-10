@@ -3,7 +3,7 @@
 import { useState, type FormEvent, type JSX } from 'react';
 import { Text, TextField, LinkField, ImageField } from '@sitecore-content-sdk/nextjs';
 import { Link as SitecoreLink, Image as SitecoreImage } from '@sitecore-content-sdk/nextjs';
-import type { ComponentProps } from '@/lib/component-props';
+import type { ComponentProps } from '@/lib/component-props'; // Import the login function
 
 /**
  * LoginSection Component
@@ -102,6 +102,7 @@ const Default = (props: LoginSectionProps): JSX.Element => {
     }
     setIsLoading(true);
     try {
+      console.log('[v0] Attempting login with username:', username);
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -111,6 +112,7 @@ const Default = (props: LoginSectionProps): JSX.Element => {
       });
 
       const result = await response.json();
+      console.log('[v0] Login result:', result);
 
       if (result.success) {
         window.location.href = '/';
