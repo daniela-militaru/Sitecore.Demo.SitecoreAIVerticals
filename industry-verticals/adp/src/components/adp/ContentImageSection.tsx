@@ -55,7 +55,7 @@ export const Default = (props: ContentImageSectionProps): JSX.Element => {
       id={id}
     >
       <div className="mx-auto max-w-7xl px-4">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-12">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-center lg:gap-12">
           {/* Content Column */}
           <div className="lg:w-1/2">
             <Text
@@ -105,7 +105,7 @@ export const Reversed = (props: ContentImageSectionProps): JSX.Element => {
       id={id}
     >
       <div className="mx-auto max-w-7xl px-4">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:gap-12">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-center lg:gap-12">
           {/* Image Column - First on Desktop */}
           <div className="order-2 lg:order-1 lg:w-1/2">
             <div className="overflow-hidden rounded-lg">
