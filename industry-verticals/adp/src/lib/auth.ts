@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers';
 
-export type UserSegment = 'employer' | 'hr-rep' | 'employee' | 'partner' | 'admin';
+export type UserSegment = 'employer' | 'hr-rep' | 'employee' | 'partner' | 'admin' | 'customer';
 
 interface MockUser {
   username: string;
@@ -29,14 +29,14 @@ const users: MockUser[] = [
     segment: 'employee',
   },
   {
-    username: 'partner@lenovo.com',
-    password: 'partner123',
-    name: 'John Partner',
-    company: 'Tech Solutions Inc.',
-    segment: 'partner',
+    username: 'christian.radermacher@sitecore.com',
+    password: 'demo',
+    name: 'Christian Radermacher',
+    company: 'Individual',
+    segment: 'customer',
   },
   {
-    username: 'sarah.oreilly@sitecore.com',
+    username: 'johan.becue@sitecore.com',
     password: 'demo',
     name: "Sarah O'Reilly",
     company: 'Sitecore',
