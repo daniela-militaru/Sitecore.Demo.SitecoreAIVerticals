@@ -120,7 +120,10 @@ export const Reversed = (props: ContentImageSectionProps): JSX.Element => {
               className="mb-6 text-3xl leading-tight font-bold text-[#1A1A2E] lg:text-4xl"
               field={fields.Heading}
             />
-            <RichText field={fields.Content} className="contentimagesection-content prose prose-lg max-w-none text-[#1A1A2E]" />
+            <RichText
+              field={fields.Content}
+              className="contentimagesection-content prose prose-lg max-w-none text-[#1A1A2E]"
+            />
           </div>
         </div>
 
@@ -136,7 +139,6 @@ export const Reversed = (props: ContentImageSectionProps): JSX.Element => {
             text-decoration: underline;
           }
         `}</style>
-
       </div>
     </section>
   );

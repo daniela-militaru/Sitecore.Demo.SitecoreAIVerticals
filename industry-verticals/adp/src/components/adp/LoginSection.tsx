@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, type FormEvent, type JSX } from 'react';
-import { Text, TextField, LinkField } from '@sitecore-content-sdk/nextjs';
-import { Link as SitecoreLink } from '@sitecore-content-sdk/nextjs';
+import { Text, TextField, LinkField, ImageField } from '@sitecore-content-sdk/nextjs';
+import { Link as SitecoreLink, Image as SitecoreImage } from '@sitecore-content-sdk/nextjs';
 import type { ComponentProps } from '@/lib/component-props';
 import { login } from '@/lib/auth';
 
@@ -36,6 +36,7 @@ interface Fields {
   RequirementsLinkText: TextField;
   RequirementsLink: LinkField;
   CopyrightText: TextField;
+  Logo: ImageField;
   LanguageLabel: TextField;
 }
 
@@ -58,6 +59,12 @@ const defaultFields: Fields = {
     value: 'Copyright \u00A9 2000-2026 ADP, Inc. Alle rechten voorbehouden.',
   },
   LanguageLabel: { value: 'Talen' },
+  Logo: {
+    value: {
+      src: '/images/adp-logo.png',
+      alt: 'ADP Logo',
+    },
+  },
 };
 
 type LoginSectionProps = ComponentProps & {
@@ -217,32 +224,7 @@ const Default = (props: LoginSectionProps): JSX.Element => {
 
           {/* ADP Logo */}
           <div className="mb-6 flex justify-center">
-            <svg
-              width="80"
-              height="80"
-              viewBox="0 0 80 80"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-label="ADP logo"
-              role="img"
-            >
-              <path
-                d="M40 0C17.9 0 0 17.9 0 40s17.9 40 40 40 40-17.9 40-40S62.1 0 40 0z"
-                fill="#D0271D"
-              />
-              <text
-                x="50%"
-                y="55%"
-                dominantBaseline="middle"
-                textAnchor="middle"
-                fill="white"
-                fontFamily="Arial Black, Arial, sans-serif"
-                fontSize="28"
-                fontWeight="900"
-              >
-                ADP
-              </text>
-            </svg>
+            <SitecoreImage field={fields.Logo} alt="ADP Logo" className="h-20 w-auto" />
           </div>
 
           {/* Heading */}
