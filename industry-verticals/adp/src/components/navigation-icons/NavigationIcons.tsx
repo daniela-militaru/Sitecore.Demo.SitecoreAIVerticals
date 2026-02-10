@@ -1,4 +1,5 @@
 import React, { JSX, useState, useEffect } from 'react';
+import Link from 'next/link';
 import { User, Heart, ShoppingCart, X, Search } from 'lucide-react';
 import { ComponentProps } from '@/lib/component-props';
 import { isParamEnabled } from '@/helpers/isParamEnabled';
@@ -21,6 +22,7 @@ export type NavigationIconsProps = ComponentProps & {
     CheckoutPage: LinkField;
     AccountPage: LinkField;
     WishlistPage: LinkField;
+    LoginPage: LinkField;
   };
   params: { [key: string]: string };
 };
@@ -112,6 +114,12 @@ export const Default = (props: NavigationIconsProps): JSX.Element => {
               ) : (
                 <p className="text-sm text-gray-600">
                   {t('account-empty') || 'You are not logged in.'}
+                  <Link
+                    href={props.fields?.LoginPage.value.href || '/login'}
+                    className="ml-1 text-[#E2231A] hover:underline"
+                  >
+                    {t('login') || 'Log in'}
+                  </Link>
                 </p>
               )}
             </IconDropdown>

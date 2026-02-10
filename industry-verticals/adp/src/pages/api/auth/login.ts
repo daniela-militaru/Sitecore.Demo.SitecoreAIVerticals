@@ -15,11 +15,17 @@ const users = {
     name: 'Demo User 2',
     company: 'Demo Company 2',
   },
-  'partner@lenovo.com': {
-    username: 'partner@lenovo.com',
-    password: 'partner123',
-    name: 'John Partner',
-    company: 'Tech Solutions Inc.',
+  'christian.radermacher@sitecore.com': {
+    username: 'christian.radermacher@sitecore.com',
+    password: 'demo',
+    name: 'Christian Radermacher',
+    company: 'Sitecore',
+  },
+  'johan.becue@sitecore.com': {
+    username: 'johan.becue@sitecore.com',
+    password: 'demo',
+    name: 'Johan Becue',
+    company: 'Sitecore',
   },
   'sarah.oreilly@sitecore.com': {
     username: 'sarah.oreilly@sitecore.com',
