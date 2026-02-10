@@ -4,7 +4,6 @@ import { useState, type FormEvent, type JSX } from 'react';
 import { Text, TextField, LinkField, ImageField } from '@sitecore-content-sdk/nextjs';
 import { Link as SitecoreLink, Image as SitecoreImage } from '@sitecore-content-sdk/nextjs';
 import type { ComponentProps } from '@/lib/component-props';
-import { login } from '@/lib/auth';
 
 /**
  * LoginSection Component
@@ -103,7 +102,16 @@ const Default = (props: LoginSectionProps): JSX.Element => {
     }
     setIsLoading(true);
     try {
-      const result = await login(username, password);
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const result = await response.json();
+
       if (result.success) {
         window.location.href = '/';
       } else {
@@ -111,7 +119,8 @@ const Default = (props: LoginSectionProps): JSX.Element => {
         setStep('username');
         setPassword('');
       }
-    } catch {
+    } catch (err) {
+      console.error('[v0] Login error:', err);
       setError('Er is een fout opgetreden. Probeer het opnieuw.');
     } finally {
       setIsLoading(false);

@@ -2,52 +2,21 @@
 
 import { cookies } from 'next/headers';
 
-export type UserSegment = 'employer' | 'hr-rep' | 'employee' | 'partner' | 'admin' | 'customer';
-
-interface MockUser {
-  username: string;
-  password: string;
-  name: string;
-  company: string;
-  segment: UserSegment;
-}
-
 // Mock user database
-const users: MockUser[] = [
+const users = [
+  { username: 'demo1', password: 'demo1', name: 'Sarah Johnson', company: 'Tech Solutions Inc' },
+  { username: 'demo2', password: 'demo2', name: 'Michael Chen', company: 'Digital Partners LLC' },
   {
-    username: 'demo1',
-    password: 'demo1',
-    name: 'Sarah Johnson',
-    company: 'Tech Solutions Inc',
-    segment: 'employer',
+    username: 'partner@lenovo.com',
+    password: 'partner123',
+    name: 'John Partner',
+    company: 'Tech Solutions Inc.',
   },
   {
-    username: 'demo2',
-    password: 'demo2',
-    name: 'Michael Chen',
-    company: 'Digital Partners LLC',
-    segment: 'employee',
-  },
-  {
-    username: 'christian.radermacher@sitecore.com',
-    password: 'demo',
-    name: 'Christian Radermacher',
-    company: 'Individual',
-    segment: 'customer',
-  },
-  {
-    username: 'johan.becue@sitecore.com',
+    username: 'sarah.oreilly@sitecore.com',
     password: 'demo',
     name: "Sarah O'Reilly",
     company: 'Sitecore',
-    segment: 'hr-rep',
-  },
-  {
-    username: 'admin',
-    password: 'admin',
-    name: 'ADP Administrator',
-    company: 'ADP Inc.',
-    segment: 'admin',
   },
 ];
 
@@ -56,16 +25,9 @@ export async function login(username: string, password: string) {
 
   if (user) {
     const cookieStore = await cookies();
-
-    // Set auth-user cookie with user info
     cookieStore.set(
       'auth-user',
-      JSON.stringify({
-        username: user.username,
-        name: user.name,
-        company: user.company,
-        segment: user.segment,
-      }),
+      JSON.stringify({ username: user.username, name: user.name, company: user.company }),
       {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
@@ -73,23 +35,9 @@ export async function login(username: string, password: string) {
         maxAge: 60 * 60 * 24 * 7, // 1 week
       }
     );
-
-    // Set segment cookie (non-httpOnly so client-side can read it for personalisation)
-    cookieStore.set('user-segment', user.segment, {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7,
-    });
-
     return {
       success: true,
-      user: {
-        username: user.username,
-        name: user.name,
-        company: user.company,
-        segment: user.segment,
-      },
+      user: { username: user.username, name: user.name, company: user.company },
     };
   }
 
@@ -99,7 +47,6 @@ export async function login(username: string, password: string) {
 export async function logout() {
   const cookieStore = await cookies();
   cookieStore.delete('auth-user');
-  cookieStore.delete('user-segment');
 }
 
 export async function getCurrentUser() {
@@ -111,12 +58,7 @@ export async function getCurrentUser() {
   }
 
   try {
-    return JSON.parse(userCookie.value) as {
-      username: string;
-      name: string;
-      company: string;
-      segment: UserSegment;
-    };
+    return JSON.parse(userCookie.value);
   } catch {
     return null;
   }

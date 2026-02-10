@@ -1,4 +1,4 @@
-import React, { JSX, useState } from 'react';
+import React, { JSX, useState, useEffect } from 'react';
 import { User, Heart, ShoppingCart, X, Search } from 'lucide-react';
 import { ComponentProps } from '@/lib/component-props';
 import { isParamEnabled } from '@/helpers/isParamEnabled';
@@ -9,6 +9,12 @@ import { MiniCart } from '../non-sitecore/MiniCart';
 import { LinkField } from '@sitecore-content-sdk/nextjs';
 import PreviewSearch from '../non-sitecore/search/PreviewSearch';
 import { PREVIEW_WIDGET_ID } from '@/constants/search';
+
+interface User {
+  username: string;
+  name: string;
+  company: string;
+}
 
 export type NavigationIconsProps = ComponentProps & {
   fields: {
@@ -49,8 +55,26 @@ export const Default = (props: NavigationIconsProps): JSX.Element => {
   const showAccountIcon = !isParamEnabled(props.params.HideAccountIcon);
   const showCartIcon = !isParamEnabled(props.params.HideCartIcon);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
 
   const { t } = useI18n();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch('/api/auth/user');
+        const data = await response.json();
+        setUser(data.user);
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      } finally {
+        setIsLoadingUser(false);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   return (
     <>
@@ -65,7 +89,29 @@ export const Default = (props: NavigationIconsProps): JSX.Element => {
 
           {showAccountIcon && (
             <IconDropdown icon={<User className="size-5" />} label="Account">
-              <p>{t('account-empty') || 'You are not logged in.'}</p>
+              {isLoadingUser ? (
+                <p className="text-sm text-gray-500">Loading...</p>
+              ) : user ? (
+                <div className="space-y-3">
+                  <div className="border-b border-gray-200 pb-3">
+                    <p className="text-sm font-semibold text-[#1A1A2E]">{user.name}</p>
+                    <p className="text-xs text-gray-600">{user.company}</p>
+                    <p className="text-xs text-gray-500">{user.username}</p>
+                  </div>
+                  <button
+                    onClick={async () => {
+                      await fetch('/api/auth/logout', { method: 'POST' });
+                      setUser(null);
+                      window.location.reload();
+                    }}
+                    className="w-full rounded bg-[#D0271D] px-4 py-2 text-sm font-medium text-white hover:bg-[#B02318] transition-colors"
+                  >
+                    {t('logout') || 'Log out'}
+                  </button>
+                </div>
+              ) : (
+                <p className="text-sm text-gray-600">{t('account-empty') || 'You are not logged in.'}</p>
+              )}
             </IconDropdown>
           )}
 
