@@ -41,7 +41,7 @@ const IconDropdown = ({
       {icon}
     </PopoverTrigger>
     <PopoverContent className="flex w-xl flex-col">
-      <PopoverClose className="surface-btn !text-foreground shrink-0 self-end">
+      <PopoverClose className="surface-btn text-foreground! shrink-0 self-end">
         <X className="size-4" />
       </PopoverClose>
       <div className="">{children}</div>
@@ -104,13 +104,15 @@ export const Default = (props: NavigationIconsProps): JSX.Element => {
                       setUser(null);
                       window.location.reload();
                     }}
-                    className="w-full rounded bg-[#D0271D] px-4 py-2 text-sm font-medium text-white hover:bg-[#B02318] transition-colors"
+                    className="w-full rounded bg-[#D0271D] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#B02318]"
                   >
                     {t('logout') || 'Log out'}
                   </button>
                 </div>
               ) : (
-                <p className="text-sm text-gray-600">{t('account-empty') || 'You are not logged in.'}</p>
+                <p className="text-sm text-gray-600">
+                  {t('account-empty') || 'You are not logged in.'}
+                </p>
               )}
             </IconDropdown>
           )}
