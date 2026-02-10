@@ -55,7 +55,7 @@ export const Default = (props: ContentImageSectionProps): JSX.Element => {
       id={id}
     >
       <div className="mx-auto max-w-7xl px-4">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-center lg:gap-12">
+        <div className="flex flex-col justify-center gap-8 lg:flex-row lg:items-center lg:gap-12 lg:pl-55">
           {/* Content Column */}
           <div className="lg:w-1/2">
             <Text
@@ -105,16 +105,16 @@ export const Reversed = (props: ContentImageSectionProps): JSX.Element => {
       id={id}
     >
       <div className="mx-auto max-w-7xl px-4">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-center lg:gap-12">
+        <div className="flex flex-col justify-center gap-8 lg:flex-row lg:items-center lg:gap-12 lg:pl-55">
           {/* Image Column - First on Desktop */}
-          <div className="order-2 lg:order-1 lg:w-1/2">
+          <div className="lg:w-1/2">
             <div className="overflow-hidden rounded-lg">
               <SitecoreImage field={fields.Image} className="h-full w-full object-cover" />
             </div>
           </div>
 
           {/* Content Column - Second on Desktop */}
-          <div className="order-1 lg:order-2 lg:w-1/2">
+          <div className="lg:w-1/2">
             <Text
               tag="h2"
               className="mb-6 text-3xl leading-tight font-bold text-[#1A1A2E] lg:text-4xl"
@@ -122,20 +122,20 @@ export const Reversed = (props: ContentImageSectionProps): JSX.Element => {
             />
             <RichText
               field={fields.Content}
-              className="contentimagesection-content prose prose-lg max-w-none text-[#1A1A2E]"
+              className="imagecontentsection-content prose prose-lg max-w-none text-[#1A1A2E]"
             />
           </div>
         </div>
 
         <style jsx>{`
-          .contentimagesection-content :global(a),
-          .contentimagesection-content :global(strong) {
+          .imagecontentsection-content :global(a),
+          .imagecontentsection-content :global(strong) {
             color: #d0271d;
           }
-          .contentimagesection-content :global(a) {
+          .imagecontentsection-content :global(a) {
             text-decoration: none;
           }
-          .contentimagesection-content :global(a:hover) {
+          .imagecontentsection-content :global(a:hover) {
             text-decoration: underline;
           }
         `}</style>
