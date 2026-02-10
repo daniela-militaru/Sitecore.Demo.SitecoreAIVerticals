@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, type FormEvent, type JSX } from 'react';
-import { Text, TextField, LinkField, ImageField } from '@sitecore-content-sdk/nextjs'; //useSitecore
+import { Text, TextField, LinkField, ImageField } from '@sitecore-content-sdk/nextjs'; //useSitecore,
 import { Link as SitecoreLink, Image as SitecoreImage } from '@sitecore-content-sdk/nextjs';
 import type { ComponentProps } from '@/lib/component-props'; // Import the login function
 //import { sendIdentity } from 'src/lib/sitecore/send-identity';

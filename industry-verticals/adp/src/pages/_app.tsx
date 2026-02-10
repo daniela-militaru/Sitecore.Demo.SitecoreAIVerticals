@@ -1,4 +1,4 @@
-import { JSX, useEffect } from 'react';
+import { JSX } from 'react'; //, useEffect
 import type { AppProps } from 'next/app';
 import { I18nProvider } from 'next-localization';
 import Bootstrap from 'src/Bootstrap';
@@ -6,7 +6,7 @@ import { SitecorePageProps } from '@sitecore-content-sdk/nextjs';
 import scConfig from 'sitecore.config';
 import 'assets/main.css';
 import { Environment, PageController, WidgetsProvider } from '@sitecore-search/react';
-import { initCloudSdkEvents } from 'src/lib/sitecore/cloudsdk-init';
+// import { initCloudSdkEvents } from 'src/lib/sitecore/cloudsdk-init';
 
 const SEARCH_CONFIG = {
   env: process.env.NEXT_PUBLIC_SEARCH_ENV,
@@ -18,9 +18,9 @@ function App({ Component, pageProps }: AppProps<SitecorePageProps>): JSX.Element
   const { dictionary, ...rest } = pageProps;
   const lang = pageProps.page?.locale || scConfig.defaultLanguage;
 
-  useEffect(() => {
-    initCloudSdkEvents();
-  }, []);
+  // useEffect(() => {
+  //   initCloudSdkEvents();
+  // }, []);
 
   PageController.getContext().setLocaleLanguage(lang.split('-')[0]);
   if (lang == 'en') {
