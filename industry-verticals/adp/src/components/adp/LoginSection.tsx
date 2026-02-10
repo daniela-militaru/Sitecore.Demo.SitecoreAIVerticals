@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, type FormEvent, type JSX } from 'react';
-import { Text, TextField, LinkField, ImageField } from '@sitecore-content-sdk/nextjs';
+import { Text, TextField, LinkField, ImageField } from '@sitecore-content-sdk/nextjs'; //useSitecore
 import { Link as SitecoreLink, Image as SitecoreImage } from '@sitecore-content-sdk/nextjs';
 import type { ComponentProps } from '@/lib/component-props'; // Import the login function
+//import { sendIdentity } from 'src/lib/sitecore/send-identity';
 
 /**
  * LoginSection Component
@@ -94,6 +95,7 @@ const Default = (props: LoginSectionProps): JSX.Element => {
   };
 
   const handleLogin = async (e: FormEvent) => {
+    //const { page } = useSitecore();
     e.preventDefault();
     setError('');
     if (!password.trim()) {
@@ -115,6 +117,7 @@ const Default = (props: LoginSectionProps): JSX.Element => {
       console.log('[v0] Login result:', result);
 
       if (result.success) {
+        //await sendIdentity(username, page?.locale ?? 'en');
         window.location.href = '/';
       } else {
         setError(result.error || 'Ongeldige inloggegevens.');

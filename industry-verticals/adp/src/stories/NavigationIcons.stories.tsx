@@ -58,6 +58,7 @@ const baseFields = {
   AccountPage: createLinkField('Go to Account'),
   WishlistPage: createLinkField('Go to Wishlist'),
   CheckoutPage: createLinkField('Go to Checkout'),
+  LoginPage: createLinkField('Go to Checkout'),
 };
 
 export const Default: Story = {
