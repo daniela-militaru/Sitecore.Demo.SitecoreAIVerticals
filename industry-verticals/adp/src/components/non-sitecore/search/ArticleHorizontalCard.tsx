@@ -31,7 +31,7 @@ const ArticleHorizontalItemCard = ({ className = '', article }: ArticleCardItemC
       >
         {validImageUrl && (
           <div className="bg-background-surface w-1/4 flex-none overflow-hidden rounded">
-            <Image
+            <img
               src={validImageUrl}
               className="h-full w-full rounded object-cover object-center lg:h-full lg:w-full"
               alt="alt"

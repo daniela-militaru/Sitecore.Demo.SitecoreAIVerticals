@@ -1,132 +1,271 @@
-This task must be executed using the marketer MCP server.
+---
+description: Register a component in SitecoreAI using Marketer MCP Prompts
+alwaysApply: false
+globs: []
+author: Johan Becue
+---
 
-Replace variables with these values:
-{{TemplateName}} = "{{ComponentName}} Template"
-{{ComponentName}} = "{{ComponentName}}"
-{{TSXComponentName}} = "{{ComponentName}}"
+# Usage: This task must be executed when the user says: "register a component in SitecoreAI". It must use the marketer2 MCP server.
 
-{{TemplateFolderName}} = "{{ComponentName}}"
-{{RenderingFolderName}} = "{{ComponentName}} Renderings"
+## Variable resolution (do this first, do not skip)
 
-{{AvailableRenderingsItem}} = "/sitecore/content/industry-verticals/adp/Presentation/Available Renderings/adp"
+Replace variables using these rules:
 
-{{DataFolderName}} = Take the plural of {{ComponentName}}
+- `{{TemplateName}} = "{{ComponentName}} Template"`
+- `{{ComponentName}} = "{{ComponentName}}"`
+- `{{TSXComponentName}} = "{{ComponentName}}"`
+- `{{TemplateFolderName}} = "{{ComponentName}}"`
+- `{{RenderingFolderName}} = "{{ComponentName}} Renderings"`
+- `{{AvailableRenderingsItem}} = "/sitecore/content/adp-digital-web-assets/ADP/Presentation/Available Renderings/adp"`
+- `{{DataFolderName}} = pluralize({{ComponentName}})`
+- `{{ComponentTemplatesPath}} = "/sitecore/templates/Project/adp/"`
+- `{{PlaceholdersPath}} = "/sitecore/layout/Placeholder Settings/Project/adp"`
+- `{{RootWebsitePath}} = "/sitecore/content/adp-digital-web-assets/ADP"`
+- `{{HomeWebsitePath}} = "/sitecore/content/adp-digital-web-assets/ADP/home"`
+- `{{ComponentsFolder}} = "/sitecore/layout/Renderings/Project/adp"`
+- `{{MediaFolder}} = "/sitecore/media library/Project/hackathon/hackathon"`
+- `{{DataTemplateIcon}} = ""`
+- `{{FolderTemplateIcon}} = "/sitecore/shell/themes/standard/Applications/32x32/folder.png"`
 
-{{ComponentTemplatesPath}} = "/sitecore/templates/Project/adp/"
-{{DataTemplatesPath}} = "/sitecore/templates/Project/adp/" (not used in this task)
+System templates:
 
-{{PlaceholdersPath}} = "/sitecore/layout/Placeholder Settings/Project/adp"
+- `{{StandardTemplate}} = "/sitecore/templates/System/Templates/Standard template"`
+- `{{TemplateSectionTemplate}} = "/sitecore/templates/System/Templates/Template section"`
+- `{{TemplateFieldTemplate}} = "/sitecore/templates/System/Templates/Template field"`
+- `{{PlaceholderTemplate}} = "/sitecore/templates/System/Layout/Placeholder"`
+- `{{PerSiteStandardValues}} = "/sitecore/templates/Foundation/Experience Accelerator/StandardValues/_PerSiteStandardValues"`
+- `{{FolderBaseTemplate}} = "/sitecore/templates/Common/Folder"`
+- `{{BaseRenderingParametersTemplate}} = "/sitecore/templates/Foundation/JSS Experience Accelerator/Presentation/Rendering Parameters/BaseRenderingParameters"`
+- `{{IDynamicPlaceholder}} = "/sitecore/templates/Foundation/Experience Accelerator/Dynamic Placeholders/Rendering Parameters/IDynamicPlaceholder"`
+- `{{IRenderingId}} = "/sitecore/templates/Foundation/Experience Accelerator/Markup Decorator/Rendering Parameters/IRenderingId"`
+- `{{RenderingFolderTemplate}} = "/sitecore/templates/Foundation/JSS Experience Accelerator/Multisite/Folders/Rendering Folder"`
+- `{{RenderingTemplate}} = "/sitecore/templates/Foundation/JavaScript Services/Json Rendering"`
 
-{{RootWebsitePath}} = "/sitecore/content/industry-verticals/adp"
-{{HomeWebsitePath}} = "/sitecore/content/industry-verticals/adp/home"
-{{ComponentsFolder}} = "/sitecore/layout/Renderings/Project/adp"
+## Template field source rules (apply when creating fields)
 
-{{DataTemplateIcon}} = ""
-{{FolderTemplateIcon}} = "/sitecore/shell/themes/standard/Applications/32x32/folder.png"
+- Image fields: set **Source** = `query:$siteMedia`
+- Rich Text fields: set **Source** = `query:$xaRichTextProfile`
+- General Link fields: set **Source** = `query:$linkableHomes`
+- For General Link + Image fields: set **Shared** = `true`
 
-{{StandardTemplate}} = "/sitecore/templates/System/Templates/Standard template"
-{{TemplateSectionTemplate}} = "/sitecore/templates/System/Templates/Template section"
-{{TemplateFieldTemplate}} = "/sitecore/templates/System/Templates/Template field"
-{{PlaceholderTemplate}} = "/sitecore/templates/System/Layout/Placeholder"
+## IMPORTANT execution rules (hard constraints)
 
-{{PerSiteStandardValues}} = "/sitecore/templates/Foundation/Experience Accelerator/StandardValues/\_PerSiteStandardValues"
-{{FolderBaseTemplate}} = "/sitecore/templates/Common/Folder"
+1. **Standard values rules**
+   - For any **LinkField** in any `__Standard Values` item: set its standard value to point to `{{HomeWebsitePath}}` (ID-based value).
 
-{{BaseRenderingParametersTemplate}} = "/sitecore/templates/Foundation/JSS Experience Accelerator/Presentation/Rendering Parameters/BaseRenderingParameters"
-{{IDynamicPlaceholder}} = "/sitecore/templates/Foundation/Experience Accelerator/Dynamic Placeholders/Rendering Parameters/IDynamicPlaceholder"
-{{IRenderingId}} = "/sitecore/templates/Foundation/Experience Accelerator/Markup Decorator/Rendering Parameters/IRenderingId"
+2. **Verification & traceability**
+   - After creating any item/template, immediately retrieve it and verify it exists.
+   - Always return the created item’s **ID and full path**.
+   - Persist and reuse these references in later steps:
+     - `{{GeneratedComponentTemplatesRoot}}`
+     - `{{GeneratedDataTemplate}}`
+     - `{{GeneratedDataTemplateDataSection}}`
+     - `{{GeneratedDataTemplateStandardValuesItem}}`
+     - `{{GeneratedDataFolderTemplate}}`
+     - `{{GeneratedDataFolderTemplateStandardValuesItem}}`
+     - `{{GeneratedRenderingTemplate}}`
+     - `{{GeneratedDataFolderItem}}`
+     - `{{GeneratedDataItem}}`
+     - `{{GeneratedRenderingFolderItem}}`
+     - `{{GeneratedRenderingItem}}`
+     - `{{PlaceholderItem}}` (only if created)
 
-{{RenderingFolderTemplate}} = "/sitecore/templates/Foundation/JSS Experience Accelerator/Multisite/Folders/Rendering Folder"
-{{RenderingTemplate}} = "/sitecore/templates/Foundation/JavaScript Services/Json Rendering"
+---
 
-General template field source rules:
+## Register Component Steps
 
-- For Image fields: set Source = "query:$siteMedia"
-- For Rich Text fields: set Source = "query:$xaRichTextProfile"
-- For General Link fields: set Source = "query:$linkableHomes"
+### Step 1 — Create component template folder
 
-IMPORTANT execution rules:
+#### Step 1.1
 
-- Before executing, check whether each target item already exists at its intended path.
-  If any exist, STOP and report which paths exist. Do not modify existing items.
-- In all standard values items, if there is a LinkField, the standard value should always be set to point to the home item {{HomeWebsitePath}}
-- In all standard value items and data items that are created. If there is an image field. No value should be set.
-- After creating any item/template, immediately retrieve it and verify it exists.
-- Always return the created item’s ID and full path.
-- Keep and reference these outputs in later steps:
-  {{GeneratedComponentTemplatesRoot}}
-  {{GeneratedDataTemplate}}
-  {{GeneratedDataFolderTemplate}}
-  {{GeneratedRenderingTemplate}}
-  {{GeneratedDataFolderItem}}
-  {{GeneratedDataItem}}
-  {{GeneratedRenderingFolderItem}}
-  {{GeneratedRenderingItem}}
+Under `{{ComponentTemplatesPath}}`, create a **Template Folder** named `{{TemplateFolderName}}`.
+Store as `{{GeneratedComponentTemplatesRoot}}`.
 
-1. Create component template folder
-   1.1 Under {{ComponentTemplatesPath}}, create a template folder named "{{TemplateFolderName}}"
-   1.2 Retrieve the created folder and store it as {{GeneratedComponentTemplatesRoot}}
+---
 
-2. Data template creation
-   2.1 Inside {{GeneratedComponentTemplatesRoot}}, create a data template named "{{TemplateName}}"
-   It must inherit from: - {{StandardTemplate}} - {{PerSiteStandardValues}}
-   Store as {{GeneratedDataTemplate}}
-   2.2 Add "Data" section underneath the item {{GeneratedDataTemplate}} . The section inherits from {{TemplateSectionTemplate}}.
-   With fields: - All the fields that were created inside the component (most of common is that those fields are defined in an interface inside the tsx component called Fields). The field items that are created need to inherit from {{TemplateFieldTemplate}}. Set the Type field to the of field. If it is a General Link or an Image set the Shared field to true.
-   2.4 Under the {{GeneratedDataTemplate}}, create a "**Standard Values"
-   item that inherits from {{GeneratedDataTemplate}}. Store as {{GeneratedDataTemplateStandardValuesItem}}.
-   In the {{GeneratedDataTemplate}}, set the "**Standard values" field, to point to the {{GeneratedDataTemplateStandardValuesItem}}.
-   2.5 Inside the "\_\_Standard Values", set Icon to: {{DataTemplateIcon}}.
-   Don't change any field values, even when they are empty. Except for the fields that were in 2.2 created, inside the Data section of the template, these fields need to contain the values that are defined in the "defaultFields" const.
-   If there is a General Link field, the value should point to the "{{RootWebsitePath}}/Home" item.
-   2.7 Retrieve {{GeneratedDataTemplate}} and confirm: - all sections + fields exist - Image field Source is set correctly - LongDetails Rich Text field Source is set correctly
+### Step 2 — Data template creation
 
-3. Data folder template creation
-   3.1 Under {{GeneratedComponentTemplatesRoot}}, create a template named "{{ComponentName}} Folder"
-   It must inherit from {{FolderBaseTemplate}}
-   Store as {{GeneratedDataFolderTemplate}}
-   3.2 Under the {{GeneratedDataFolderTemplate}}, create a "**Standard Values" item, this item inherits from {{GeneratedDataFolderTemplate}}. Store as {{GeneratedDataFolderTemplateStandardValuesItem}}.
-   In the {{GeneratedDataFolderTemplate}}, set the "**Standard values" field, to point to the {{GeneratedDataFolderTemplate}}.
-   3.3 In "**Standard Values", set Insert Options (**Masters) to allow: - {{GeneratedDataTemplate}} - {{GeneratedDataFolderTemplate}}
-   3.4 In "**Standard Values", set Icon to: {{FolderTemplateIcon}}.
-   3.5 Retrieve {{GeneratedDataFolderTemplate}} and verify: - Standard values exists - Insert options (**Masters) include both templates
+#### Step 2.1
 
-4. Rendering parameters template creation
-   4.1 Under {{GeneratedComponentTemplatesRoot}}, create a rendering parameters template named "{{ComponentName}} Rendering Parameters"
-   It must inherit from: - {{BaseRenderingParametersTemplate}} - {{IDynamicPlaceholder}} - {{IRenderingId}}
-   Store as {{GeneratedRenderingTemplate}}
-   4.2 Add section "Rendering Parameters" with no fields.
-   4.4 Retrieve {{GeneratedRenderingTemplate}} and confirm all fields exist.
+Inside `{{GeneratedComponentTemplatesRoot}}`, create a **Template** named `{{TemplateName}}` inheriting from:
 
-5. Data folder insert options
-   5.1 Retrieve {{RootWebsitePath}}/Data and read Insert Options (**Masters)
-   5.2 Append {{GeneratedDataFolderTemplate}} to **Masters (do not overwrite existing values)
-   5.3 Retrieve {{RootWebsitePath}}/Data again and verify **Masters includes {{GeneratedDataFolderTemplate}}
-   (use template ID in **Masters)
+- `{{StandardTemplate}}`
+- `{{PerSiteStandardValues}}`
+  Store as `{{GeneratedDataTemplate}}`.
 
-6. Create data items
-   6.1 Under {{RootWebsitePath}}/Data, create a new folder item based on {{GeneratedDataFolderTemplate}}.
-   The item name must be "{{DataFolderName}}".
-   Store as {{GeneratedDataFolderItem}}
-   6.2 Under {{GeneratedDataFolderItem}}, create a new item based on {{GeneratedDataTemplate}}.
-   The item name must be "Default {{ComponentName}}".
-   Store as {{GeneratedDataItem}}
-   6.3 Retrieve {{GeneratedDataFolderItem}} and {{GeneratedDataItem}} to confirm they exist and have correct templates.
+#### Step 2.2
 
-7. Create component rendering items
-   7.1 Under {{ComponentsFolder}}, create a new JSON rendering item based on {{RenderingTemplate}}.
-   The item name must be "{{ComponentName}}".
-   Set the "Component Name" field to "{{TSXComponentName}}"
-   Set the "Parameters Template" field to {{GeneratedRenderingTemplate}} (use template ID)
-   Set the "Datasource Template" field to the template path: {{ComponentTemplatesPath}}{{ComponentName}}/{{TemplateName}} (e.g. /sitecore/templates/Project/adp/CtaBarSection/CtaBarSection Template)
-   Set the "Datasource Location" field to:
-   "query:$site/*[@@name='Data']/*[@@templatename='{{ComponentName}} Folder']|query:$sharedSites/_[@@name='Data']/_[@@templatename='{{ComponentName}} Folder']"
-   (When using Marketer MCP, the API may expose the location field as "Data source"; set both "Datasource Location" and "Data source" to the same query if the UI shows empty.)
-   Store as {{GeneratedRenderingItem}}
-   7.2 Retrieve {{GeneratedRenderingFolderItem}} and {{GeneratedRenderingItem}} to confirm they exist and have correct templates and field values.
+Under `{{GeneratedDataTemplate}}`, create a **Template Section** named `Data` inheriting from `{{TemplateSectionTemplate}}`.
+Store as `{{GeneratedDataTemplateDataSection}}`.
 
-8. If the component contains placeholders, then under {{PlaceholdersPath}} , a new item that inherits from {{PlaceholderTemplate}} needs to be created. Store as {{PlaceholderItem}}
-   The Placeholder Key field needs to be set to the value of:
-   The value of const that defines the placeholder name inside the component. But the ${DynamicPlaceholderId} needs to be replace with {\*}.
+#### Step 2.3
 
-   Then field "Layout Service Placeholders" of the {{GeneratedRenderingItem}} needs to include the {{PlaceholderItem}}
+Create template fields under `{{GeneratedDataTemplateDataSection}}`:
+
+- Fields must match the component’s `Fields` interface (or equivalent field definitions).
+- Each field item inherits from `{{TemplateFieldTemplate}}`.
+- Set:
+  - **Type** = correct Sitecore field type (Text, Rich Text, Image, General Link, etc.)
+  - **Source** rules (Image/Rich Text/General Link) as defined above
+  - **Shared** = true for Image and General Link fields only
+
+#### Step 2.4
+
+Create `__Standard Values` under `{{GeneratedDataTemplate}}` (inherits from `{{GeneratedDataTemplate}}`).
+Store as `{{GeneratedDataTemplateStandardValuesItem}}`.
+
+#### Step 2.5
+
+On `{{GeneratedDataTemplate}}`, set the `__Standard values` field to point to `{{GeneratedDataTemplateStandardValuesItem}}` (item ID reference).
+
+#### Step 2.6
+
+In `{{GeneratedDataTemplateStandardValuesItem}}`:
+
+- If `{{DataTemplateIcon}}` is not empty, set **Icon** (`__Icon`) field = `{{DataTemplateIcon}}`
+
+- For Link fields: set to `{{HomeWebsitePath}}` (ID-based link value)
+- For Image fields:
+- Search media item inside `{{MediaFolder}}` (path) with name (name of the asset is in the `defaultFields` const) using the get_content_item_by_path api and store the ID as `{{MediaItemID}}`
+- Then on the `{{GeneratedDataTemplateStandardValuesItem}}` set the Image field value to `<image mediaid="`{{MediaItemID}}`" />`
+- For other fields created in step 2.3: set standard values only if you have a `defaultFields` const provided;
+
+#### Step 2.7
+
+Update the **Insert Options** (`__Masters`) of the `{{GeneratedDataTemplate}}`item to reference the `{{GeneratedDataTemplateStandardValuesItem}}`
+
+---
+
+### Step 3 — Data folder template creation
+
+#### Step 3.1
+
+Under `{{GeneratedComponentTemplatesRoot}}`, create a **Template** named `{{ComponentName}} Folder` inheriting from `{{FolderBaseTemplate}}`.
+Store as `{{GeneratedDataFolderTemplate}}`.
+
+#### Step 3.2
+
+Under `{{GeneratedDataFolderTemplate}}`, create `__Standard Values` (inherits from `{{GeneratedDataFolderTemplate}}`).
+Store as `{{GeneratedDataFolderTemplateStandardValuesItem}}`.
+
+#### Step 3.3
+
+On `{{GeneratedDataFolderTemplate}}`, set the **Standard values** (`__Standard values`) field to point to `{{GeneratedDataFolderTemplateStandardValuesItem}}`
+
+#### Step 3.4
+
+In `{{GeneratedDataFolderTemplateStandardValuesItem}}`:
+
+- Set the **Insert Options** (`__Masters`) to allow:
+  - `{{GeneratedDataTemplate}}` (use template ID)
+  - `{{GeneratedDataFolderTemplate}}` (use template ID)
+
+- Set **Icon** = `{{FolderTemplateIcon}}`
+
+---
+
+### Step 4 — Rendering parameters template creation
+
+#### Step 4.1
+
+Under `{{GeneratedComponentTemplatesRoot}}`, create a **Rendering Parameters Template** named `{{ComponentName}} Rendering Parameters` inheriting from:
+
+- `{{BaseRenderingParametersTemplate}}`
+- `{{IDynamicPlaceholder}}`
+- `{{IRenderingId}}`
+  Store as `{{GeneratedRenderingTemplate}}`.
+
+#### Step 4.2
+
+Add a section named `Rendering Parameters` (no fields).
+
+#### Step 4.3
+
+Under `{{GeneratedRenderingTemplate}}`, create `__Standard Values` (inherits from `{{GeneratedRenderingTemplate}}`).
+Store as `{{GeneratedRenderingTemplateStandardValuesItem}}`.
+
+#### Step 4.4
+
+On `{{GeneratedRenderingTemplate}}`, set the **Standard values** (`__Standard values`) field to point to `{{GeneratedRenderingTemplateStandardValuesItem}}`
+
+---
+
+### Step 5 — Data folder insert options on site Data root
+
+#### Step 5.1
+
+Retrieve `{{RootWebsitePath}}/Data`. Store the raw value of **Insert Options** (`__Masters`) field as `{{RetrievedDataFolderInsertOptions}}`. Write `{{RetrievedDataFolderInsertOptions}}` in the log
+
+#### Step 5.2
+
+Append the `{{GeneratedDataFolderTemplate}}` ID to `{{RetrievedDataFolderInsertOptions}}` (add at the end of the current value seperated with a pipe character if `{{RetrievedDataFolderInsertOptions}}` is not empty) and store as `{{UpdatedDataFolderInsertOptions}}`
+Write `{{UpdatedDataFolderInsertOptions}}` in the log
+
+#### Step 5.3
+
+Set the value of **Insert Options** (`__Masters`) field to `{{UpdatedDataFolderInsertOptions}}`
+
+---
+
+### Step 6 — Create data items
+
+#### Step 6.1
+
+Under `{{RootWebsitePath}}/Data`, create a folder item based on `{{GeneratedDataFolderTemplate}}` named `{{DataFolderName}}`.
+Store as `{{GeneratedDataFolderItem}}`.
+
+#### Step 6.2
+
+Under `{{GeneratedDataFolderItem}}`, create an item based on `{{GeneratedDataTemplate}}` named `Default {{ComponentName}}`.
+Store as `{{GeneratedDataItem}}`.
+
+---
+
+### Step 7 — Create component rendering item (JSON rendering)
+
+#### Step 7.1
+
+(Optional folder) If your rendering tree requires a folder per component:
+
+Create a folder under `{{ComponentsFolder}}` named `{{RenderingFolderName}}` using `{{RenderingFolderTemplate}}`.
+Store as `{{GeneratedRenderingFolderItem}}`.
+Otherwise set `{{GeneratedRenderingFolderItem}} = {{ComponentsFolder}}` (as reference).
+
+#### Step 7.2
+
+Under the chosen rendering folder path, create a **Json Rendering** item based on `{{RenderingTemplate}}` named `{{ComponentName}}`.
+Store as `{{GeneratedRenderingItem}}`.
+
+#### Step 7.3
+
+Set fields on `{{GeneratedRenderingItem}}`:
+
+- **Component Name** = `{{TSXComponentName}}`
+- **Parameters Template** = `{{GeneratedRenderingTemplate}}` (template ID)
+- **Datasource Template** = `{{GeneratedDataTemplate}}`
+- **Datasource Location** =
+  `query:$site/*[@@name='Data']/*[@@templatename='{{ComponentName}} Folder']|query:$sharedSites/_[@@name='Data']/_[@@templatename='{{ComponentName}} Folder']`
+  **Data source** = `query:$site/*[@@name='Data']/*[@@templatename='{{ComponentName}} Folder']|query:$sharedSites/_[@@name='Data']/_[@@templatename='{{ComponentName}} Folder']`
+
+---
+
+### Step 8 — Placeholder settings (ONLY if component contains placeholders)
+
+#### Step 8.1
+
+If the component contains placeholders, create a placeholder settings item under `{{PlaceholdersPath}}` inheriting from `{{PlaceholderTemplate}}`.
+Store as `{{PlaceholderItem}}`.
+
+#### Step 8.2
+
+Set **Placeholder Key** to the component’s placeholder const value, replacing `${DynamicPlaceholderId}` with `{*}` (exactly).
+8.3 Update `{{GeneratedRenderingItem}}` field **Layout Service Placeholders** to include `{{PlaceholderItem}}` (ID reference).
+
+---
+
+## Required final output
+
+Return a structured result containing:
+
+- For each created and or updated item: **ID + full path**
+- All stored variables resolved and populated.

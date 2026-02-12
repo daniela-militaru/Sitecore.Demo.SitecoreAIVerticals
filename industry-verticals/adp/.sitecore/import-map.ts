@@ -86,11 +86,10 @@ import { generateIndexes } from '@/helpers/generateIndexes';
 import client from 'lib/sitecore-client';
 import * as FEAAS from '@sitecore-feaas/clientside/react';
 import nextConfig from 'next.config';
-import { pageView } from '@sitecore-cloudsdk/events/browser';
+import { pageView, identity } from '@sitecore-cloudsdk/events/browser';
 import config from 'sitecore.config';
 import { faUser, faCalendar, faTag } from '@fortawesome/free-solid-svg-icons';
 import { sortByDateDesc, getCategoryCounts } from '@/helpers/articleUtils';
-import { login } from '@/lib/auth';
 
 const importMap = [
   {
@@ -663,6 +662,7 @@ const importMap = [
     module: '@sitecore-cloudsdk/events/browser',
     exports: [
       { name: 'pageView', value: pageView },
+      { name: 'identity', value: identity },
     ]
   },
   {
@@ -684,12 +684,6 @@ const importMap = [
     exports: [
       { name: 'sortByDateDesc', value: sortByDateDesc },
       { name: 'getCategoryCounts', value: getCategoryCounts },
-    ]
-  },
-  {
-    module: '@/lib/auth',
-    exports: [
-      { name: 'login', value: login },
     ]
   }
 ] as ImportEntry[];
