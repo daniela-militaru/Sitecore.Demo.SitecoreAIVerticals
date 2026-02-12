@@ -1,4 +1,5 @@
 const path = require('path');
+const shouldDisableImageOptimization = process.env.DISABLE_IMAGE_OPTIMIZATION === 'true';
 
 /**
  * @type {import('next').NextConfig}
@@ -26,6 +27,7 @@ const nextConfig = {
   // can be served from the Next.js Image Optimization API
   // see https://nextjs.org/docs/app/api-reference/components/image#remotepatterns
   images: {
+    unoptimized: shouldDisableImageOptimization,
     remotePatterns: [
       {
         protocol: 'https',
