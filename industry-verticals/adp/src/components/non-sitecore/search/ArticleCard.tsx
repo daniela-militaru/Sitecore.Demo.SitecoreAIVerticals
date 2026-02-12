@@ -1,6 +1,5 @@
 import { ArticleCard } from '@sitecore-search/ui';
 import Link from 'next/link';
-import Image from 'next/image';
 import { DEFAULT_IMG_URL } from '@/constants/search';
 import { EntityModel } from '@sitecore-search/react';
 
