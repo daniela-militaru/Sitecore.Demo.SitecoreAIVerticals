@@ -1,6 +1,7 @@
 import { ArticleCard } from '@sitecore-search/ui';
 import { DEFAULT_IMG_URL } from '@/constants/search';
 import Link from 'next/link';
+import Image from 'next/image';
 import { EntityModel } from '@sitecore-search/react';
 
 type ArticleCardItemCardProps = {
@@ -30,7 +31,7 @@ const ArticleHorizontalItemCard = ({ className = '', article }: ArticleCardItemC
       >
         {validImageUrl && (
           <div className="bg-background-surface w-1/4 flex-none overflow-hidden rounded">
-            <img
+            <Image
               src={validImageUrl}
               className="h-full w-full rounded object-cover object-center lg:h-full lg:w-full"
               alt="alt"

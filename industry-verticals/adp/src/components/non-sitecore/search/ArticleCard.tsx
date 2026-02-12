@@ -2,6 +2,7 @@ import { ArticleCard } from '@sitecore-search/ui';
 import Link from 'next/link';
 import { DEFAULT_IMG_URL } from '@/constants/search';
 import { EntityModel } from '@sitecore-search/react';
+import Image from 'next/image';
 
 type ArticleItemCardProps = {
   className?: string;
@@ -24,7 +25,7 @@ const ArticleItemCard = ({ className = '', article }: ArticleItemCardProps) => {
         className={`group border-border hover:shadow-accent/20 relative rounded-md border shadow-sm hover:shadow-md hover:transition-all hover:duration-300 hover:ease-linear ${className}`}
       >
         <div className="bg-background-surface h-50 w-full overflow-hidden rounded-t-md">
-          <img
+          <Image
             src={validImageUrl}
             className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105 lg:h-full lg:w-full"
             alt={article.name || article.title}
