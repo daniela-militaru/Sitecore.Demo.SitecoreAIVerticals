@@ -100,7 +100,7 @@ export const Default = (props: HeroSectionProps): JSX.Element => {
           {/* Hero Image */}
           <div className="relative flex-1">
             <div className="relative overflow-hidden rounded-lg">
-              <SitecoreImage field={fields.HeroImage} className="h-auto w-full object-cover" />
+              <SitecoreImage field={fields.HeroImage} className="h-auto w-full object-cover"  />
             </div>
           </div>
         </div>
