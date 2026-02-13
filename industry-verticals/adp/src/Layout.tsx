@@ -34,11 +34,21 @@ const Layout = ({ page }: LayoutProps): JSX.Element => {
     fields?.metadataDescription?.value?.toString() || fields?.pageSummary?.value?.toString() || '';
   const metaKeywords = fields?.metadataKeywords?.value?.toString() || '';
   const ogTitle = fields?.metadataTitle?.value?.toString() || 'Page';
-  const ogImage = fields?.ogImage?.value?.src;
   const ogDescription =
     fields?.metadataDescription?.value?.toString() || fields?.pageSummary?.value?.toString() || '';
   const currentPath = router.asPath;
   const ogUrl = `${process.env.NEXT_PUBLIC_BASE_URL || ''}${currentPath}`;
+
+   let ogImage: string | undefined = undefined;
+   if (fields?.ogImage?.value?.src) {
+      try {
+      const url = new URL(fields?.ogImage?.value?.src);
+      ogImage = url.pathname; // "/folder/name.jpg"
+    } catch {
+      // It's already a relative path
+      ogImage = fields?.ogImage?.value?.src;
+    }
+  }
 
   return (
     <>
