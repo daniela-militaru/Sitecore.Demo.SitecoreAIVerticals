@@ -32,6 +32,16 @@
     "incremental": true,
     "forceConsistentCasingInFileNames": false
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "src/pages/api/auth/login.ts.old",
+    "src/pages/api/auth/user.ts.old",
+    "src/components/navigation/Navigation.tsx.ori",
+    "src/pages/[[...path]].tsx.ori",
+    "src/pages/api/auth/user.ts.old",
+    "src/pages/api/auth/login.ts.old"
+  ],
   "exclude": ["node_modules"]
 }

@@ -16,14 +16,14 @@ Replace variables using these rules:
 - `{{TSXComponentName}} = "{{ComponentName}}"`
 - `{{TemplateFolderName}} = "{{ComponentName}}"`
 - `{{RenderingFolderName}} = "{{ComponentName}} Renderings"`
-- `{{AvailableRenderingsItem}} = "/sitecore/content/teamviewer/teamviewer/Presentation/Available Renderings/teamviewer"`
+- `{{AvailableRenderingsItem}} = "/sitecore/content/teamviewerhackathon/teamviewerhackathon/Presentation/Available Renderings/TeamViewerHackathon"`
 - `{{DataFolderName}} = pluralize({{ComponentName}})`
-- `{{ComponentTemplatesPath}} = "/sitecore/templates/Project/teamviewer/"`
+- `{{ComponentTemplatesPath}} = "/sitecore/templates/Project/teamviewerhackathon/"`
 - `{{PlaceholdersPath}} = "/sitecore/layout/Placeholder Settings/Project/teamviewer"`
-- `{{RootWebsitePath}} = "/sitecore/content/teamviewer/teamviewer"`
-- `{{HomeWebsitePath}} = "/sitecore/content/teamviewer/teamviewer/home"`
-- `{{ComponentsFolder}} = "/sitecore/layout/Renderings/Project/teamviewer"`
-- `{{MediaFolder}} = "/sitecore/media library/Project/teamviewer/teamviewer"`
+- `{{RootWebsitePath}} = "/sitecore/content/teamviewerhackathon/teamviewerhackathon"`
+- `{{HomeWebsitePath}} = "/sitecore/content/teamviewerhackathon/teamviewerhackathon/home"`
+- `{{ComponentsFolder}} = "/sitecore/layout/Renderings/Project/teamviewerhackathon"`
+- `{{MediaFolder}} = "/sitecore/media library/Project/teamviewerhackathon/teamviewerhackathon"`
 - `{{DataTemplateIcon}} = ""`
 - `{{FolderTemplateIcon}} = "/sitecore/shell/themes/standard/Applications/32x32/folder.png"`
 

@@ -124,7 +124,7 @@ export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['ArticleHorizontalCard', { ...ArticleHorizontalCard }],
   ['ArticleCard', { ...ArticleCard }],
   ['NavigationIcons', { ...NavigationIcons }],
-  ['Navigation', { ...Navigation, componentType: 'client' }],
+  ['Navigation', { ...Navigation }],
   ['LinkList', { ...LinkList }],
   ['LanguageSwitcher', { ...LanguageSwitcher, componentType: 'client' }],
   ['Image', { ...Image }],
