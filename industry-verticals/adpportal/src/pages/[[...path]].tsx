@@ -1,16 +1,18 @@
 // src/pages/[[...path]].tsx
-import { useEffect, JSX } from 'react';
-import { GetServerSideProps } from 'next';
+import { useEffect, type JSX } from 'react';
+import type { GetServerSideProps } from 'next';
 import NotFound from 'src/NotFound';
 import Layout from 'src/Layout';
 import {
   SitecoreProvider,
   ComponentPropsContext,
-  SitecorePageProps,
+  type SitecorePageProps,
+  LayoutServiceData,
 } from '@sitecore-content-sdk/nextjs';
 import { extractPath, handleEditorFastRefresh } from '@sitecore-content-sdk/nextjs/utils';
 import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing';
 import { getSession } from '@auth0/nextjs-auth0';
+import type { Session } from '@auth0/nextjs-auth0';
 import client from 'lib/sitecore-client';
 import components from '.sitecore/component-map';
 import scConfig from 'sitecore.config';
@@ -47,18 +49,24 @@ function parsePipeSeparatedGuids(raw?: string | null): string[] {
     .filter(Boolean);
 }
 
-function deepOmitUndefined<T>(value: T): T {
+/**
+ * ---- No-`any` deep omit undefined (returns unknown) ----
+ * Next.js SSR cannot serialize `undefined` anywhere inside props.
+ */
+function deepOmitUndefined(value: unknown): unknown {
   if (Array.isArray(value)) {
-    // keep array shape; sanitize elements
-    return value.map((v) => deepOmitUndefined(v)) as any;
+    return value.map((v) => deepOmitUndefined(v));
   }
 
   if (value && typeof value === 'object') {
-    const out: any = {};
-    for (const [k, v] of Object.entries(value as any)) {
-      if (v === undefined) continue; // omit
+    const obj = value as Record<string, unknown>;
+    const out: Record<string, unknown> = {};
+
+    for (const [k, v] of Object.entries(obj)) {
+      if (v === undefined) continue;
       out[k] = deepOmitUndefined(v);
     }
+
     return out;
   }
 
@@ -66,25 +74,74 @@ function deepOmitUndefined<T>(value: T): T {
 }
 
 /**
+ * ---- client.getData typing + runtime guard (no `any`) ----
+ */
+type GetDataFn = (query: string, variables: Record<string, unknown>) => Promise<unknown>;
+
+function hasGetData(x: unknown): x is { getData: GetDataFn } {
+  return typeof (x as { getData?: unknown })?.getData === 'function';
+}
+
+type PageEntitlementsResult = {
+  item?: {
+    entitlements?: { value?: string | null };
+  };
+};
+
+type EntitlementItemResult = {
+  item?: {
+    auth0?: { value?: string | null };
+  };
+};
+
+function getUserEntitlements(session: Session | null | undefined): Record<string, boolean> {
+  const claim = session?.user?.[ENTITLEMENTS_CLAIM];
+  if (claim && typeof claim === 'object' && !Array.isArray(claim)) {
+    return claim as Record<string, boolean>;
+  }
+  return {};
+}
+
+function getItemIdFromLayout(layout: unknown): string | undefined {
+  const l = layout as { sitecore?: { route?: { itemId?: string } } } | null;
+  return l?.sitecore?.route?.itemId;
+}
+
+/**
  * Fetch required Auth0 entitlement keys for the page
  */
-async function getRequiredAuth0EntitlementKeysForPage(pageItemId: string, language: string) {
-  const pageResult = await (client as any).getData?.(PAGE_ENTITLEMENTS_QUERY, {
+async function getRequiredAuth0EntitlementKeysForPage(
+  pageItemId: string,
+  language: string
+): Promise<string[]> {
+  if (!hasGetData(client)) {
+    throw new Error(
+      'client.getData(...) is not available. Ensure your Sitecore client exposes getData.'
+    );
+  }
+
+  const pageResultUnknown = await client.getData(PAGE_ENTITLEMENTS_QUERY, {
     id: pageItemId,
     language,
   });
 
-  if (!pageResult?.item) return [];
+  const raw = (pageResultUnknown as PageEntitlementsResult)?.item?.entitlements?.value ?? null;
 
-  const raw = pageResult.item?.entitlements?.value as string | undefined;
   const entitlementItemIds = parsePipeSeparatedGuids(raw);
-  if (!entitlementItemIds.length) return [];
+  if (entitlementItemIds.length === 0) return [];
 
   const keys: string[] = [];
   for (const id of entitlementItemIds) {
-    const result = await (client as any).getData?.(ENTITLEMENT_ITEM_QUERY, { id, language });
-    const value = result?.item?.auth0?.value;
-    if (typeof value === 'string' && value.trim()) keys.push(value.trim());
+    const entitlementUnknown = await client.getData(ENTITLEMENT_ITEM_QUERY, {
+      id,
+      language,
+    });
+
+    const value = (entitlementUnknown as EntitlementItemResult)?.item?.auth0?.value ?? null;
+
+    if (typeof value === 'string' && value.trim().length > 0) {
+      keys.push(value.trim());
+    }
   }
 
   return keys;
@@ -106,41 +163,43 @@ const SitecorePage = ({ page, notFound, componentProps }: SitecorePageProps): JS
   );
 };
 
+type PageLike = {
+  layout?: unknown;
+  locale?: string;
+  siteName?: string;
+};
+
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  // Important: for auth-varying SSR, avoid shared caching unless you build proper Vary-by-entitlements.
+  // Auth-varying SSR: don't let shared caches leak menu/page
   context.res.setHeader('Cache-Control', 'private, no-store, max-age=0');
   context.res.setHeader('Vary', 'Cookie');
 
   const path = extractPath(context);
-  let page: any;
+
+  let pageUnknown: unknown;
 
   if (context.preview && isDesignLibraryPreviewData(context.previewData)) {
-    page = await client.getDesignLibraryData(context.previewData);
+    pageUnknown = await client.getDesignLibraryData(context.previewData);
   } else {
-    page = context.preview
+    pageUnknown = context.preview
       ? await client.getPreview(context.previewData)
       : await client.getPage(path, { locale: context.locale });
   }
 
-  if (!page) return { props: {}, notFound: true };
+  if (!pageUnknown) return { props: {}, notFound: true };
 
-  const itemId = page?.layout?.sitecore?.route?.itemId;
+  const page = pageUnknown as PageLike;
+
   const isPreview = Boolean(context.preview);
   const language = (context.locale || page.locale || 'en') as string;
+  const itemId = getItemIdFromLayout(page.layout);
 
-  // Read session once; we use it for page gating and nav gating
+  // Read session once; used for page gating + nav gating
   const session = await getSession(context.req, context.res);
-  const userEntitlements =
-    (session?.user?.[ENTITLEMENTS_CLAIM] as Record<string, boolean> | undefined) || {};
+  const userEntitlements = getUserEntitlements(session);
 
-  // 1) PAGE ACCESS GATING (your existing logic)
+  // 1) PAGE ACCESS GATING
   if (!isPreview && itemId) {
-    if (typeof (client as any).getData !== 'function') {
-      throw new Error(
-        'client.getData(...) is not available. Ensure your Sitecore client exposes getData.'
-      );
-    }
-
     const requiredAuth0Keys = await getRequiredAuth0EntitlementKeysForPage(itemId, language);
 
     if (requiredAuth0Keys.length > 0) {
@@ -162,26 +221,33 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   // 2) NAVIGATION GATING (SSR mutate layout -> no flicker)
-  if (!isPreview && page?.layout) {
-    page.layout = await secureNavigationInLayout({
+  if (!isPreview && page.layout) {
+    const securedLayout = await secureNavigationInLayout({
       layout: page.layout,
       language,
       userEntitlements,
-      debug: true, // set false once you’re happy
+      debug: true,
     });
+
+    // Important: keep pageUnknown in sync with modified layout
+    // We mutate `page` (which is a view on pageUnknown) by replacing layout field
+    (page as { layout?: unknown }).layout = securedLayout;
   }
 
   const props = {
-    page,
+    page: pageUnknown,
     dictionary: await client.getDictionary({
-      site: page.siteName,
-      locale: page.locale,
+      site: page.siteName ?? '',
+      locale: page.locale ?? language,
     }),
-    componentProps: await client.getComponentData(page.layout, context, components),
+    componentProps: await client.getComponentData(
+      page.layout as LayoutServiceData,
+      context,
+      components
+    ),
   };
 
-  // ✅ Ensure nothing contains `undefined`
-  return { props: deepOmitUndefined(props) };
+  return { props: deepOmitUndefined(props) as typeof props };
 };
 
 export default SitecorePage;

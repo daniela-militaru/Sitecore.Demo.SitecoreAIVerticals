@@ -294,7 +294,10 @@ export const Default = ({ params, fields }: NavigationProps) => {
           <Link
             field={getLinkField(rootItem!)}
             editable={page.mode.isEditing}
-            className={clsx('navigation-mobile-trigger', !isSimpleLayout && '[.component.header_&]:mx-auto')}
+            className={clsx(
+              'navigation-mobile-trigger',
+              !isSimpleLayout && '[.component.header_&]:mx-auto'
+            )}
           >
             {getLinkContent(rootItem!, logoSrc)}
           </Link>
@@ -308,7 +311,10 @@ export const Default = ({ params, fields }: NavigationProps) => {
               handleToggleMenu();
             }
           }}
-          className={clsx('navigation-mobile-trigger', !isSimpleLayout && '[.component.header_&]:-order-1')}
+          className={clsx(
+            'navigation-mobile-trigger',
+            !isSimpleLayout && '[.component.header_&]:-order-1'
+          )}
         />
       </div>
 

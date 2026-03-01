@@ -80,7 +80,7 @@ import { useClickAway } from '@/hooks/useClickAway';
 import { useStopResponsiveTransition } from '@/hooks/useStopResponsiveTransition';
 import { extractMediaUrl } from '@/helpers/extractMediaUrl';
 import { getLinkContent, getLinkField, isNavLevel, isNavRootItem, prepareFields } from '@/helpers/navHelpers';
-import { useAuth } from 'src/auth/AuthContext';
+import { ENTITLEMENTS_CLAIM } from 'lib/entitlements';
 import { useRouter as useRouter_0e8a928699f624a3ad05eb9c9906b0e7ce1a00be } from 'next/router';
 import { Select as Select_4a7098778d43a9b4dcd5871ec48ea51b5a246850, SelectContent, SelectItem, SelectTrigger, SelectValue } from 'src/shadcn/components/ui/select';
 import { localeOptions } from '@/constants/localeOptions';
@@ -621,9 +621,9 @@ const importMap = [
     ]
   },
   {
-    module: 'src/auth/AuthContext',
+    module: 'lib/entitlements',
     exports: [
-      { name: 'useAuth', value: useAuth },
+      { name: 'ENTITLEMENTS_CLAIM', value: ENTITLEMENTS_CLAIM },
     ]
   },
   {

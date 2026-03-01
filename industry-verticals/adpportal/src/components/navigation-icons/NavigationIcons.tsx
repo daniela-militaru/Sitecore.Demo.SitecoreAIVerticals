@@ -1,4 +1,4 @@
-import React, { JSX, useState, useEffect } from 'react';
+import React, { JSX, useState } from 'react';
 import Link from 'next/link';
 import { User, Heart, ShoppingCart, X, Search } from 'lucide-react';
 import { ComponentProps } from '@/lib/component-props';
@@ -58,13 +58,13 @@ export default function AuthButtons() {
   if (isLoading) return <div>Loading...</div>;
 
   if (!user) {
-    return <a href="/api/auth/login">Login</a>;
+    return <Link href="/api/auth/login">Login</Link>;
   }
 
   return (
     <div>
       <p>Welcome {user.name}</p>
-      <a href="/api/auth/logout">Logout</a>
+      <Link href="/api/auth/logout">Logout</Link>
     </div>
   );
 }

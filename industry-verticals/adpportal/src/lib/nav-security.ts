@@ -1,11 +1,15 @@
 // lib/nav-security.ts
 import { getRequiredAuth0EntitlementKeysForItem, userHasSomeRequiredKey } from './entitlements';
 
+/**
+ * Keep Title/NavigationTitle as unknown to avoid `any`.
+ * Your Navigation.tsx will treat these as Sitecore field JSON objects anyway.
+ */
 export type NavItem = {
   Id: string;
   DisplayName?: string;
-  Title?: any;
-  NavigationTitle?: any;
+  Title?: unknown;
+  NavigationTitle?: unknown;
   Href?: string;
   Querystring?: string;
   Children?: NavItem[];
@@ -22,7 +26,7 @@ export function collectNavItemIds(items: NavItem[]): string[] {
   const walk = (arr: NavItem[]) => {
     for (const it of arr) {
       if (it?.Id) out.push(it.Id);
-      if (it?.Children?.length) walk(it.Children);
+      if (Array.isArray(it.Children) && it.Children.length > 0) walk(it.Children);
     }
   };
   walk(items);
@@ -38,21 +42,24 @@ export async function buildRequiredKeysMapForItemIds(
   debug?: boolean
 ): Promise<Record<string, string[]>> {
   const map: Record<string, string[]> = {};
+
   await Promise.all(
     itemIds.map(async (id) => {
       const keys = await getRequiredAuth0EntitlementKeysForItem(id, language);
       map[id] = keys;
-      if (debug && keys.length) {
-        // This is the "secured" detection debug signal you wanted.
+
+      if (debug && keys.length > 0) {
         console.log('[NAV][SECURED ITEM]', { itemId: id, requiredAuth0Keys: keys });
       }
     })
   );
+
   return map;
 }
 
 /**
- * Attach __requiredAuth0Keys to each nav node (mutates a cloned tree).
+ * Attach __requiredAuth0Keys to each nav node (returns a cloned tree).
+ * IMPORTANT: do NOT assign Children: undefined (Next SSR serialization).
  */
 export function attachRequiredKeys(
   items: NavItem[],
@@ -67,9 +74,6 @@ export function attachRequiredKeys(
 
       if (Array.isArray(it.Children) && it.Children.length > 0) {
         next.Children = clone(it.Children);
-      } else {
-        // IMPORTANT: do NOT assign next.Children = undefined
-        // Leave it absent.
       }
 
       return next;
@@ -97,8 +101,6 @@ export function filterNavTree(
 
       if (Array.isArray(it.Children) && it.Children.length > 0) {
         next.Children = filterRec(it.Children);
-      } else {
-        // again: don't set undefined
       }
 
       out.push(next);
@@ -111,84 +113,113 @@ export function filterNavTree(
 }
 
 /**
- * Heuristic: find Navigation renderings in Layout Service data and return a reference to their fields object.
- * This avoids hardcoding placeholder paths.
+ * ---- Layout traversal types (no `any`) ----
  */
-function findRenderings(layout: any): any[] {
-  const route = layout?.sitecore?.route;
-  if (!route) return [];
 
-  const found: any[] = [];
+type RenderingLike = {
+  componentName?: string;
+  name?: string;
+  fields?: unknown;
+  placeholders?: unknown;
+};
 
-  const walkPlaceholders = (placeholders: any) => {
-    if (!placeholders) return;
+function isObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
 
-    if (Array.isArray(placeholders)) {
-      for (const rendering of placeholders) {
-        if (rendering) {
-          found.push(rendering);
-          if (rendering.placeholders) walkPlaceholders(rendering.placeholders);
+function isRenderingLike(value: unknown): value is RenderingLike {
+  return isObject(value);
+}
+
+function getRoutePlaceholders(layout: unknown): unknown {
+  if (!isObject(layout)) return undefined;
+  const sitecore = layout['sitecore'];
+  if (!isObject(sitecore)) return undefined;
+  const route = sitecore['route'];
+  if (!isObject(route)) return undefined;
+  return route['placeholders'];
+}
+
+/**
+ * Collect all renderings by walking placeholders recursively.
+ * Placeholders in Layout Service can be:
+ * - array of renderings
+ * - object where each key -> array of renderings
+ */
+function findRenderings(layout: unknown): RenderingLike[] {
+  const placeholders = getRoutePlaceholders(layout);
+  if (!placeholders) return [];
+
+  const found: RenderingLike[] = [];
+
+  const walk = (node: unknown) => {
+    if (!node) return;
+
+    if (Array.isArray(node)) {
+      for (const entry of node) {
+        if (isRenderingLike(entry)) {
+          found.push(entry);
+          if (entry.placeholders) walk(entry.placeholders);
         }
       }
       return;
     }
 
-    // object of arrays
-    for (const key of Object.keys(placeholders)) {
-      walkPlaceholders(placeholders[key]);
+    if (isObject(node)) {
+      for (const v of Object.values(node)) {
+        walk(v);
+      }
     }
   };
 
-  walkPlaceholders(route?.placeholders);
+  walk(placeholders);
   return found;
 }
 
 /**
  * Extract nav items from a Navigation rendering fields structure:
- * In your component, `fields` is Record<string, NavItemFields>.
- * In Layout Service, renderings.fields typically matches that.
+ * In your component you do: Object.values(fields)
+ * So here we interpret rendering.fields as a record of items.
  */
-function extractNavItemsFromRendering(rendering: any): NavItem[] | null {
-  const fieldsObj = rendering?.fields;
-  if (!fieldsObj || typeof fieldsObj !== 'object') return null;
+function extractNavItemsFromRendering(rendering: RenderingLike): NavItem[] | null {
+  if (!rendering.fields || !isObject(rendering.fields)) return null;
 
-  const values = Object.values(fieldsObj).filter(Boolean) as any[];
-  // Detect by shape: must have Id and (Href or Children)
-  const navLike = values.filter((v) => v && typeof v === 'object' && typeof v.Id === 'string');
-  if (!navLike.length) return null;
+  const values = Object.values(rendering.fields).filter(Boolean);
 
-  // In your Navigation.tsx you treat it as "Object.values(fields)".
-  return navLike as NavItem[];
+  const navLike = values.filter((v) => isObject(v) && typeof v['Id'] === 'string');
+  if (navLike.length === 0) return null;
+
+  // We trust the shape here because it came from your Navigation rendering fields.
+  return navLike as unknown as NavItem[];
 }
 
 /**
  * Mutate layout: attach required keys and filter nav items SSR.
- * Returns a new layout object (safe to assign back to page.layout).
+ * Returns a cloned layout object (safe to assign back to page.layout).
  */
 export async function secureNavigationInLayout(opts: {
-  layout: any;
+  layout: unknown;
   language: string;
   userEntitlements: Record<string, boolean>;
   debug?: boolean;
-}): Promise<any> {
+}): Promise<unknown> {
   const { layout, language, userEntitlements, debug } = opts;
-  if (!layout?.sitecore?.route) return layout;
 
-  const renderings = findRenderings(layout);
+  // If layout doesn't look like Sitecore Layout, no-op
+  const routePlaceholders = getRoutePlaceholders(layout);
+  if (!routePlaceholders) return layout;
 
-  // Clone layout shallowly so we can safely mutate nested fields
-  const nextLayout = structuredClone ? structuredClone(layout) : JSON.parse(JSON.stringify(layout));
-  const nextRenderings = findRenderings(nextLayout);
+  // Clone to avoid mutating original
+  const nextLayout: unknown =
+    typeof structuredClone === 'function'
+      ? structuredClone(layout)
+      : JSON.parse(JSON.stringify(layout));
 
-  for (let i = 0; i < nextRenderings.length; i++) {
-    const rendering = nextRenderings[i];
+  const renderings = findRenderings(nextLayout);
 
-    // Only apply to the Navigation component
-    // You can adjust this check if your componentName differs.
-    const componentName = rendering?.componentName || rendering?.name;
-    const looksLikeNavigation = componentName === 'Navigation';
-
-    if (!looksLikeNavigation) continue;
+  for (const rendering of renderings) {
+    const componentName = rendering.componentName ?? rendering.name;
+    if (componentName !== 'Navigation') continue;
 
     const items = extractNavItemsFromRendering(rendering);
     if (!items) continue;
@@ -199,10 +230,11 @@ export async function secureNavigationInLayout(opts: {
     const withKeys = attachRequiredKeys(items, requiredMap);
     const filtered = filterNavTree(withKeys, userEntitlements);
 
-    // Rebuild rendering.fields as the same shape: Record<string, NavItem>
-    // We keep original keys where possible, but simplest is re-indexing:
+    // Rebuild rendering.fields as Record<string, NavItem>
     const newFields: Record<string, NavItem> = {};
-    filtered.forEach((it, idx) => (newFields[String(idx)] = it));
+    filtered.forEach((it, idx) => {
+      newFields[String(idx)] = it;
+    });
 
     rendering.fields = newFields;
 

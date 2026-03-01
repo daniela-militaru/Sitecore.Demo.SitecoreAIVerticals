@@ -53,7 +53,7 @@ const CdpIdentity = (user: string, firstName: string, lastName: string): JSX.Ele
         },
       ],
     }).catch((e) => console.debug(e));
-  }, [mode, route, context.variantId, siteName]);
+  }, [firstName, lastName, user, mode, route, context.variantId, siteName]);
 
   return <></>;
 };
