@@ -1,5 +1,4 @@
-// src/pages/[[...path]].tsx
-import { useEffect, type JSX } from 'react';
+import { useEffect, JSX } from 'react';
 import type { GetServerSideProps } from 'next';
 import NotFound from 'src/NotFound';
 import Layout from 'src/Layout';
@@ -13,138 +12,112 @@ import { extractPath, handleEditorFastRefresh } from '@sitecore-content-sdk/next
 import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing';
 import { getSession } from '@auth0/nextjs-auth0';
 import type { Session } from '@auth0/nextjs-auth0';
+
 import client from 'lib/sitecore-client';
 import components from '.sitecore/component-map';
 import scConfig from 'sitecore.config';
 
-import { ENTITLEMENTS_CLAIM } from 'lib/entitlements';
-import { secureNavigationInLayout } from 'lib/nav-security';
+import {
+  ENTITLEMENTS_CLAIM,
+  getRequiredAuth0EntitlementKeysForItem,
+  userHasSomeRequiredKey,
+} from 'lib/entitlements';
+import { getNavMetadata } from 'lib/nav-metadata';
+import { enrichNavTree, filterNavTree, type NavFields, type NavItem } from 'lib/nav-apply';
+import { getNavigationFieldsFromLayout, setNavigationFieldsOnLayout } from 'lib/nav-layout';
 
-// Sitecore field names
-const ENTITLEMENTS_FIELD = 'Entitlements';
-const ENTITLEMENT_ITEM_AUTH0_FIELD = 'Auth0';
-
-// GraphQL queries (Delivery API safe)
-const PAGE_ENTITLEMENTS_QUERY = `
-  query PageEntitlements($id: String!, $language: String!) {
-    item(path: $id, language: $language) {
-      entitlements: field(name: "${ENTITLEMENTS_FIELD}") { value }
-    }
-  }
-`;
-
-const ENTITLEMENT_ITEM_QUERY = `
-  query EntitlementItem($id: String!, $language: String!) {
-    item(path: $id, language: $language) {
-      auth0: field(name: "${ENTITLEMENT_ITEM_AUTH0_FIELD}") { value }
-    }
-  }
-`;
-
-function parsePipeSeparatedGuids(raw?: string | null): string[] {
-  if (!raw) return [];
-  return raw
-    .split('|')
-    .map((x) => x.trim())
-    .filter(Boolean);
+function normalizeGuid(id: string): string {
+  return id.trim().replace(/[{}]/g, '').toLowerCase();
 }
-
-/**
- * ---- No-`any` deep omit undefined (returns unknown) ----
- * Next.js SSR cannot serialize `undefined` anywhere inside props.
- */
-function deepOmitUndefined(value: unknown): unknown {
-  if (Array.isArray(value)) {
-    return value.map((v) => deepOmitUndefined(v));
-  }
-
-  if (value && typeof value === 'object') {
-    const obj = value as Record<string, unknown>;
-    const out: Record<string, unknown> = {};
-
-    for (const [k, v] of Object.entries(obj)) {
-      if (v === undefined) continue;
-      out[k] = deepOmitUndefined(v);
-    }
-
-    return out;
-  }
-
-  return value;
-}
-
-/**
- * ---- client.getData typing + runtime guard (no `any`) ----
- */
-type GetDataFn = (query: string, variables: Record<string, unknown>) => Promise<unknown>;
-
-function hasGetData(x: unknown): x is { getData: GetDataFn } {
-  return typeof (x as { getData?: unknown })?.getData === 'function';
-}
-
-type PageEntitlementsResult = {
-  item?: {
-    entitlements?: { value?: string | null };
-  };
-};
-
-type EntitlementItemResult = {
-  item?: {
-    auth0?: { value?: string | null };
-  };
-};
 
 function getUserEntitlements(session: Session | null | undefined): Record<string, boolean> {
   const claim = session?.user?.[ENTITLEMENTS_CLAIM];
-  if (claim && typeof claim === 'object' && !Array.isArray(claim)) {
+  if (claim && typeof claim === 'object' && !Array.isArray(claim))
     return claim as Record<string, boolean>;
-  }
   return {};
 }
 
-function getItemIdFromLayout(layout: unknown): string | undefined {
-  const l = layout as { sitecore?: { route?: { itemId?: string } } } | null;
-  return l?.sitecore?.route?.itemId;
+const EMPLOYEE_EMAIL_DOMAIN = (process.env.ADP_EMPLOYEE_EMAIL_DOMAIN || 'adp.com').toLowerCase();
+function isEmployee(session: Session | null | undefined): boolean {
+  const email = (session?.user?.email as string | undefined)?.toLowerCase();
+  return Boolean(email && email.endsWith(`@${EMPLOYEE_EMAIL_DOMAIN}`));
 }
 
 /**
- * Fetch required Auth0 entitlement keys for the page
+ * ---- NEW: Fallback resolver for the NEW Experience Edge entitlements shape ----
+ * Your Edge response shows:
+ *   entitlements: { jsonValue: [ { fields: { Auth0: { value: "..." } } } ] }
+ *
+ * But lib/entitlements.ts still expects the OLD pipe-separated string.
+ *
+ * We DO NOT change that file here; we simply add this fallback ONLY in this page gating path.
  */
-async function getRequiredAuth0EntitlementKeysForPage(
-  pageItemId: string,
-  language: string
-): Promise<string[]> {
-  if (!hasGetData(client)) {
-    throw new Error(
-      'client.getData(...) is not available. Ensure your Sitecore client exposes getData.'
-    );
-  }
+type GetDataFn = (query: string, variables: Record<string, unknown>) => Promise<unknown>;
+function hasGetData(x: unknown): x is { getData: GetDataFn } {
+  return typeof (x as { getData?: unknown })?.getData === 'function';
+}
+function isObject(v: unknown): v is Record<string, unknown> {
+  return typeof v === 'object' && v !== null;
+}
+function asString(v: unknown): string | undefined {
+  return typeof v === 'string' ? v : undefined;
+}
 
-  const pageResultUnknown = await client.getData(PAGE_ENTITLEMENTS_QUERY, {
-    id: pageItemId,
-    language,
-  });
-
-  const raw = (pageResultUnknown as PageEntitlementsResult)?.item?.entitlements?.value ?? null;
-
-  const entitlementItemIds = parsePipeSeparatedGuids(raw);
-  if (entitlementItemIds.length === 0) return [];
-
-  const keys: string[] = [];
-  for (const id of entitlementItemIds) {
-    const entitlementUnknown = await client.getData(ENTITLEMENT_ITEM_QUERY, {
-      id,
-      language,
-    });
-
-    const value = (entitlementUnknown as EntitlementItemResult)?.item?.auth0?.value ?? null;
-
-    if (typeof value === 'string' && value.trim().length > 0) {
-      keys.push(value.trim());
+const PAGE_ENTITLEMENTS_JSONVALUE_QUERY = `
+  query PageEntitlementsJsonValue($id: String!, $language: String!) {
+    item(path: $id, language: $language) {
+      entitlements: field(name: "Entitlements") { jsonValue }
     }
   }
+`;
 
-  return keys;
+async function getRequiredAuth0KeysForItem_FallbackJsonValue(
+  itemId: string,
+  language: string
+): Promise<string[]> {
+  if (!hasGetData(client)) return [];
+
+  const rawUnknown = await client.getData(PAGE_ENTITLEMENTS_JSONVALUE_QUERY, {
+    id: itemId,
+    language,
+  });
+  const raw = isObject(rawUnknown) ? rawUnknown : {};
+
+  const item = raw.item;
+  if (!isObject(item)) return [];
+
+  const entField = item.entitlements;
+  if (!isObject(entField)) return [];
+
+  const jsonValue = entField.jsonValue;
+  if (!Array.isArray(jsonValue)) return [];
+
+  const keys: string[] = [];
+  for (const entItem of jsonValue) {
+    if (!isObject(entItem)) continue;
+
+    const fields = entItem.fields;
+    if (!isObject(fields)) continue;
+
+    const auth0 = fields.Auth0;
+    if (!isObject(auth0)) continue;
+
+    const v = asString(auth0.value);
+    if (v && v.trim()) keys.push(v.trim());
+  }
+
+  return [...new Set(keys)];
+}
+
+function collectIds(fields: NavFields): string[] {
+  const ids: string[] = [];
+  const walk = (it: NavItem | undefined) => {
+    if (!it) return;
+    if (it.Id) ids.push(normalizeGuid(it.Id));
+    if (Array.isArray(it.Children)) it.Children.forEach((c) => walk(c));
+  };
+  Object.values(fields).forEach((v) => walk(v));
+  return [...new Set(ids)];
 }
 
 const SitecorePage = ({ page, notFound, componentProps }: SitecorePageProps): JSX.Element => {
@@ -163,82 +136,129 @@ const SitecorePage = ({ page, notFound, componentProps }: SitecorePageProps): JS
   );
 };
 
-type PageLike = {
-  layout?: unknown;
-  locale?: string;
-  siteName?: string;
-};
-
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  // Auth-varying SSR: don't let shared caches leak menu/page
+  // auth-varying SSR
   context.res.setHeader('Cache-Control', 'private, no-store, max-age=0');
   context.res.setHeader('Vary', 'Cookie');
 
+  const traceId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+  const debug = process.env.NAV_DEBUG === '1' || context.query.navdebug === '1';
+
   const path = extractPath(context);
 
-  let pageUnknown: unknown;
-
-  if (context.preview && isDesignLibraryPreviewData(context.previewData)) {
-    pageUnknown = await client.getDesignLibraryData(context.previewData);
-  } else {
-    pageUnknown = context.preview
-      ? await client.getPreview(context.previewData)
-      : await client.getPage(path, { locale: context.locale });
-  }
+  const pageUnknown =
+    context.preview && isDesignLibraryPreviewData(context.previewData)
+      ? await client.getDesignLibraryData(context.previewData)
+      : context.preview
+        ? await client.getPreview(context.previewData)
+        : await client.getPage(path, { locale: context.locale });
 
   if (!pageUnknown) return { props: {}, notFound: true };
 
-  const page = pageUnknown as PageLike;
+  const page = pageUnknown as {
+    layout?: unknown;
+    locale?: string;
+    siteName?: string;
+  };
 
-  const isPreview = Boolean(context.preview);
   const language = (context.locale || page.locale || 'en') as string;
-  const itemId = getItemIdFromLayout(page.layout);
+  const isPreview = Boolean(context.preview);
 
-  // Read session once; used for page gating + nav gating
   const session = await getSession(context.req, context.res);
-  const userEntitlements = getUserEntitlements(session);
+  const entitlements = getUserEntitlements(session);
+  const employee = isEmployee(session);
 
-  // 1) PAGE ACCESS GATING
-  if (!isPreview && itemId) {
-    const requiredAuth0Keys = await getRequiredAuth0EntitlementKeysForPage(itemId, language);
+  // Editing/preview: show everything
+  const isEditingOrPreview = Boolean(isPreview);
 
-    if (requiredAuth0Keys.length > 0) {
+  // ---- 1) PAGE GATING ----
+  const routeItemId = (
+    page as unknown as { layout?: { sitecore?: { route?: { itemId?: string } } } }
+  )?.layout?.sitecore?.route?.itemId;
+
+  if (!isEditingOrPreview && routeItemId) {
+    // KEEP existing logic, but make requiredKeys mutable so we can fallback if needed
+    let requiredKeys = await getRequiredAuth0EntitlementKeysForItem(routeItemId, language);
+
+    // NEW: if lib/entitlements returns [], try the new Experience Edge jsonValue array format
+    if (requiredKeys.length === 0) {
+      const fallbackKeys = await getRequiredAuth0KeysForItem_FallbackJsonValue(
+        routeItemId,
+        language
+      );
+      if (fallbackKeys.length > 0) requiredKeys = fallbackKeys;
+    }
+
+    if (debug) {
+      console.log('[PAGE GATE]', {
+        traceId,
+        path,
+        routeItemId: normalizeGuid(routeItemId),
+        requiredKeys,
+        employee,
+      });
+    }
+
+    if (requiredKeys.length > 0 && !employee) {
       if (!session?.user) {
         const returnTo = encodeURIComponent(context.resolvedUrl || '/');
         return {
-          redirect: {
-            destination: `/api/auth/login?returnTo=${returnTo}`,
-            permanent: false,
-          },
+          redirect: { destination: `/api/auth/login?returnTo=${returnTo}`, permanent: false },
         };
       }
 
-      const allowed = requiredAuth0Keys.some((key) => userEntitlements[key] === true);
+      const allowed = userHasSomeRequiredKey(requiredKeys, entitlements);
       if (!allowed) {
+        // This is the "unauthorized screen" behavior you asked for
         return { redirect: { destination: '/unauthorized', permanent: false } };
       }
     }
   }
 
-  // 2) NAVIGATION GATING (SSR mutate layout -> no flicker)
-  if (!isPreview && page.layout) {
-    const securedLayout = await secureNavigationInLayout({
-      layout: page.layout,
-      language,
-      userEntitlements,
-      debug: true,
-    });
+  // ---- 2) NAVIGATION ENRICH + FILTER (SSR -> no flicker) ----
+  if (!isEditingOrPreview && page.layout) {
+    const navFields = getNavigationFieldsFromLayout(page.layout);
+    if (navFields) {
+      const ids = collectIds(navFields);
+      if (debug)
+        console.log('[NAV SSR][FIELDS]', {
+          traceId,
+          navTopKeys: Object.keys(navFields).length,
+          ids: ids.length,
+        });
 
-    // Important: keep pageUnknown in sync with modified layout
-    // We mutate `page` (which is a view on pageUnknown) by replacing layout field
-    (page as { layout?: unknown }).layout = securedLayout;
+      const meta = await getNavMetadata({ itemIds: ids, language, debug, traceId });
+
+      const enriched = enrichNavTree({
+        fields: navFields,
+        redirectMap: meta.redirectMap,
+        requiredKeysMap: meta.requiredKeysMap,
+        debug,
+        traceId,
+      });
+
+      const filtered = filterNavTree({
+        fields: enriched,
+        userEntitlements: entitlements,
+        isEditingOrPreview,
+        isEmployee: employee,
+        debug,
+        traceId,
+      });
+
+      setNavigationFieldsOnLayout(page.layout, filtered);
+      if (debug)
+        console.log('[NAV SSR][DONE]', { traceId, returnedKeys: Object.keys(filtered).length });
+    } else if (debug) {
+      console.log('[NAV SSR][NO RENDERING FOUND]', { traceId });
+    }
   }
 
   const props = {
     page: pageUnknown,
     dictionary: await client.getDictionary({
-      site: page.siteName ?? '',
-      locale: page.locale ?? language,
+      site: (page.siteName || '') as string,
+      locale: (page.locale || language) as string,
     }),
     componentProps: await client.getComponentData(
       page.layout as LayoutServiceData,
@@ -247,7 +267,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     ),
   };
 
-  return { props: deepOmitUndefined(props) as typeof props };
+  return { props };
 };
 
 export default SitecorePage;

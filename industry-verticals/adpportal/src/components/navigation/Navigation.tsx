@@ -101,6 +101,16 @@ const NavigationListItem: React.FC<NavigationListItemProps> = ({
       ))
     : null;
 
+  const debug =
+    typeof window !== 'undefined' &&
+    new URLSearchParams(window.location.search).get('navdebug') === '1';
+  if (debug)
+    console.log('[NAV ITEM]', {
+      id: fields.Id,
+      href: fields.Href,
+      req: fields.__requiredAuth0Keys,
+    });
+
   return (
     <li
       ref={dropdownRef}
@@ -114,12 +124,12 @@ const NavigationListItem: React.FC<NavigationListItemProps> = ({
         isLogoRootItem && isSimpleLayout && 'lg:mr-auto'
       )}
     >
-      <div className="flex items-center justify-center gap-1">
+      <div className="flex items-center justify-center">
         <Link
           field={getLinkField(fields)}
           editable={page.mode.isEditing}
           onClick={clickHandler}
-          className="hover:text-foreground-light whitespace-nowrap transition-colors"
+          className="hover:text-foreground-light text-xs whitespace-nowrap transition-colors"
         >
           {getLinkContent(fields, logoSrc)}
         </Link>
@@ -130,7 +140,7 @@ const NavigationListItem: React.FC<NavigationListItemProps> = ({
             aria-label="Toggle submenu"
             aria-haspopup="true"
             aria-expanded={isActive}
-            className="flex h-6 w-6 cursor-pointer items-center justify-center"
+            className="flex h-6 cursor-pointer items-center justify-center"
             onClick={() => setIsActive((a) => !a)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
@@ -177,16 +187,15 @@ const NavigationListItem: React.FC<NavigationListItemProps> = ({
 export const Default = ({ params, fields }: NavigationProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { page } = useSitecore();
-  const { user, isLoading } = useUser();
+  const isEditing = page.mode.isEditing;
+  const { user } = useUser();
 
   const { styles, RenderingIdentifier: id, Logo: logoImage, SimpleLayout: simpleLayout } = params;
 
   useStopResponsiveTransition();
 
-  // Base fields from Sitecore (already SSR-filtered, and enriched with __requiredAuth0Keys)
   const [baseFields, setBaseFields] = useState<Record<string, NavItemFields>>(fields);
 
-  // Keep baseFields in sync when route changes (Sitecore delivers a new fields object)
   useEffect(() => {
     setBaseFields(fields);
   }, [fields]);
@@ -199,34 +208,45 @@ export const Default = ({ params, fields }: NavigationProps) => {
   const isSimpleLayout = isParamEnabled(simpleLayout);
   const logoSrc = extractMediaUrl(logoImage);
 
-  const userEntitlements =
-    (user?.[ENTITLEMENTS_CLAIM] as Record<string, boolean> | undefined) || {};
+  const userEntitlements = useMemo<Record<string, boolean>>(() => {
+    const claim = user?.[ENTITLEMENTS_CLAIM] as unknown;
+    if (claim && typeof claim === 'object' && !Array.isArray(claim)) {
+      return claim as Record<string, boolean>;
+    }
+    return {};
+  }, [user]);
 
-  /**
-   * Re-filter instantly on login/logout (no network).
-   */
   const filteredFields = useMemo(() => {
     const prepared = prepareFields(baseFields, !isSimpleLayout);
     const list = Object.values(prepared).filter(Boolean) as NavItemFields[];
-    const filteredList = filterNavTreeClient(list, userEntitlements);
 
-    // put back to record shape to keep existing rendering logic stable
+    if (isEditing) {
+      const record: Record<string, NavItemFields> = {};
+      list.forEach((it, idx) => (record[String(idx)] = it));
+      return record;
+    }
+
+    const filteredList = filterNavTreeClient(list, userEntitlements);
     const record: Record<string, NavItemFields> = {};
     filteredList.forEach((it, idx) => (record[String(idx)] = it));
     return record;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [baseFields, isSimpleLayout, user?.sub, isLoading]);
+  }, [userEntitlements, baseFields, isSimpleLayout, isEditing]);
 
   /**
-   * Periodically refresh navigation from Edge via API
-   * so newly published items can appear during a long session.
+   * Refresh nav during long sessions so newly published items appear.
+   * IMPORTANT: Do NOT refresh in editing mode, so editors never get filtered data.
    */
   useEffect(() => {
+    if (isEditing) return;
+
     let cancelled = false;
 
     const refresh = async () => {
       try {
-        const res = await fetch('/api/nav', { method: 'GET' });
+        const locale = (page as unknown as { locale?: string })?.locale || 'en';
+        const res = await fetch(`/api/nav?locale=${encodeURIComponent(locale)}&editing=0`, {
+          method: 'GET',
+        });
         if (!res.ok) return;
         const json = (await res.json()) as { fields?: Record<string, NavItemFields> };
         if (!cancelled && json?.fields) {
@@ -238,13 +258,9 @@ export const Default = ({ params, fields }: NavigationProps) => {
       }
     };
 
-    // initial refresh after mount
     refresh();
 
-    // refresh every 2 minutes (tune as you like)
     const interval = setInterval(refresh, 2 * 60 * 1000);
-
-    // refresh when tab becomes active again
     const onFocus = () => refresh();
     window.addEventListener('focus', onFocus);
 
@@ -253,7 +269,7 @@ export const Default = ({ params, fields }: NavigationProps) => {
       clearInterval(interval);
       window.removeEventListener('focus', onFocus);
     };
-  }, []);
+  }, [isEditing, page]);
 
   if (!Object.values(filteredFields).some((v) => !!v)) {
     return (
@@ -328,7 +344,7 @@ export const Default = ({ params, fields }: NavigationProps) => {
         <ul
           role="menubar"
           className={clsx(
-            'container flex flex-col items-center justify-center gap-x-8 gap-y-4 py-6 text-lg lg:flex-row xl:gap-x-16',
+            'container flex flex-col items-center justify-center gap-x-4 gap-y-4 py-6 text-lg lg:flex-row xl:gap-x-8',
             isSimpleLayout && !hasLogoRootItem && 'lg:justify-end'
           )}
         >

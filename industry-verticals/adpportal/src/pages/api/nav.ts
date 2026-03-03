@@ -1,101 +1,91 @@
-// pages/api/nav.ts
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from '@auth0/nextjs-auth0';
 
 import client from 'lib/sitecore-client';
+import type { Session } from '@auth0/nextjs-auth0';
 import { ENTITLEMENTS_CLAIM } from 'lib/entitlements';
-import { secureNavigationInLayout } from 'lib/nav-security';
+import { getNavMetadata } from 'lib/nav-metadata';
+import { enrichNavTree, filterNavTree, type NavFields } from 'lib/nav-apply';
+import { getNavigationFieldsFromLayout, setNavigationFieldsOnLayout } from 'lib/nav-layout';
 
-function getUserEntitlements(session: unknown): Record<string, boolean> {
-  const user = (session as { user?: Record<string, unknown> } | null)?.user;
-  const claim = user?.[ENTITLEMENTS_CLAIM];
-
+function getUserEntitlements(session: Session | null | undefined): Record<string, boolean> {
+  const claim = session?.user?.[ENTITLEMENTS_CLAIM];
   if (claim && typeof claim === 'object' && !Array.isArray(claim)) {
     return claim as Record<string, boolean>;
   }
   return {};
 }
 
-type RenderingLike = {
-  componentName?: string;
-  name?: string;
-  fields?: unknown;
-  placeholders?: unknown;
-};
-
-function isObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null;
-}
-
-function findNavigationFields(node: unknown): unknown | null {
-  if (!node) return null;
-
-  if (Array.isArray(node)) {
-    for (const entry of node) {
-      if (isObject(entry)) {
-        const r = entry as RenderingLike;
-        const name = r.componentName ?? r.name;
-        if (name === 'Navigation' && r.fields) return r.fields;
-
-        const deep = findNavigationFields(r.placeholders);
-        if (deep) return deep;
-      }
-    }
-    return null;
-  }
-
-  if (isObject(node)) {
-    for (const v of Object.values(node)) {
-      const deep = findNavigationFields(v);
-      if (deep) return deep;
-    }
-  }
-
-  return null;
-}
-
-function getPlaceholdersFromLayout(layout: unknown): unknown {
-  if (!isObject(layout)) return undefined;
-  const sitecore = layout['sitecore'];
-  if (!isObject(sitecore)) return undefined;
-  const route = sitecore['route'];
-  if (!isObject(route)) return undefined;
-  return route['placeholders'];
+const EMPLOYEE_EMAIL_DOMAIN = (process.env.ADP_EMPLOYEE_EMAIL_DOMAIN || 'adp.com').toLowerCase();
+function isEmployee(session: Session | null | undefined): boolean {
+  const email = (session?.user?.email as string | undefined)?.toLowerCase();
+  return Boolean(email && email.endsWith(`@${EMPLOYEE_EMAIL_DOMAIN}`));
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // varies by auth cookie
   res.setHeader('Cache-Control', 'private, no-store, max-age=0');
   res.setHeader('Vary', 'Cookie');
 
   try {
-    // Pull a fresh page layout from Edge (home is usually enough for global nav)
     const locale = typeof req.query.locale === 'string' ? req.query.locale : 'en';
-    const pageUnknown: unknown = await client.getPage('/', { locale });
 
-    const page = pageUnknown as { layout?: unknown };
-    if (!page?.layout) {
-      return res.status(200).json({ fields: {} });
-    }
+    // Editing/Preview bypass: still apply redirects, skip entitlement filtering
+    const isEditingOrPreview =
+      req.query.editing === '1' ||
+      req.query.preview === '1' ||
+      (typeof req.query.sc_mode === 'string' &&
+        ['edit', 'preview'].includes(req.query.sc_mode.toLowerCase()));
+
+    const page = (await client.getPage('/', { locale })) as { layout?: unknown };
+    if (!page?.layout) return res.status(200).json({ fields: {} });
 
     const session = await getSession(req, res);
-    const userEntitlements = getUserEntitlements(session);
+    const entitlements = getUserEntitlements(session);
+    const employee = isEmployee(session);
 
-    // Mutate layout with nav security
-    const securedLayout = await secureNavigationInLayout({
-      layout: page.layout,
+    const navFields = getNavigationFieldsFromLayout(page.layout);
+    if (!navFields) return res.status(200).json({ fields: {} });
+
+    const collectIds = (fields: NavFields): string[] => {
+      const ids: string[] = [];
+      const walk = (it: any) => {
+        if (it?.Id) ids.push(it.Id);
+        if (Array.isArray(it?.Children)) it.Children.forEach(walk);
+      };
+      Object.values(fields).forEach(walk);
+      return [...new Set(ids)];
+    };
+
+    const ids = collectIds(navFields);
+
+    // Always fetch redirects; only fetch entitlement keys when NOT editing/preview and NOT employee
+    const meta = await getNavMetadata({
+      itemIds: ids,
       language: locale,
-      userEntitlements,
-      debug: true,
+      includeEntitlements: !isEditingOrPreview && !employee,
+      debug: false,
     });
 
-    // Extract Navigation fields from mutated layout
-    const placeholders = getPlaceholdersFromLayout(securedLayout);
-    const navFields = (findNavigationFields(placeholders) as Record<string, unknown>) ?? {};
+    // Always enrich (redirects always applied)
+    const enriched = enrichNavTree({
+      fields: navFields,
+      redirectMap: meta.redirectMap,
+      requiredKeysMap: meta.requiredKeysMap,
+    });
 
-    console.log('[NAV API] returning fields keys:', Object.keys(navFields));
+    // Filter only when not editing/preview (filter function will bypass automatically)
+    const filtered = filterNavTree({
+      fields: enriched,
+      userEntitlements: entitlements,
+      isEditingOrPreview,
+      isEmployee: employee,
+    });
 
-    return res.status(200).json({ fields: navFields });
+    setNavigationFieldsOnLayout(page.layout, filtered);
+
+    const updated = getNavigationFieldsFromLayout(page.layout) || {};
+    return res.status(200).json({ fields: updated });
   } catch (e: unknown) {
     console.error('[NAV API] error', e);
     return res.status(200).json({ fields: {} });

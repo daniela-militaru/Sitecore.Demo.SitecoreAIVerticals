@@ -1,7 +1,21 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { handleAuth } from '@auth0/nextjs-auth0';
+import { handleAuth, handleLogin, handleLogout } from '@auth0/nextjs-auth0';
 
-export default function auth(req: NextApiRequest, res: NextApiResponse) {
-  console.log('AUTH0_SECRET present?', Boolean(process.env.AUTH0_SECRET));
-  return handleAuth()(req, res);
-}
+export default handleAuth({
+  // Force credential prompt
+  login: async (req: NextApiRequest, res: NextApiResponse) => {
+    return handleLogin(req, res, {
+      authorizationParams: {
+        prompt: 'login',
+      },
+    });
+  },
+
+  // (Optional) make logout also clear the Auth0 session
+  logout: async (req: NextApiRequest, res: NextApiResponse) => {
+    return handleLogout(req, res, {
+      // `returnTo` is optional; your app URL is fine
+      returnTo: '/',
+    });
+  },
+});

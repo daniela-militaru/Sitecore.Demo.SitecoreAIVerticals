@@ -6,15 +6,15 @@ import client from 'lib/sitecore-client';
  */
 export const ENTITLEMENTS_CLAIM = 'https://adp-portal.vercel.app/entitlements';
 
-// Sitecore field names
+// Sitecore field names (must match EXACTLY the field names in Sitecore)
 const ENTITLEMENTS_FIELD = 'Entitlements';
 const ENTITLEMENT_ITEM_AUTH0_FIELD = 'Auth0';
 
-// GraphQL queries (Delivery API safe)
+// GraphQL queries (Experience Edge / Delivery API safe)
 const PAGE_ENTITLEMENTS_QUERY = `
   query ItemEntitlements($id: String!, $language: String!) {
     item(path: $id, language: $language) {
-      entitlements: field(name: "${ENTITLEMENTS_FIELD}") { value }
+      entitlements: field(name: "${ENTITLEMENTS_FIELD}") { jsonValue }
     }
   }
 `;
@@ -22,16 +22,28 @@ const PAGE_ENTITLEMENTS_QUERY = `
 const ENTITLEMENT_ITEM_QUERY = `
   query EntitlementItem($id: String!, $language: String!) {
     item(path: $id, language: $language) {
-      auth0: field(name: "${ENTITLEMENT_ITEM_AUTH0_FIELD}") { value }
+      auth0: field(name: "${ENTITLEMENT_ITEM_AUTH0_FIELD}") { jsonValue }
     }
   }
 `;
+
+/**
+ * Utilities
+ */
+
+function asString(v: unknown): string | undefined {
+  return typeof v === 'string' ? v : undefined;
+}
+
+function normalizeGuid(id: string): string {
+  return id.trim().replace(/[{}]/g, '').toLowerCase();
+}
 
 function parsePipeSeparatedGuids(raw?: string | null): string[] {
   if (!raw) return [];
   return raw
     .split('|')
-    .map((x) => x.trim())
+    .map((x) => normalizeGuid(x))
     .filter(Boolean);
 }
 
@@ -39,7 +51,6 @@ function parsePipeSeparatedGuids(raw?: string | null): string[] {
  * getData typing + runtime guard (avoids `any`)
  */
 type GetDataFn = (query: string, variables: Record<string, unknown>) => Promise<unknown>;
-
 function hasGetData(x: unknown): x is { getData: GetDataFn } {
   return typeof (x as { getData?: unknown })?.getData === 'function';
 }
@@ -53,18 +64,27 @@ const TTL_MS = 10 * 60 * 1000; // 10 minutes
 const requiredKeysCache = new Map<string, CacheEntry<string[]>>();
 
 function getCacheKey(itemId: string, language: string) {
-  return `${language}::${itemId}`;
+  return `${language}::${normalizeGuid(itemId)}`;
 }
+
+/**
+ * Result shapes for jsonValue
+ */
+type JsonValueField = {
+  jsonValue?: {
+    value?: unknown;
+  };
+};
 
 type ItemEntitlementsResult = {
   item?: {
-    entitlements?: { value?: string | null };
+    entitlements?: JsonValueField;
   };
 };
 
 type EntitlementItemResult = {
   item?: {
-    auth0?: { value?: string | null };
+    auth0?: JsonValueField;
   };
 };
 
@@ -94,9 +114,11 @@ export async function getRequiredAuth0EntitlementKeysForItem(
     language,
   });
 
-  const raw = (pageResultUnknown as ItemEntitlementsResult)?.item?.entitlements?.value ?? null;
+  const rawEntitlements =
+    asString((pageResultUnknown as ItemEntitlementsResult)?.item?.entitlements?.jsonValue?.value) ??
+    null;
 
-  const entitlementItemIds = parsePipeSeparatedGuids(raw);
+  const entitlementItemIds = parsePipeSeparatedGuids(rawEntitlements);
 
   if (entitlementItemIds.length === 0) {
     const empty: string[] = [];
@@ -106,13 +128,17 @@ export async function getRequiredAuth0EntitlementKeysForItem(
 
   const keys: string[] = [];
 
-  for (const id of entitlementItemIds) {
-    const resultUnknown = await client.getData(ENTITLEMENT_ITEM_QUERY, { id, language });
+  for (const entitlementItemId of entitlementItemIds) {
+    const resultUnknown = await client.getData(ENTITLEMENT_ITEM_QUERY, {
+      id: entitlementItemId,
+      language,
+    });
 
-    const value = (resultUnknown as EntitlementItemResult)?.item?.auth0?.value ?? null;
+    const auth0Key =
+      asString((resultUnknown as EntitlementItemResult)?.item?.auth0?.jsonValue?.value) ?? null;
 
-    if (typeof value === 'string' && value.trim().length > 0) {
-      keys.push(value.trim());
+    if (typeof auth0Key === 'string' && auth0Key.trim().length > 0) {
+      keys.push(auth0Key.trim());
     }
   }
 
