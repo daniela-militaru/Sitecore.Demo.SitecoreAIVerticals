@@ -92,6 +92,7 @@ import { pageView, identity } from '@sitecore-cloudsdk/events/browser';
 import config from 'sitecore.config';
 import { faUser, faCalendar, faTag } from '@fortawesome/free-solid-svg-icons';
 import { sortByDateDesc, getCategoryCounts } from '@/helpers/articleUtils';
+import { userHasSomeRequiredKey, getRequiredAuth0KeysFromEntitlements } from '@/lib/entitlements/componentEntitlements';
 
 const importMap = [
   {
@@ -698,6 +699,13 @@ const importMap = [
     exports: [
       { name: 'sortByDateDesc', value: sortByDateDesc },
       { name: 'getCategoryCounts', value: getCategoryCounts },
+    ]
+  },
+  {
+    module: '@/lib/entitlements/componentEntitlements',
+    exports: [
+      { name: 'userHasSomeRequiredKey', value: userHasSomeRequiredKey },
+      { name: 'getRequiredAuth0KeysFromEntitlements', value: getRequiredAuth0KeysFromEntitlements },
     ]
   }
 ] as ImportEntry[];

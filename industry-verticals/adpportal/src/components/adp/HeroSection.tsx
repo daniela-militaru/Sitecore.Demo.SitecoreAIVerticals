@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 'use client';
 
 import type { JSX } from 'react';
+import { useUser } from '@auth0/nextjs-auth0/client';
 import {
   TextField,
   RichTextField,
@@ -10,32 +13,26 @@ import {
   Image as SitecoreImage,
   LinkField,
   Link as SitecoreLink,
+  useSitecore,
 } from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from '@/lib/component-props';
-
-/**
- * HeroSection Component
- * ADP hero with headline, subtitle, optional email input + CTA, and hero image
- *
- * Layout:
- * - Desktop: Two-column (text left, image right) with white background
- * - Mobile: Stacked (text top, image bottom)
- * - Optionally features an email input field (homepage) or just a CTA button (product pages)
- * - Optional floating badges on the hero image
- *
- * Usage:
- * - Homepage: provide EmailPlaceholder + Badge fields for the full hero
- * - Product pages (e.g. HCM): omit EmailPlaceholder + Badges for a simpler hero
- */
+import {
+  userHasSomeRequiredKey,
+  type EntitlementsMap,
+} from '@/lib/entitlements/componentEntitlements';
+import type { EntitlementItem } from '@/lib/entitlements/componentEntitlements';
+import { getRequiredAuth0KeysFromEntitlements } from '@/lib/entitlements/componentEntitlements';
 
 interface Fields {
   Title: TextField;
   Subtitle: RichTextField;
-  /** Optional -- if empty, only the CTA button is shown without an email input */
   EmailPlaceholder: TextField;
   CTAText: TextField;
   CTALink: LinkField;
   HeroImage: ImageField;
+
+  // ✅ Entitlements lives on the datasource, so it comes through as a datasource field here
+  Entitlements: EntitlementItem[];
 }
 
 const defaultFields: Fields = {
@@ -47,16 +44,54 @@ const defaultFields: Fields = {
   CTAText: { value: 'Get Pricing' },
   CTALink: { value: { href: '/get-pricing' } },
   HeroImage: { value: { src: '/hero-image.jpg', alt: 'ADP Payroll and HR Solutions' } },
+  Entitlements: [],
 };
 
 export type HeroSectionProps = ComponentProps & {
   fields: Fields;
 };
 
-export const Default = (props: HeroSectionProps): JSX.Element => {
+function extractUserEntitlementsMap(user: any): EntitlementsMap {
+  // ✅ Use the same claim key you use elsewhere.
+  // Example patterns:
+  //   user.entitlements (array) OR user["https://your-namespace/entitlements"] (array)
+  const raw = user?.entitlements ?? user?.['https://example.com/entitlements'] ?? [];
+
+  if (!Array.isArray(raw)) return {};
+  return raw.reduce((acc: EntitlementsMap, k: any) => {
+    if (typeof k === 'string' && k.trim()) acc[k.trim()] = true;
+    return acc;
+  }, {});
+}
+
+export const Default = (props: HeroSectionProps): JSX.Element | null => {
   const id = props.params.RenderingIdentifier;
   const { styles } = props.params;
   const fields = props.fields || defaultFields;
+
+  // Edit/Preview bypass (must always show)
+  const { page } = useSitecore();
+  const isEditingOrPreview = page.mode.isEditing || page.mode.isPreview;
+
+  console.log('HeroSection Entitlements:', fields.Entitlements);
+  const requiredKeys = getRequiredAuth0KeysFromEntitlements(fields?.Entitlements);
+  console.log('Required Auth0 Keys for this component:', requiredKeys);
+  const isSecured = requiredKeys.length > 0;
+
+  const { user, isLoading } = useUser();
+
+  if (!isEditingOrPreview && isSecured) {
+    // Fail-closed while Auth0 user is loading to avoid flicker/leakage
+    if (isLoading) return null;
+
+    // Not logged in => hide secured component
+    if (!user) return null;
+
+    const entitlements = extractUserEntitlementsMap(user);
+    const allowed = userHasSomeRequiredKey(requiredKeys, entitlements);
+
+    if (!allowed) return null;
+  }
 
   return (
     <section className={`component hero-section bg-white py-8 lg:py-16 ${styles || ''}`} id={id}>
@@ -72,7 +107,6 @@ export const Default = (props: HeroSectionProps): JSX.Element => {
               <RichText field={fields.Subtitle} />
             </div>
 
-            {/* Email Input + CTA (or just CTA if no email placeholder) */}
             {fields.EmailPlaceholder?.value ? (
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <input

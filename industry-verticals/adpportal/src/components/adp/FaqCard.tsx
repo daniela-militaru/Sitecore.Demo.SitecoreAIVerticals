@@ -1,8 +1,22 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { type JSX } from 'react';
-import { TextField, RichTextField, Text, RichText } from '@sitecore-content-sdk/nextjs';
+import { useUser } from '@auth0/nextjs-auth0/client';
+import {
+  TextField,
+  RichTextField,
+  Text,
+  RichText,
+  useSitecore,
+} from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from '@/lib/component-props';
+import {
+  getRequiredAuth0KeysFromEntitlements,
+  userHasSomeRequiredKey,
+  type EntitlementItem,
+  type EntitlementsMap,
+} from '@/lib/entitlements/componentEntitlements';
 
 /**
  * FaqCard Component
@@ -19,6 +33,9 @@ import { ComponentProps } from '@/lib/component-props';
 interface Fields {
   Question: TextField;
   Answer: RichTextField;
+
+  // ✅ Entitlements is on the datasource
+  Entitlements: EntitlementItem[];
 }
 
 const defaultFields: Fields = {
@@ -27,16 +44,49 @@ const defaultFields: Fields = {
     value:
       "<p>Human Capital Management (HCM) is a comprehensive approach to managing an organisation's most valuable asset: its people. It covers everything from recruiting and onboarding to payroll, benefits, performance management and talent development.</p>",
   },
+  Entitlements: [],
 };
 
 export type FaqCardProps = ComponentProps & {
   fields: Fields;
 };
 
-export const Default = (props: FaqCardProps): JSX.Element => {
+function extractUserEntitlementsMap(user: any): EntitlementsMap {
+  // ✅ Use the same claim you use elsewhere in your project
+  const raw = user?.entitlements ?? user?.['https://example.com/entitlements'] ?? [];
+
+  if (!Array.isArray(raw)) return {};
+  return raw.reduce((acc: EntitlementsMap, k: any) => {
+    if (typeof k === 'string' && k.trim()) acc[k.trim()] = true;
+    return acc;
+  }, {});
+}
+
+export const Default = (props: FaqCardProps): JSX.Element | null => {
   const id = props.params.RenderingIdentifier;
   const { styles } = props.params;
   const fields = props.fields || defaultFields;
+
+  // Always show in edit/preview
+  const { page } = useSitecore();
+  const isEditingOrPreview = page.mode.isEditing || page.mode.isPreview;
+
+  const requiredKeys = getRequiredAuth0KeysFromEntitlements(fields?.Entitlements);
+  const isSecured = requiredKeys.length > 0;
+
+  const { user, isLoading } = useUser();
+
+  if (!isEditingOrPreview && isSecured) {
+    // Fail-closed while loading user to avoid showing secured content briefly
+    if (isLoading) return null;
+
+    // Logged out => hide secured FAQ card
+    if (!user) return null;
+
+    const entitlements = extractUserEntitlementsMap(user);
+    const allowed = userHasSomeRequiredKey(requiredKeys, entitlements);
+    if (!allowed) return null;
+  }
 
   const questionValue = (fields.Question?.value as string) || '';
 
