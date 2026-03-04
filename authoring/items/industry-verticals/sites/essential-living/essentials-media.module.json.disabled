@@ -1,7 +1,9 @@
 {
   "$schema": "../.sitecore/schemas/ModuleFile.schema.json",
   "namespace": "Project.Essentials-Media",
-  "references": ["Project.IndustryVerticals"],
+  "references": [
+    "Project.IndustryVerticals"
+  ],
   "items": {
     "includes": [
       {
