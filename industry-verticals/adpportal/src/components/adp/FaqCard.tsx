@@ -14,8 +14,8 @@ import { ComponentProps } from '@/lib/component-props';
 import {
   getRequiredAuth0KeysFromEntitlements,
   userHasSomeRequiredKey,
+  getUserEntitlementsFromUser,
   type EntitlementItem,
-  type EntitlementsMap,
 } from '@/lib/entitlements/componentEntitlements';
 
 /**
@@ -51,17 +51,6 @@ export type FaqCardProps = ComponentProps & {
   fields: Fields;
 };
 
-function extractUserEntitlementsMap(user: any): EntitlementsMap {
-  // ✅ Use the same claim you use elsewhere in your project
-  const raw = user?.entitlements ?? user?.['https://example.com/entitlements'] ?? [];
-
-  if (!Array.isArray(raw)) return {};
-  return raw.reduce((acc: EntitlementsMap, k: any) => {
-    if (typeof k === 'string' && k.trim()) acc[k.trim()] = true;
-    return acc;
-  }, {});
-}
-
 export const Default = (props: FaqCardProps): JSX.Element | null => {
   const id = props.params.RenderingIdentifier;
   const { styles } = props.params;
@@ -83,7 +72,7 @@ export const Default = (props: FaqCardProps): JSX.Element | null => {
     // Logged out => hide secured FAQ card
     if (!user) return null;
 
-    const entitlements = extractUserEntitlementsMap(user);
+    const entitlements = getUserEntitlementsFromUser(user as any);
     const allowed = userHasSomeRequiredKey(requiredKeys, entitlements);
     if (!allowed) return null;
   }

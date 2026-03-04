@@ -17,11 +17,11 @@ import {
 } from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from '@/lib/component-props';
 import {
+  getRequiredAuth0KeysFromEntitlements,
+  getUserEntitlementsFromUser,
   userHasSomeRequiredKey,
-  type EntitlementsMap,
 } from '@/lib/entitlements/componentEntitlements';
 import type { EntitlementItem } from '@/lib/entitlements/componentEntitlements';
-import { getRequiredAuth0KeysFromEntitlements } from '@/lib/entitlements/componentEntitlements';
 
 interface Fields {
   Title: TextField;
@@ -51,19 +51,6 @@ export type HeroSectionProps = ComponentProps & {
   fields: Fields;
 };
 
-function extractUserEntitlementsMap(user: any): EntitlementsMap {
-  // ✅ Use the same claim key you use elsewhere.
-  // Example patterns:
-  //   user.entitlements (array) OR user["https://your-namespace/entitlements"] (array)
-  const raw = user?.entitlements ?? user?.['https://example.com/entitlements'] ?? [];
-
-  if (!Array.isArray(raw)) return {};
-  return raw.reduce((acc: EntitlementsMap, k: any) => {
-    if (typeof k === 'string' && k.trim()) acc[k.trim()] = true;
-    return acc;
-  }, {});
-}
-
 export const Default = (props: HeroSectionProps): JSX.Element | null => {
   const id = props.params.RenderingIdentifier;
   const { styles } = props.params;
@@ -87,7 +74,7 @@ export const Default = (props: HeroSectionProps): JSX.Element | null => {
     // Not logged in => hide secured component
     if (!user) return null;
 
-    const entitlements = extractUserEntitlementsMap(user);
+    const entitlements = getUserEntitlementsFromUser(user as any);
     const allowed = userHasSomeRequiredKey(requiredKeys, entitlements);
 
     if (!allowed) return null;
