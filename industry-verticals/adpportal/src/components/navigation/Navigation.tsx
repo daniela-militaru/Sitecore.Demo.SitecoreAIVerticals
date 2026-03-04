@@ -346,7 +346,7 @@ export const Default = ({ params, fields }: NavigationProps) => {
           className={clsx(
             // Mobile: center items; Desktop: align items from the left.
             'container flex flex-col gap-x-4 gap-y-4 py-6 text-lg lg:flex-row xl:gap-x-8',
-            'max-lg:items-center max-lg:justify-center lg:justify-start lg:items-center',
+            'max-lg:items-center max-lg:justify-center lg:items-center lg:justify-start',
             isSimpleLayout && !hasLogoRootItem && 'lg:justify-end'
           )}
         >
