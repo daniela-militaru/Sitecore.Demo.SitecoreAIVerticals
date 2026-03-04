@@ -65,6 +65,7 @@ import * as ServicesSection from 'src/components/adp/ServicesSection';
 import * as ServiceCard from 'src/components/adp/ServiceCard';
 import * as SearchFilterSection from 'src/components/adp/SearchFilterSection';
 import * as PromoCtaSection from 'src/components/adp/PromoCtaSection';
+import * as Newsletter from 'src/components/adp/Newsletter';
 import * as Logo from 'src/components/adp/Logo';
 import * as LoginSection from 'src/components/adp/LoginSection';
 import * as HeroSection from 'src/components/adp/HeroSection';
@@ -152,6 +153,7 @@ export const componentMap = new Map<string, NextjsContentSdkComponent>([
   ['ServiceCard', { ...ServiceCard, componentType: 'client' }],
   ['SearchFilterSection', { ...SearchFilterSection, componentType: 'client' }],
   ['PromoCtaSection', { ...PromoCtaSection, componentType: 'client' }],
+  ['Newsletter', { ...Newsletter }],
   ['Logo', { ...Logo }],
   ['LoginSection', { ...LoginSection, componentType: 'client' }],
   ['HeroSection', { ...HeroSection, componentType: 'client' }],
