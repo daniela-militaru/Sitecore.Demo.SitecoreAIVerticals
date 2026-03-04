@@ -129,7 +129,7 @@ const NavigationListItem: React.FC<NavigationListItemProps> = ({
           field={getLinkField(fields)}
           editable={page.mode.isEditing}
           onClick={clickHandler}
-          className="hover:text-foreground-light text-[10px] whitespace-nowrap transition-colors"
+          className="hover:text-foreground-light text-[12px] whitespace-nowrap transition-colors"
         >
           {getLinkContent(fields, logoSrc)}
         </Link>
@@ -303,7 +303,7 @@ export const Default = ({ params, fields }: NavigationProps) => {
           !isSimpleLayout &&
             '[.component.header_&]:grid-cols-2 [.component.header_&]:px-0 [.component.header_&]:max-lg:grid',
           !isSimpleLayout ? 'flex-row-reverse' : '',
-          isSimpleLayout && !hasLogoRootItem ? 'justify-end' : 'justify-between'
+          isSimpleLayout && !hasLogoRootItem ? 'justify-end' : ''
         )}
       >
         {hasLogoRootItem && (
@@ -344,7 +344,9 @@ export const Default = ({ params, fields }: NavigationProps) => {
         <ul
           role="menubar"
           className={clsx(
-            'container flex flex-col items-center justify-center gap-x-4 gap-y-4 py-6 text-lg lg:flex-row xl:gap-x-8',
+            // Mobile: center items; Desktop: align items from the left.
+            'container flex flex-col gap-x-4 gap-y-4 py-6 text-lg lg:flex-row xl:gap-x-8',
+            'max-lg:items-center max-lg:justify-center lg:justify-start lg:items-center',
             isSimpleLayout && !hasLogoRootItem && 'lg:justify-end'
           )}
         >
