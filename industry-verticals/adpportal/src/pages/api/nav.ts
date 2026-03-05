@@ -3,25 +3,10 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from '@auth0/nextjs-auth0';
 
 import client from 'lib/sitecore-client';
-import type { Session } from '@auth0/nextjs-auth0';
-import { ENTITLEMENTS_CLAIM } from 'lib/entitlements';
+import { getEntitlementsFromSession, isEmployeeFromSession } from 'lib/entitlements';
 import { getNavMetadata } from 'lib/nav-metadata';
 import { enrichNavTree, filterNavTree, type NavFields } from 'lib/nav-apply';
 import { getNavigationFieldsFromLayout, setNavigationFieldsOnLayout } from 'lib/nav-layout';
-
-function getUserEntitlements(session: Session | null | undefined): Record<string, boolean> {
-  const claim = session?.user?.[ENTITLEMENTS_CLAIM];
-  if (claim && typeof claim === 'object' && !Array.isArray(claim)) {
-    return claim as Record<string, boolean>;
-  }
-  return {};
-}
-
-const EMPLOYEE_EMAIL_DOMAIN = (process.env.ADP_EMPLOYEE_EMAIL_DOMAIN || 'adp.com').toLowerCase();
-function isEmployee(session: Session | null | undefined): boolean {
-  const email = (session?.user?.email as string | undefined)?.toLowerCase();
-  return Boolean(email && email.endsWith(`@${EMPLOYEE_EMAIL_DOMAIN}`));
-}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'private, no-store, max-age=0');
@@ -41,8 +26,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (!page?.layout) return res.status(200).json({ fields: {} });
 
     const session = await getSession(req, res);
-    const entitlements = getUserEntitlements(session);
-    const employee = isEmployee(session);
+    const entitlements = getEntitlementsFromSession(session);
+    const employee = isEmployeeFromSession(session);
 
     const navFields = getNavigationFieldsFromLayout(page.layout);
     if (!navFields) return res.status(200).json({ fields: {} });
@@ -80,6 +65,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       userEntitlements: entitlements,
       isEditingOrPreview,
       isEmployee: employee,
+      language: locale,
+      userSub: session?.user?.sub,
     });
 
     setNavigationFieldsOnLayout(page.layout, filtered);

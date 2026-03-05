@@ -3,7 +3,7 @@
 'use client';
 
 import type { JSX } from 'react';
-import { useUser } from '@auth0/nextjs-auth0/client';
+import { useMemo } from 'react';
 import {
   TextField,
   RichTextField,
@@ -18,8 +18,7 @@ import {
 import { ComponentProps } from '@/lib/component-props';
 import {
   getRequiredAuth0KeysFromEntitlements,
-  getUserEntitlementsFromUser,
-  userHasSomeRequiredKey,
+  useComponentEntitlementDecision,
 } from '@/lib/entitlements/componentEntitlements';
 import type { EntitlementItem } from '@/lib/entitlements/componentEntitlements';
 
@@ -56,27 +55,17 @@ export const Default = (props: HeroSectionProps): JSX.Element | null => {
   const { styles } = props.params;
   const fields = props.fields || defaultFields;
 
-  // Edit/Preview bypass (must always show)
   const { page } = useSitecore();
   const isEditingOrPreview = page.mode.isEditing || page.mode.isPreview;
 
-  console.log('HeroSection Entitlements:', fields.Entitlements);
-  const requiredKeys = getRequiredAuth0KeysFromEntitlements(fields?.Entitlements);
-  console.log('Required Auth0 Keys for this component:', requiredKeys);
-  const isSecured = requiredKeys.length > 0;
-
-  const { user, isLoading } = useUser();
+  const requiredKeys = useMemo(
+    () => getRequiredAuth0KeysFromEntitlements(fields?.Entitlements),
+    [fields?.Entitlements]
+  );
+  const { allowed, isLoading, isSecured } = useComponentEntitlementDecision(requiredKeys);
 
   if (!isEditingOrPreview && isSecured) {
-    // Fail-closed while Auth0 user is loading to avoid flicker/leakage
     if (isLoading) return null;
-
-    // Not logged in => hide secured component
-    if (!user) return null;
-
-    const entitlements = getUserEntitlementsFromUser(user as any);
-    const allowed = userHasSomeRequiredKey(requiredKeys, entitlements);
-
     if (!allowed) return null;
   }
 

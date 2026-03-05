@@ -1,4 +1,6 @@
 // lib/nav-apply.ts
+import { getOrSetAccessDecision } from 'lib/entitlements';
+
 export type NavItem = {
   Id: string;
   Href: string;
@@ -43,11 +45,6 @@ function normalizeHref(input?: string | null): string {
   const base = trimmed.split('#')[0].split('?')[0];
   const withSlash = base.startsWith('/') ? base : `/${base}`;
   return withSlash.length > 1 ? withSlash.replace(/\/+$/, '') : withSlash;
-}
-
-function userHasSomeKey(required: string[], userEntitlements: Record<string, boolean>) {
-  if (!required.length) return true;
-  return required.some((k) => userEntitlements[k] === true);
 }
 
 export function enrichNavTree(params: {
@@ -118,16 +115,27 @@ export function filterNavTree(params: {
   userEntitlements: Record<string, boolean>;
   isEditingOrPreview: boolean;
   isEmployee: boolean;
+  language: string;
+  userSub: string | undefined;
   debug?: boolean;
   traceId?: string;
 }): NavFields {
-  const { fields, userEntitlements, isEditingOrPreview, isEmployee, debug, traceId } = params;
+  const {
+    fields,
+    userEntitlements,
+    isEditingOrPreview,
+    isEmployee,
+    language,
+    userSub,
+    debug,
+    traceId,
+  } = params;
 
   if (isEditingOrPreview || isEmployee) return fields;
 
   const filterItem = (it: NavItem): NavItem | null => {
     const required = it.__requiredAuth0Keys ?? [];
-    const allowed = userHasSomeKey(required, userEntitlements);
+    const allowed = getOrSetAccessDecision(it.Id, language, required, userEntitlements, userSub);
 
     if (!allowed) {
       if (debug) {

@@ -1,5 +1,6 @@
 // lib/nav-metadata.ts
 import client from 'lib/sitecore-client';
+import { ENTITLEMENTS_CACHE_TTL_MS, setRequiredKeysForItem } from 'lib/entitlements';
 
 export type RedirectMap = Record<string, string>;
 export type RequiredKeysMap = Record<string, string[]>;
@@ -10,7 +11,6 @@ export type NavMetadata = {
 };
 
 type CacheEntry<T> = { value: T; expiresAt: number };
-const TTL_MS = 10 * 60 * 1000; // 10 minutes
 const metaCache = new Map<string, CacheEntry<NavMetadata>>();
 
 // Experience Edge depth limit is strict; keep small.
@@ -187,6 +187,7 @@ export async function getNavMetadata(params: {
 
       if (includeEntitlements) {
         requiredKeysMap[idKey] = extractAuth0KeysFromEntitlements(node.entitlements);
+        setRequiredKeysForItem(idKey, language, requiredKeysMap[idKey]);
       } else {
         requiredKeysMap[idKey] = [];
       }
@@ -203,7 +204,7 @@ export async function getNavMetadata(params: {
   }
 
   const value: NavMetadata = { redirectMap, requiredKeysMap };
-  metaCache.set(cacheKey, { value, expiresAt: now + TTL_MS });
+  metaCache.set(cacheKey, { value, expiresAt: now + ENTITLEMENTS_CACHE_TTL_MS });
 
   if (debug) {
     const secured = Object.entries(requiredKeysMap).filter(([, v]) => v.length > 0);

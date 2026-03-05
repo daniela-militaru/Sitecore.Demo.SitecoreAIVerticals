@@ -11,102 +11,22 @@ import {
 import { extractPath, handleEditorFastRefresh } from '@sitecore-content-sdk/nextjs/utils';
 import { isDesignLibraryPreviewData } from '@sitecore-content-sdk/nextjs/editing';
 import { getSession } from '@auth0/nextjs-auth0';
-import type { Session } from '@auth0/nextjs-auth0';
 
 import client from 'lib/sitecore-client';
 import components from '.sitecore/component-map';
 import scConfig from 'sitecore.config';
 
 import {
-  ENTITLEMENTS_CLAIM,
-  getRequiredAuth0EntitlementKeysForItem,
-  userHasSomeRequiredKey,
+  getEntitlementsFromSession,
+  isEmployeeFromSession,
+  isUserAllowedForPage,
 } from 'lib/entitlements';
-import { getNavMetadata } from 'lib/nav-metadata';
+import { getNavMetadata, type NavMetadata } from 'lib/nav-metadata';
 import { enrichNavTree, filterNavTree, type NavFields, type NavItem } from 'lib/nav-apply';
 import { getNavigationFieldsFromLayout, setNavigationFieldsOnLayout } from 'lib/nav-layout';
 
 function normalizeGuid(id: string): string {
   return id.trim().replace(/[{}]/g, '').toLowerCase();
-}
-
-function getUserEntitlements(session: Session | null | undefined): Record<string, boolean> {
-  const claim = session?.user?.[ENTITLEMENTS_CLAIM];
-  if (claim && typeof claim === 'object' && !Array.isArray(claim))
-    return claim as Record<string, boolean>;
-  return {};
-}
-
-const EMPLOYEE_EMAIL_DOMAIN = (process.env.ADP_EMPLOYEE_EMAIL_DOMAIN || 'adp.com').toLowerCase();
-function isEmployee(session: Session | null | undefined): boolean {
-  const email = (session?.user?.email as string | undefined)?.toLowerCase();
-  return Boolean(email && email.endsWith(`@${EMPLOYEE_EMAIL_DOMAIN}`));
-}
-
-/**
- * ---- NEW: Fallback resolver for the NEW Experience Edge entitlements shape ----
- * Your Edge response shows:
- *   entitlements: { jsonValue: [ { fields: { Auth0: { value: "..." } } } ] }
- *
- * But lib/entitlements.ts still expects the OLD pipe-separated string.
- *
- * We DO NOT change that file here; we simply add this fallback ONLY in this page gating path.
- */
-type GetDataFn = (query: string, variables: Record<string, unknown>) => Promise<unknown>;
-function hasGetData(x: unknown): x is { getData: GetDataFn } {
-  return typeof (x as { getData?: unknown })?.getData === 'function';
-}
-function isObject(v: unknown): v is Record<string, unknown> {
-  return typeof v === 'object' && v !== null;
-}
-function asString(v: unknown): string | undefined {
-  return typeof v === 'string' ? v : undefined;
-}
-
-const PAGE_ENTITLEMENTS_JSONVALUE_QUERY = `
-  query PageEntitlementsJsonValue($id: String!, $language: String!) {
-    item(path: $id, language: $language) {
-      entitlements: field(name: "Entitlements") { jsonValue }
-    }
-  }
-`;
-
-async function getRequiredAuth0KeysForItem_FallbackJsonValue(
-  itemId: string,
-  language: string
-): Promise<string[]> {
-  if (!hasGetData(client)) return [];
-
-  const rawUnknown = await client.getData(PAGE_ENTITLEMENTS_JSONVALUE_QUERY, {
-    id: itemId,
-    language,
-  });
-  const raw = isObject(rawUnknown) ? rawUnknown : {};
-
-  const item = raw.item;
-  if (!isObject(item)) return [];
-
-  const entField = item.entitlements;
-  if (!isObject(entField)) return [];
-
-  const jsonValue = entField.jsonValue;
-  if (!Array.isArray(jsonValue)) return [];
-
-  const keys: string[] = [];
-  for (const entItem of jsonValue) {
-    if (!isObject(entItem)) continue;
-
-    const fields = entItem.fields;
-    if (!isObject(fields)) continue;
-
-    const auth0 = fields.Auth0;
-    if (!isObject(auth0)) continue;
-
-    const v = asString(auth0.value);
-    if (v && v.trim()) keys.push(v.trim());
-  }
-
-  return [...new Set(keys)];
 }
 
 function collectIds(fields: NavFields): string[] {
@@ -165,29 +85,46 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const isPreview = Boolean(context.preview);
 
   const session = await getSession(context.req, context.res);
-  const entitlements = getUserEntitlements(session);
-  const employee = isEmployee(session);
+  const entitlements = getEntitlementsFromSession(session);
+  const employee = isEmployeeFromSession(session);
 
   // Editing/preview: show everything
   const isEditingOrPreview = Boolean(isPreview);
 
-  // ---- 1) PAGE GATING ----
   const routeItemId = (
     page as unknown as { layout?: { sitecore?: { route?: { itemId?: string } } } }
   )?.layout?.sitecore?.route?.itemId;
 
-  if (!isEditingOrPreview && routeItemId) {
-    // KEEP existing logic, but make requiredKeys mutable so we can fallback if needed
-    let requiredKeys = await getRequiredAuth0EntitlementKeysForItem(routeItemId, language);
-
-    // NEW: if lib/entitlements returns [], try the new Experience Edge jsonValue array format
-    if (requiredKeys.length === 0) {
-      const fallbackKeys = await getRequiredAuth0KeysForItem_FallbackJsonValue(
-        routeItemId,
-        language
-      );
-      if (fallbackKeys.length > 0) requiredKeys = fallbackKeys;
+  // ---- 1) BATCH-FETCH NAV METADATA (includes current page so page gate can use cache) ----
+  let navMeta: NavMetadata | null = null;
+  if (!isEditingOrPreview && page.layout) {
+    const navFields = getNavigationFieldsFromLayout(page.layout);
+    if (navFields) {
+      const ids = collectIds(navFields);
+      if (routeItemId) ids.push(normalizeGuid(routeItemId));
+      navMeta = await getNavMetadata({
+        itemIds: [...new Set(ids)],
+        language,
+        debug,
+        traceId,
+      });
+      if (debug)
+        console.log('[NAV SSR][FIELDS]', {
+          traceId,
+          navTopKeys: Object.keys(navFields).length,
+          ids: ids.length,
+        });
     }
+  }
+
+  // ---- 2) PAGE GATING (cache hit when routeItemId was in nav batch) ----
+  if (!isEditingOrPreview && routeItemId) {
+    const { allowed, requiredKeys } = await isUserAllowedForPage(
+      routeItemId,
+      language,
+      entitlements,
+      session?.user?.sub
+    );
 
     if (debug) {
       console.log('[PAGE GATE]', {
@@ -195,6 +132,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         path,
         routeItemId: normalizeGuid(routeItemId),
         requiredKeys,
+        allowed,
         employee,
       });
     }
@@ -207,32 +145,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         };
       }
 
-      const allowed = userHasSomeRequiredKey(requiredKeys, entitlements);
       if (!allowed) {
-        // This is the "unauthorized screen" behavior you asked for
         return { redirect: { destination: '/unauthorized', permanent: false } };
       }
     }
   }
 
-  // ---- 2) NAVIGATION ENRICH + FILTER (SSR -> no flicker) ----
-  if (!isEditingOrPreview && page.layout) {
+  // ---- 3) NAV ENRICH + FILTER (reuse navMeta; no extra fetch) ----
+  if (!isEditingOrPreview && page.layout && navMeta) {
     const navFields = getNavigationFieldsFromLayout(page.layout);
     if (navFields) {
-      const ids = collectIds(navFields);
-      if (debug)
-        console.log('[NAV SSR][FIELDS]', {
-          traceId,
-          navTopKeys: Object.keys(navFields).length,
-          ids: ids.length,
-        });
-
-      const meta = await getNavMetadata({ itemIds: ids, language, debug, traceId });
-
       const enriched = enrichNavTree({
         fields: navFields,
-        redirectMap: meta.redirectMap,
-        requiredKeysMap: meta.requiredKeysMap,
+        redirectMap: navMeta.redirectMap,
+        requiredKeysMap: navMeta.requiredKeysMap,
         debug,
         traceId,
       });
@@ -242,6 +168,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         userEntitlements: entitlements,
         isEditingOrPreview,
         isEmployee: employee,
+        language,
+        userSub: session?.user?.sub,
         debug,
         traceId,
       });

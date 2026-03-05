@@ -1,5 +1,7 @@
 import type { Session } from '@auth0/nextjs-auth0';
-import { ENTITLEMENTS_CLAIM } from '../entitlements';
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { useMemo } from 'react';
+import { ADP_EMPLOYEE_ROLE, ENTITLEMENTS_CLAIM } from '../entitlements';
 
 export type EntitlementsMap = Record<string, boolean>;
 
@@ -57,4 +59,35 @@ export function userHasSomeRequiredKey(
 ): boolean {
   if (!requiredKeys?.length) return true;
   return requiredKeys.some((k) => userEntitlements[k] === true);
+}
+
+/**
+ * True if the user has the ADP Employee role (user.roles includes ADP_EMPLOYEE_ROLE).
+ * Employees see everything regardless of entitlements.
+ */
+export function isEmployeeFromUser(user: Record<string, unknown> | null | undefined): boolean {
+  if (!user) return false;
+  const roles = user.roles;
+  if (!Array.isArray(roles)) return false;
+  return roles.includes(ADP_EMPLOYEE_ROLE);
+}
+
+/**
+ * Memoized entitlement check for client components (HeroSection, FaqCard, etc.).
+ * If user has ADP Employee role, allowed is true (see everything). Otherwise uses required keys.
+ */
+export function useComponentEntitlementDecision(requiredKeys: string[]) {
+  const isSecured = requiredKeys.length > 0;
+  const { user, isLoading } = useUser();
+
+  const userEntitlements = useMemo(() => getUserEntitlementsFromUser(user ?? undefined), [user]);
+
+  const isEmployee = useMemo(() => isEmployeeFromUser(user ?? undefined), [user]);
+
+  const allowed = useMemo(
+    () => isEmployee || userHasSomeRequiredKey(requiredKeys, userEntitlements),
+    [isEmployee, requiredKeys, userEntitlements]
+  );
+
+  return { allowed, isLoading, isSecured };
 }

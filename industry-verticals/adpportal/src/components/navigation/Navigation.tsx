@@ -187,7 +187,7 @@ const NavigationListItem: React.FC<NavigationListItemProps> = ({
 export const Default = ({ params, fields }: NavigationProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { page } = useSitecore();
-  const isEditing = page.mode.isEditing;
+  const isEditingOrPreview = page.mode.isEditing || page.mode.isPreview;
   const { user } = useUser();
 
   const { styles, RenderingIdentifier: id, Logo: logoImage, SimpleLayout: simpleLayout } = params;
@@ -201,7 +201,7 @@ export const Default = ({ params, fields }: NavigationProps) => {
   }, [fields]);
 
   const handleToggleMenu = (event?: React.MouseEvent<HTMLElement>, forceState?: boolean) => {
-    if (event && page.mode.isEditing) event.preventDefault();
+    if (event && isEditingOrPreview) event.preventDefault();
     setIsMenuOpen(forceState ?? !isMenuOpen);
   };
 
@@ -220,7 +220,7 @@ export const Default = ({ params, fields }: NavigationProps) => {
     const prepared = prepareFields(baseFields, !isSimpleLayout);
     const list = Object.values(prepared).filter(Boolean) as NavItemFields[];
 
-    if (isEditing) {
+    if (isEditingOrPreview) {
       const record: Record<string, NavItemFields> = {};
       list.forEach((it, idx) => (record[String(idx)] = it));
       return record;
@@ -230,14 +230,14 @@ export const Default = ({ params, fields }: NavigationProps) => {
     const record: Record<string, NavItemFields> = {};
     filteredList.forEach((it, idx) => (record[String(idx)] = it));
     return record;
-  }, [userEntitlements, baseFields, isSimpleLayout, isEditing]);
+  }, [userEntitlements, baseFields, isSimpleLayout, isEditingOrPreview]);
 
   /**
    * Refresh nav during long sessions so newly published items appear.
-   * IMPORTANT: Do NOT refresh in editing mode, so editors never get filtered data.
+   * IMPORTANT: Do NOT refresh in editing/preview mode, so editors never get filtered data.
    */
   useEffect(() => {
-    if (isEditing) return;
+    if (isEditingOrPreview) return;
 
     let cancelled = false;
 
@@ -269,7 +269,7 @@ export const Default = ({ params, fields }: NavigationProps) => {
       clearInterval(interval);
       window.removeEventListener('focus', onFocus);
     };
-  }, [isEditing, page]);
+  }, [isEditingOrPreview, page]);
 
   if (!Object.values(filteredFields).some((v) => !!v)) {
     return (

@@ -1,5 +1,4 @@
 import React, { JSX, useState } from 'react';
-import Link from 'next/link';
 import { User, Heart, ShoppingCart, X, Search } from 'lucide-react';
 import { ComponentProps } from '@/lib/component-props';
 import { isParamEnabled } from '@/helpers/isParamEnabled';
@@ -23,7 +22,6 @@ export type NavigationIconsProps = ComponentProps & {
     CheckoutPage: LinkField;
     AccountPage: LinkField;
     WishlistPage: LinkField;
-    LoginPage: LinkField;
   };
   params: { [key: string]: string };
 };
@@ -58,13 +56,22 @@ export default function AuthButtons() {
   if (isLoading) return <div>Loading...</div>;
 
   if (!user) {
-    return <Link href="/api/auth/login">Login</Link>;
+    return (
+      // Intentional <a>: full navigation so request hits API route; Link causes client-side 404
+      // eslint-disable-next-line @next/next/no-html-link-for-pages
+      <a href="/api/auth/login" className="text-[#E2231A] hover:underline">
+        Login
+      </a>
+    );
   }
 
   return (
     <div>
       <p>Welcome {user.name}</p>
-      <Link href="/api/auth/logout">Logout</Link>
+      {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+      <a href="/api/auth/logout" className="text-[#E2231A] hover:underline">
+        Logout
+      </a>
     </div>
   );
 }
@@ -100,22 +107,18 @@ export const Default = (props: NavigationIconsProps): JSX.Element => {
                     <p className="text-sm font-semibold text-[#1A1A2E]">{user.name}</p>
                     <p className="text-xs text-gray-600">{user.name}</p>
                   </div>
-                  <Link
-                    href={props.fields?.LoginPage.value.href || '/login'}
-                    className="ml-1 text-[#E2231A] hover:underline"
-                  >
+                  {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+                  <a href="/api/auth/logout" className="ml-1 text-[#E2231A] hover:underline">
                     {t('logout') || 'Log out'}
-                  </Link>
+                  </a>
                 </div>
               ) : (
                 <p className="text-sm text-gray-600">
                   {t('account-empty') || 'You are not logged in.'}
-                  <Link
-                    href={props.fields?.LoginPage.value.href || '/login'}
-                    className="ml-1 text-[#E2231A] hover:underline"
-                  >
+                  {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+                  <a href="/api/auth/login" className="ml-1 text-[#E2231A] hover:underline">
                     {t('login') || 'Log in'}
-                  </Link>
+                  </a>
                 </p>
               )}
             </IconDropdown>
