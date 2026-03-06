@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from '@auth0/nextjs-auth0';
 
 import client from 'lib/sitecore-client';
-import { getEntitlementsFromSession, isEmployeeFromSession } from 'lib/entitlements';
+import { getEntitlementsFromSession, getRolesFromSession } from 'lib/entitlements';
 import { getNavMetadata } from 'lib/nav-metadata';
 import { enrichNavTree, filterNavTree, type NavFields } from 'lib/nav-apply';
 import { getNavigationFieldsFromLayout, setNavigationFieldsOnLayout } from 'lib/nav-layout';
@@ -27,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const session = await getSession(req, res);
     const entitlements = getEntitlementsFromSession(session);
-    const employee = isEmployeeFromSession(session);
+    const userRoles = getRolesFromSession(session);
 
     const navFields = getNavigationFieldsFromLayout(page.layout);
     if (!navFields) return res.status(200).json({ fields: {} });
@@ -44,11 +44,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const ids = collectIds(navFields);
 
-    // Always fetch redirects; only fetch entitlement keys when NOT editing/preview and NOT employee
+    // Always fetch redirects; only fetch entitlement keys when NOT editing/preview
     const meta = await getNavMetadata({
       itemIds: ids,
       language: locale,
-      includeEntitlements: !isEditingOrPreview && !employee,
+      includeEntitlements: !isEditingOrPreview,
       debug: false,
     });
 
@@ -57,14 +57,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       fields: navFields,
       redirectMap: meta.redirectMap,
       requiredKeysMap: meta.requiredKeysMap,
+      requiredOperatorMap: meta.requiredOperatorMap,
+      requiredRolesMap: meta.requiredRolesMap,
+      requiredRolesOperatorMap: meta.requiredRolesOperatorMap,
     });
 
     // Filter only when not editing/preview (filter function will bypass automatically)
     const filtered = filterNavTree({
       fields: enriched,
       userEntitlements: entitlements,
+      userRoles,
       isEditingOrPreview,
-      isEmployee: employee,
       language: locale,
       userSub: session?.user?.sub,
     });

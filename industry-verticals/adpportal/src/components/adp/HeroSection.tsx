@@ -17,10 +17,12 @@ import {
 } from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from '@/lib/component-props';
 import {
+  getEntitlementOperatorFromField,
   getRequiredAuth0KeysFromEntitlements,
+  getRequiredRolesFromField,
   useComponentEntitlementDecision,
 } from '@/lib/entitlements/componentEntitlements';
-import type { EntitlementItem } from '@/lib/entitlements/componentEntitlements';
+import type { EntitlementItem, RoleItem } from '@/lib/entitlements/componentEntitlements';
 
 interface Fields {
   Title: TextField;
@@ -29,9 +31,10 @@ interface Fields {
   CTAText: TextField;
   CTALink: LinkField;
   HeroImage: ImageField;
-
-  // ✅ Entitlements lives on the datasource, so it comes through as a datasource field here
   Entitlements: EntitlementItem[];
+  EntitlementOperator?: LinkField;
+  Roles: RoleItem[];
+  RolesOperator: LinkField;
 }
 
 const defaultFields: Fields = {
@@ -44,6 +47,9 @@ const defaultFields: Fields = {
   CTALink: { value: { href: '/get-pricing' } },
   HeroImage: { value: { src: '/hero-image.jpg', alt: 'ADP Payroll and HR Solutions' } },
   Entitlements: [],
+  EntitlementOperator: { value: { id: '{95926502-E249-4B28-90F7-CEBF2F744D53}', value: '' } },
+  Roles: [],
+  RolesOperator: { value: { id: '', value: '' } },
 };
 
 export type HeroSectionProps = ComponentProps & {
@@ -62,7 +68,21 @@ export const Default = (props: HeroSectionProps): JSX.Element | null => {
     () => getRequiredAuth0KeysFromEntitlements(fields?.Entitlements),
     [fields?.Entitlements]
   );
-  const { allowed, isLoading, isSecured } = useComponentEntitlementDecision(requiredKeys);
+  const operator = useMemo(
+    () => getEntitlementOperatorFromField(fields?.EntitlementOperator),
+    [fields?.EntitlementOperator]
+  );
+  const requiredRoles = useMemo(() => getRequiredRolesFromField(fields?.Roles), [fields?.Roles]);
+  const rolesOperator = useMemo(
+    () => getEntitlementOperatorFromField(fields?.RolesOperator),
+    [fields?.RolesOperator]
+  );
+  const { allowed, isLoading, isSecured } = useComponentEntitlementDecision(
+    requiredKeys,
+    operator,
+    requiredRoles,
+    rolesOperator
+  );
 
   if (!isEditingOrPreview && isSecured) {
     if (isLoading) return null;

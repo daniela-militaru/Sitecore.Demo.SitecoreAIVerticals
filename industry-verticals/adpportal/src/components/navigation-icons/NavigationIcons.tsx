@@ -1,4 +1,4 @@
-import React, { JSX, useState } from 'react';
+import React, { JSX, useMemo, useState } from 'react';
 import { User, Heart, ShoppingCart, X, Search } from 'lucide-react';
 import { ComponentProps } from '@/lib/component-props';
 import { isParamEnabled } from '@/helpers/isParamEnabled';
@@ -10,6 +10,10 @@ import { LinkField } from '@sitecore-content-sdk/nextjs';
 import PreviewSearch from '../non-sitecore/search/PreviewSearch';
 import { PREVIEW_WIDGET_ID } from '@/constants/search';
 import { useUser } from '@auth0/nextjs-auth0/client';
+import {
+  getUserEntitlementsFromUser,
+  getUserRolesFromUser,
+} from '@/lib/entitlements/componentEntitlements';
 
 interface User {
   username: string;
@@ -25,6 +29,68 @@ export type NavigationIconsProps = ComponentProps & {
   };
   params: { [key: string]: string };
 };
+
+function UserInfoWithHover({ user }: { user: Record<string, unknown> }) {
+  const [isHovered, setIsHovered] = useState(false);
+  console.log('JBE UserInfoWithHover USER:', user);
+  const entitlements = useMemo(() => getUserEntitlementsFromUser(user), [user]);
+  const roles = useMemo(() => getUserRolesFromUser(user), [user]);
+
+  const entitlementKeys = useMemo(
+    () => Object.keys(entitlements).filter((k) => entitlements[k] === true),
+    [entitlements]
+  );
+
+  const displayName =
+    typeof user.name === 'string'
+      ? user.name
+      : typeof user.email === 'string'
+        ? user.email
+        : 'User';
+
+  return (
+    <div
+      className="relative inline-block"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <p className="cursor-default text-sm font-semibold text-[#1A1A2E]">Welcome, {displayName}</p>
+      {isHovered && (
+        <div
+          className="absolute top-full left-0 z-50 mt-1 min-w-[200px] rounded-md border border-gray-200 bg-white px-3 py-2 shadow-lg"
+          role="tooltip"
+        >
+          <div className="mb-2">
+            <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase">
+              Entitlements
+            </p>
+            {entitlementKeys.length > 0 ? (
+              <ul className="mt-0.5 space-y-0.5 text-xs text-[#1A1A2E]">
+                {entitlementKeys.map((key) => (
+                  <li key={key}>{key}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-0.5 text-xs text-gray-500 italic">None configured</p>
+            )}
+          </div>
+          <div>
+            <p className="text-xs font-semibold tracking-wide text-gray-500 uppercase">Roles</p>
+            {roles.length > 0 ? (
+              <ul className="mt-0.5 space-y-0.5 text-xs text-[#1A1A2E]">
+                {roles.map((role) => (
+                  <li key={role}>{role}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-0.5 text-xs text-gray-500 italic">None configured</p>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 const IconDropdown = ({
   icon,
@@ -67,7 +133,8 @@ export default function AuthButtons() {
 
   return (
     <div>
-      <p>Welcome {user.name}</p>
+      <UserInfoWithHover user={user} />
+      <br />
       {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
       <a href="/api/auth/logout" className="text-[#E2231A] hover:underline">
         Logout
@@ -103,9 +170,8 @@ export const Default = (props: NavigationIconsProps): JSX.Element => {
                 <p className="text-sm text-gray-500">Loading...</p>
               ) : user ? (
                 <div className="space-y-3">
-                  <div className="border-b border-gray-200 pb-3">
-                    <p className="text-sm font-semibold text-[#1A1A2E]">{user.name}</p>
-                    <p className="text-xs text-gray-600">{user.name}</p>
+                  <div className="overflow-visible border-b border-gray-200 pb-3">
+                    <UserInfoWithHover user={user} />
                   </div>
                   {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
                   <a href="/api/auth/logout" className="ml-1 text-[#E2231A] hover:underline">

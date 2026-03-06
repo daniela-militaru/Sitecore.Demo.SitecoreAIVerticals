@@ -75,6 +75,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/shadcn/components/ui/
 import { MiniCart } from 'src/components/non-sitecore/MiniCart';
 import PreviewSearch_938f3b0320996fc3fe6ab3d953daf2e708e085ca from 'src/components/non-sitecore/search/PreviewSearch';
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { getUserEntitlementsFromUser, getUserRolesFromUser, getEntitlementOperatorFromField, getRequiredAuth0KeysFromEntitlements, getRequiredRolesFromField, useComponentEntitlementDecision } from '@/lib/entitlements/componentEntitlements';
 import HamburgerIcon from '@/components/non-sitecore/HamburgerIcon';
 import { useClickAway } from '@/hooks/useClickAway';
 import { useStopResponsiveTransition } from '@/hooks/useStopResponsiveTransition';
@@ -92,7 +93,6 @@ import { pageView, identity } from '@sitecore-cloudsdk/events/browser';
 import config from 'sitecore.config';
 import { faUser, faCalendar, faTag } from '@fortawesome/free-solid-svg-icons';
 import { sortByDateDesc, getCategoryCounts } from '@/helpers/articleUtils';
-import { getRequiredAuth0KeysFromEntitlements, useComponentEntitlementDecision } from '@/lib/entitlements/componentEntitlements';
 
 const importMap = [
   {
@@ -588,6 +588,17 @@ const importMap = [
     ]
   },
   {
+    module: '@/lib/entitlements/componentEntitlements',
+    exports: [
+      { name: 'getUserEntitlementsFromUser', value: getUserEntitlementsFromUser },
+      { name: 'getUserRolesFromUser', value: getUserRolesFromUser },
+      { name: 'getEntitlementOperatorFromField', value: getEntitlementOperatorFromField },
+      { name: 'getRequiredAuth0KeysFromEntitlements', value: getRequiredAuth0KeysFromEntitlements },
+      { name: 'getRequiredRolesFromField', value: getRequiredRolesFromField },
+      { name: 'useComponentEntitlementDecision', value: useComponentEntitlementDecision },
+    ]
+  },
+  {
     module: '@/components/non-sitecore/HamburgerIcon',
     exports: [
       { name: 'default', value: HamburgerIcon },
@@ -699,13 +710,6 @@ const importMap = [
     exports: [
       { name: 'sortByDateDesc', value: sortByDateDesc },
       { name: 'getCategoryCounts', value: getCategoryCounts },
-    ]
-  },
-  {
-    module: '@/lib/entitlements/componentEntitlements',
-    exports: [
-      { name: 'getRequiredAuth0KeysFromEntitlements', value: getRequiredAuth0KeysFromEntitlements },
-      { name: 'useComponentEntitlementDecision', value: useComponentEntitlementDecision },
     ]
   }
 ] as ImportEntry[];

@@ -20,6 +20,7 @@ import { isParamEnabled } from '@/helpers/isParamEnabled';
 
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { ENTITLEMENTS_CLAIM } from 'lib/entitlements';
+import type { EntitlementOperator } from 'lib/entitlements';
 
 export interface NavItemFields {
   Id: string;
@@ -30,7 +31,8 @@ export interface NavItemFields {
   Querystring: string;
   Children?: Array<NavItemFields>;
   Styles: string[];
-  __requiredAuth0Keys?: string[]; // injected by SSR
+  __requiredAuth0Keys?: string[];
+  __requiredAuth0Operator?: EntitlementOperator;
 }
 
 interface NavigationListItemProps {
@@ -44,9 +46,15 @@ export interface NavigationProps extends ComponentProps {
   fields: Record<string, NavItemFields>;
 }
 
-function userHasSomeRequiredKey(requiredKeys: string[], userEntitlements: Record<string, boolean>) {
+function userHasRequiredKeys(
+  requiredKeys: string[],
+  userEntitlements: Record<string, boolean>,
+  operator: EntitlementOperator
+) {
   if (!requiredKeys?.length) return true;
-  return requiredKeys.some((k) => userEntitlements[k] === true);
+  return operator === 'all'
+    ? requiredKeys.every((k) => userEntitlements[k] === true)
+    : requiredKeys.some((k) => userEntitlements[k] === true);
 }
 
 function filterNavTreeClient(items: NavItemFields[], userEntitlements: Record<string, boolean>) {
@@ -54,7 +62,8 @@ function filterNavTreeClient(items: NavItemFields[], userEntitlements: Record<st
     const out: NavItemFields[] = [];
     for (const it of arr) {
       const required = it.__requiredAuth0Keys || [];
-      if (!userHasSomeRequiredKey(required, userEntitlements)) continue;
+      const operator = it.__requiredAuth0Operator ?? 'any';
+      if (!userHasRequiredKeys(required, userEntitlements, operator)) continue;
 
       const next: NavItemFields = { ...it };
       if (next.Children?.length) next.Children = filterRec(next.Children);
@@ -345,7 +354,7 @@ export const Default = ({ params, fields }: NavigationProps) => {
           role="menubar"
           className={clsx(
             // Mobile: center items; Desktop: align items from the left.
-            'container flex flex-col gap-x-4 gap-y-4 py-6 text-[10px] lg:flex-row xl:gap-x-8',
+            'container flex flex-col gap-x-4 gap-y-4 py-6 text-[10px] lg:flex-row xl:gap-x-4',
             'max-lg:items-center max-lg:justify-center lg:items-center lg:justify-start',
             isSimpleLayout && !hasLogoRootItem && 'lg:justify-end'
           )}

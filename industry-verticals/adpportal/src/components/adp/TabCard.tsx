@@ -1,14 +1,24 @@
 'use client';
 
 import type { JSX } from 'react';
+import { useMemo } from 'react';
 import {
   TextField,
   ImageField,
   Text,
   Image as SitecoreImage,
   Placeholder,
+  LinkField,
+  useSitecore,
 } from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from '@/lib/component-props';
+import {
+  getEntitlementOperatorFromField,
+  getRequiredAuth0KeysFromEntitlements,
+  getRequiredRolesFromField,
+  useComponentEntitlementDecision,
+} from '@/lib/entitlements/componentEntitlements';
+import type { EntitlementItem, RoleItem } from '@/lib/entitlements/componentEntitlements';
 
 /**
  * TabCard Component
@@ -34,21 +44,57 @@ interface Fields {
   Label: TextField;
   /** Optional image shown beside the benefits */
   Image: ImageField;
+  Entitlements: EntitlementItem[];
+  EntitlementOperator: LinkField;
+  Roles: RoleItem[];
+  RolesOperator: LinkField;
 }
 
 const defaultFields: Fields = {
   Label: { value: 'Bespaar geld' },
   Image: { value: { src: '/tab-image.jpg', alt: 'Tab visual' } },
+  Entitlements: [],
+  EntitlementOperator: { value: { id: '{95926502-E249-4B28-90F7-CEBF2F744D53}', value: '' } },
+  Roles: [],
+  RolesOperator: { value: { id: '', value: '' } },
 };
 
 export type TabCardProps = ComponentProps & {
   fields: Fields;
 };
 
-export const Default = (props: TabCardProps): JSX.Element => {
+export const Default = (props: TabCardProps): JSX.Element | null => {
   const id = props.params.RenderingIdentifier;
   const { styles, DynamicPlaceholderId } = props.params;
   const fields = props.fields || defaultFields;
+
+  const { page } = useSitecore();
+  const isEditingOrPreview = page.mode.isEditing || page.mode.isPreview;
+
+  const requiredKeys = useMemo(
+    () => getRequiredAuth0KeysFromEntitlements(fields?.Entitlements),
+    [fields?.Entitlements]
+  );
+  const operator = useMemo(
+    () => getEntitlementOperatorFromField(fields?.EntitlementOperator),
+    [fields?.EntitlementOperator]
+  );
+  const requiredRoles = useMemo(() => getRequiredRolesFromField(fields?.Roles), [fields?.Roles]);
+  const rolesOperator = useMemo(
+    () => getEntitlementOperatorFromField(fields?.RolesOperator),
+    [fields?.RolesOperator]
+  );
+  const { allowed, isLoading, isSecured } = useComponentEntitlementDecision(
+    requiredKeys,
+    operator,
+    requiredRoles,
+    rolesOperator
+  );
+
+  if (!isEditingOrPreview && isSecured) {
+    if (isLoading) return null;
+    if (!allowed) return null;
+  }
 
   const phBenefits = `tabBenefitCards-${DynamicPlaceholderId}`;
 

@@ -7,13 +7,17 @@ import {
   RichTextField,
   Text,
   RichText,
+  LinkField,
   useSitecore,
 } from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from '@/lib/component-props';
 import {
+  getEntitlementOperatorFromField,
   getRequiredAuth0KeysFromEntitlements,
+  getRequiredRolesFromField,
   useComponentEntitlementDecision,
   type EntitlementItem,
+  type RoleItem,
 } from '@/lib/entitlements/componentEntitlements';
 
 /**
@@ -31,9 +35,10 @@ import {
 interface Fields {
   Question: TextField;
   Answer: RichTextField;
-
-  // ✅ Entitlements is on the datasource
   Entitlements: EntitlementItem[];
+  EntitlementOperator?: LinkField;
+  Roles: RoleItem[];
+  RolesOperator: LinkField;
 }
 
 const defaultFields: Fields = {
@@ -43,6 +48,9 @@ const defaultFields: Fields = {
       "<p>Human Capital Management (HCM) is a comprehensive approach to managing an organisation's most valuable asset: its people. It covers everything from recruiting and onboarding to payroll, benefits, performance management and talent development.</p>",
   },
   Entitlements: [],
+  EntitlementOperator: { value: { id: '{95926502-E249-4B28-90F7-CEBF2F744D53}', value: '' } },
+  Roles: [],
+  RolesOperator: { value: { id: '', value: '' } },
 };
 
 export type FaqCardProps = ComponentProps & {
@@ -61,7 +69,21 @@ export const Default = (props: FaqCardProps): JSX.Element | null => {
     () => getRequiredAuth0KeysFromEntitlements(fields?.Entitlements),
     [fields?.Entitlements]
   );
-  const { allowed, isLoading, isSecured } = useComponentEntitlementDecision(requiredKeys);
+  const operator = useMemo(
+    () => getEntitlementOperatorFromField(fields?.EntitlementOperator),
+    [fields?.EntitlementOperator]
+  );
+  const requiredRoles = useMemo(() => getRequiredRolesFromField(fields?.Roles), [fields?.Roles]);
+  const rolesOperator = useMemo(
+    () => getEntitlementOperatorFromField(fields?.RolesOperator),
+    [fields?.RolesOperator]
+  );
+  const { allowed, isLoading, isSecured } = useComponentEntitlementDecision(
+    requiredKeys,
+    operator,
+    requiredRoles,
+    rolesOperator
+  );
 
   if (!isEditingOrPreview && isSecured) {
     if (isLoading) return null;

@@ -18,7 +18,7 @@ import scConfig from 'sitecore.config';
 
 import {
   getEntitlementsFromSession,
-  isEmployeeFromSession,
+  getRolesFromSession,
   isUserAllowedForPage,
 } from 'lib/entitlements';
 import { getNavMetadata, type NavMetadata } from 'lib/nav-metadata';
@@ -86,7 +86,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const session = await getSession(context.req, context.res);
   const entitlements = getEntitlementsFromSession(session);
-  const employee = isEmployeeFromSession(session);
+  const userRoles = getRolesFromSession(session);
 
   // Editing/preview: show everything
   const isEditingOrPreview = Boolean(isPreview);
@@ -119,10 +119,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   // ---- 2) PAGE GATING (cache hit when routeItemId was in nav batch) ----
   if (!isEditingOrPreview && routeItemId) {
-    const { allowed, requiredKeys } = await isUserAllowedForPage(
+    const { allowed, requiredKeys, requiredRoles } = await isUserAllowedForPage(
       routeItemId,
       language,
       entitlements,
+      userRoles,
       session?.user?.sub
     );
 
@@ -132,12 +133,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         path,
         routeItemId: normalizeGuid(routeItemId),
         requiredKeys,
+        requiredRoles,
         allowed,
-        employee,
       });
     }
 
-    if (requiredKeys.length > 0 && !employee) {
+    if (requiredKeys.length > 0 || requiredRoles.length > 0) {
       if (!session?.user) {
         const returnTo = encodeURIComponent(context.resolvedUrl || '/');
         return {
@@ -159,6 +160,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         fields: navFields,
         redirectMap: navMeta.redirectMap,
         requiredKeysMap: navMeta.requiredKeysMap,
+        requiredOperatorMap: navMeta.requiredOperatorMap,
+        requiredRolesMap: navMeta.requiredRolesMap,
+        requiredRolesOperatorMap: navMeta.requiredRolesOperatorMap,
         debug,
         traceId,
       });
@@ -166,8 +170,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       const filtered = filterNavTree({
         fields: enriched,
         userEntitlements: entitlements,
+        userRoles: userRoles,
         isEditingOrPreview,
-        isEmployee: employee,
         language,
         userSub: session?.user?.sub,
         debug,

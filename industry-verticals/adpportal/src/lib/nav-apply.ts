@@ -1,5 +1,5 @@
 // lib/nav-apply.ts
-import { getOrSetAccessDecision } from 'lib/entitlements';
+import { getOrSetAccessDecision, type EntitlementOperator } from 'lib/entitlements';
 
 export type NavItem = {
   Id: string;
@@ -8,11 +8,17 @@ export type NavItem = {
   Children?: NavItem[];
   Styles?: string[];
   __requiredAuth0Keys?: string[];
+  __requiredAuth0Operator?: EntitlementOperator;
+  __requiredRoles?: string[];
+  __requiredRolesOperator?: EntitlementOperator;
 };
 
 export type NavFields = Record<string, NavItem>;
 export type RedirectMap = Record<string, string>;
 export type RequiredKeysMap = Record<string, string[]>;
+export type RequiredOperatorMap = Record<string, EntitlementOperator>;
+export type RequiredRolesMap = Record<string, string[]>;
+export type RequiredRolesOperatorMap = Record<string, EntitlementOperator>;
 
 /**
  * MUST match nav-metadata.ts normalization:
@@ -49,12 +55,24 @@ function normalizeHref(input?: string | null): string {
 
 export function enrichNavTree(params: {
   fields: NavFields;
-  redirectMap: RedirectMap; // normalized itemId -> redirectUrl
-  requiredKeysMap: RequiredKeysMap; // normalized itemId -> required auth0 keys
+  redirectMap: RedirectMap;
+  requiredKeysMap: RequiredKeysMap;
+  requiredOperatorMap: RequiredOperatorMap;
+  requiredRolesMap: RequiredRolesMap;
+  requiredRolesOperatorMap: RequiredRolesOperatorMap;
   debug?: boolean;
   traceId?: string;
 }): NavFields {
-  const { fields, redirectMap, requiredKeysMap, debug, traceId } = params;
+  const {
+    fields,
+    redirectMap,
+    requiredKeysMap,
+    requiredOperatorMap,
+    requiredRolesMap,
+    requiredRolesOperatorMap,
+    debug,
+    traceId,
+  } = params;
 
   const rewriteItem = (it: NavItem): NavItem => {
     const idKey = normalizeId(it.Id);
@@ -62,6 +80,9 @@ export function enrichNavTree(params: {
     const next: NavItem = {
       ...it,
       __requiredAuth0Keys: requiredKeysMap[idKey] ?? [],
+      __requiredAuth0Operator: requiredOperatorMap[idKey] ?? 'any',
+      __requiredRoles: requiredRolesMap[idKey] ?? [],
+      __requiredRolesOperator: requiredRolesOperatorMap[idKey] ?? 'any',
     };
 
     // Debug: show the join result per item
@@ -113,8 +134,8 @@ export function enrichNavTree(params: {
 export function filterNavTree(params: {
   fields: NavFields;
   userEntitlements: Record<string, boolean>;
+  userRoles: string[];
   isEditingOrPreview: boolean;
-  isEmployee: boolean;
   language: string;
   userSub: string | undefined;
   debug?: boolean;
@@ -123,19 +144,32 @@ export function filterNavTree(params: {
   const {
     fields,
     userEntitlements,
+    userRoles,
     isEditingOrPreview,
-    isEmployee,
     language,
     userSub,
     debug,
     traceId,
   } = params;
 
-  if (isEditingOrPreview || isEmployee) return fields;
+  if (isEditingOrPreview) return fields;
 
   const filterItem = (it: NavItem): NavItem | null => {
     const required = it.__requiredAuth0Keys ?? [];
-    const allowed = getOrSetAccessDecision(it.Id, language, required, userEntitlements, userSub);
+    const operator = it.__requiredAuth0Operator ?? 'any';
+    const requiredRoles = it.__requiredRoles ?? [];
+    const rolesOperator = it.__requiredRolesOperator ?? 'any';
+    const allowed = getOrSetAccessDecision(
+      it.Id,
+      language,
+      required,
+      operator,
+      requiredRoles,
+      rolesOperator,
+      userEntitlements,
+      userRoles,
+      userSub
+    );
 
     if (!allowed) {
       if (debug) {

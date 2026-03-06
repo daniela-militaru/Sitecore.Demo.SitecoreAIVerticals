@@ -11,6 +11,8 @@ import { Text } from '@sitecore-content-sdk/nextjs';
  * Navigation.tsx -> navHelpers.tsx -> Navigation.tsx
  */
 
+import type { EntitlementOperator } from 'lib/entitlements';
+
 export interface NavItemFields {
   Id: string;
   DisplayName: string;
@@ -21,6 +23,7 @@ export interface NavItemFields {
   Children?: Array<NavItemFields>;
   Styles: string[];
   __requiredAuth0Keys?: string[];
+  __requiredAuth0Operator?: EntitlementOperator;
 }
 
 export type NavigationFields = Record<string, NavItemFields>;

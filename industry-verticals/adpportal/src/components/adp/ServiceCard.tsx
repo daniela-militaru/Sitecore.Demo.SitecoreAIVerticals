@@ -1,6 +1,7 @@
 'use client';
 
 import type { JSX } from 'react';
+import { useMemo } from 'react';
 import {
   TextField,
   RichTextField,
@@ -10,8 +11,16 @@ import {
   LinkField,
   Link as SitecoreLink,
   Image as SitecoreImage,
+  useSitecore,
 } from '@sitecore-content-sdk/nextjs';
 import { ComponentProps } from '@/lib/component-props';
+import {
+  getEntitlementOperatorFromField,
+  getRequiredAuth0KeysFromEntitlements,
+  getRequiredRolesFromField,
+  useComponentEntitlementDecision,
+} from '@/lib/entitlements/componentEntitlements';
+import type { EntitlementItem, RoleItem } from '@/lib/entitlements/componentEntitlements';
 
 /**
  * serviceCard Component
@@ -31,6 +40,10 @@ interface Fields {
   Description: RichTextField;
   Link: LinkField;
   LinkText: TextField;
+  Entitlements: EntitlementItem[];
+  EntitlementOperator?: LinkField;
+  Roles: RoleItem[];
+  RolesOperator: LinkField;
 }
 
 const defaultFields: Fields = {
@@ -44,6 +57,10 @@ const defaultFields: Fields = {
     value: { href: 'https://www.adp.com/what-we-offer/global-solutions/global-payroll.aspx' },
   },
   LinkText: { value: 'Learn more about our global payroll solutions' },
+  Entitlements: [],
+  EntitlementOperator: { value: { id: '{95926502-E249-4B28-90F7-CEBF2F744D53}', value: '' } },
+  Roles: [],
+  RolesOperator: { value: { id: '', value: '' } },
 };
 
 export type serviceCardProps = ComponentProps & {
@@ -54,6 +71,34 @@ export const Default = (props: serviceCardProps): JSX.Element | null => {
   const id = props.params.RenderingIdentifier;
   const { styles } = props.params;
   const fields = props.fields || defaultFields;
+
+  const { page } = useSitecore();
+  const isEditingOrPreview = page.mode.isEditing || page.mode.isPreview;
+
+  const requiredKeys = useMemo(
+    () => getRequiredAuth0KeysFromEntitlements(fields?.Entitlements),
+    [fields?.Entitlements]
+  );
+  const operator = useMemo(
+    () => getEntitlementOperatorFromField(fields?.EntitlementOperator),
+    [fields?.EntitlementOperator]
+  );
+  const requiredRoles = useMemo(() => getRequiredRolesFromField(fields?.Roles), [fields?.Roles]);
+  const rolesOperator = useMemo(
+    () => getEntitlementOperatorFromField(fields?.RolesOperator),
+    [fields?.RolesOperator]
+  );
+  const { allowed, isLoading, isSecured } = useComponentEntitlementDecision(
+    requiredKeys,
+    operator,
+    requiredRoles,
+    rolesOperator
+  );
+
+  if (!isEditingOrPreview && isSecured) {
+    if (isLoading) return null;
+    if (!allowed) return null;
+  }
 
   const hasContent = fields.Title?.value;
   if (!hasContent) return null;

@@ -1,20 +1,32 @@
 // lib/nav-metadata.ts
 import client from 'lib/sitecore-client';
-import { ENTITLEMENTS_CACHE_TTL_MS, setRequiredKeysForItem } from 'lib/entitlements';
+import {
+  ENTITLEMENT_OPERATOR_ALL,
+  ENTITLEMENTS_CACHE_TTL_MS,
+  setRequiredKeysForItem,
+  type EntitlementOperator,
+} from 'lib/entitlements';
 
 export type RedirectMap = Record<string, string>;
 export type RequiredKeysMap = Record<string, string[]>;
+export type RequiredOperatorMap = Record<string, EntitlementOperator>;
+export type RequiredRolesMap = Record<string, string[]>;
+export type RequiredRolesOperatorMap = Record<string, EntitlementOperator>;
 
 export type NavMetadata = {
-  redirectMap: RedirectMap; // normalized itemId -> redirect href/url
-  requiredKeysMap: RequiredKeysMap; // normalized itemId -> required auth0 keys
+  redirectMap: RedirectMap;
+  requiredKeysMap: RequiredKeysMap;
+  requiredOperatorMap: RequiredOperatorMap;
+  requiredRolesMap: RequiredRolesMap;
+  requiredRolesOperatorMap: RequiredRolesOperatorMap;
 };
 
 type CacheEntry<T> = { value: T; expiresAt: number };
 const metaCache = new Map<string, CacheEntry<NavMetadata>>();
 
-// Experience Edge depth limit is strict; keep small.
-const CHUNK_SIZE = 5;
+// Experience Edge depth limit is 15; multilist fields (Entitlements, Roles) add depth per item.
+// With 5 items we hit ~30 depth. Use 2 items per chunk to stay under the limit.
+const CHUNK_SIZE = 2;
 
 type GetDataFn = (query: string, variables: Record<string, unknown>) => Promise<unknown>;
 function hasGetData(x: unknown): x is { getData: GetDataFn } {
@@ -98,6 +110,38 @@ function extractAuth0KeysFromEntitlements(entitlementsField: unknown): string[] 
   return [...new Set(keys)];
 }
 
+/** Extract operator from droplink field. Default: any. */
+function extractOperatorFromField(opField: unknown): EntitlementOperator {
+  if (!isObject(opField)) return 'any';
+  const jsonValue = opField.jsonValue;
+  if (!isObject(jsonValue)) return 'any';
+  const value = jsonValue.value;
+  const id = isObject(value) ? (asString(value.id) ?? asString(value.value)) : asString(value);
+  if (!id) return 'any';
+  const normalized = normalizeId(id);
+  return normalized === ENTITLEMENT_OPERATOR_ALL ? 'all' : 'any';
+}
+
+/** Roles field: jsonValue array of items with fields.Name/RoleName/Value.value or item.name */
+function extractRolesFromField(rolesField: unknown): string[] {
+  if (!isObject(rolesField)) return [];
+  const jsonValue = rolesField.jsonValue;
+  if (!Array.isArray(jsonValue)) return [];
+  const roles: string[] = [];
+  for (const roleItem of jsonValue) {
+    if (!isObject(roleItem)) continue;
+    const fields = roleItem.fields;
+    let v: string | undefined;
+    if (isObject(fields)) {
+      const nameField = fields.Name ?? fields.RoleName ?? fields.Value;
+      v = isObject(nameField) ? asString(nameField.value) : asString(nameField);
+    }
+    v = v ?? asString(roleItem.name) ?? asString(roleItem.displayName);
+    if (v && v.trim()) roles.push(v.trim());
+  }
+  return [...new Set(roles)];
+}
+
 function buildNavMetaQuery(itemIds: string[], includeEntitlements: boolean): string {
   const parts: string[] = [];
 
@@ -106,7 +150,7 @@ function buildNavMetaQuery(itemIds: string[], includeEntitlements: boolean): str
       i${i}: item(path: "${itemIds[i]}", language: $language) {
         id
         redirectUrl: field(name: "RedirectUrl") { jsonValue }
-        ${includeEntitlements ? 'entitlements: field(name: "Entitlements") { jsonValue }' : ''}
+        ${includeEntitlements ? 'entitlements: field(name: "Entitlements") { jsonValue }\n        entitlementOperator: field(name: "EntitlementOperator") { jsonValue }\n        roles: field(name: "Roles") { jsonValue }\n        rolesOperator: field(name: "RolesOperator") { jsonValue }' : ''}
       }
     `);
   }
@@ -128,7 +172,14 @@ export async function getNavMetadata(params: {
   const { itemIds, language, includeEntitlements = true, debug, traceId } = params;
 
   const uniqueIds = [...new Set(itemIds.map(normalizeId))].filter(Boolean);
-  if (uniqueIds.length === 0) return { redirectMap: {}, requiredKeysMap: {} };
+  if (uniqueIds.length === 0)
+    return {
+      redirectMap: {},
+      requiredKeysMap: {},
+      requiredOperatorMap: {},
+      requiredRolesMap: {},
+      requiredRolesOperatorMap: {},
+    };
 
   const cacheKey = stableKey(language, uniqueIds, includeEntitlements);
   const now = Date.now();
@@ -154,6 +205,9 @@ export async function getNavMetadata(params: {
 
   const redirectMap: RedirectMap = {};
   const requiredKeysMap: RequiredKeysMap = {};
+  const requiredOperatorMap: RequiredOperatorMap = {};
+  const requiredRolesMap: RequiredRolesMap = {};
+  const requiredRolesOperatorMap: RequiredRolesOperatorMap = {};
 
   const chunks = chunk(uniqueIds, CHUNK_SIZE);
 
@@ -187,9 +241,22 @@ export async function getNavMetadata(params: {
 
       if (includeEntitlements) {
         requiredKeysMap[idKey] = extractAuth0KeysFromEntitlements(node.entitlements);
-        setRequiredKeysForItem(idKey, language, requiredKeysMap[idKey]);
+        requiredOperatorMap[idKey] = extractOperatorFromField(node.entitlementOperator);
+        requiredRolesMap[idKey] = extractRolesFromField(node.roles);
+        requiredRolesOperatorMap[idKey] = extractOperatorFromField(node.rolesOperator);
+        setRequiredKeysForItem(
+          idKey,
+          language,
+          requiredKeysMap[idKey],
+          requiredOperatorMap[idKey],
+          requiredRolesMap[idKey],
+          requiredRolesOperatorMap[idKey]
+        );
       } else {
         requiredKeysMap[idKey] = [];
+        requiredOperatorMap[idKey] = 'any';
+        requiredRolesMap[idKey] = [];
+        requiredRolesOperatorMap[idKey] = 'any';
       }
 
       if (debug && (redirectHref || (requiredKeysMap[idKey]?.length ?? 0) > 0)) {
@@ -203,7 +270,13 @@ export async function getNavMetadata(params: {
     }
   }
 
-  const value: NavMetadata = { redirectMap, requiredKeysMap };
+  const value: NavMetadata = {
+    redirectMap,
+    requiredKeysMap,
+    requiredOperatorMap,
+    requiredRolesMap,
+    requiredRolesOperatorMap,
+  };
   metaCache.set(cacheKey, { value, expiresAt: now + ENTITLEMENTS_CACHE_TTL_MS });
 
   if (debug) {
