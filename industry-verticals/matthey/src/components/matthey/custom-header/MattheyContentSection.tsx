@@ -40,7 +40,10 @@ export const Default = (props: ComponentProps): JSX.Element => {
   const id = props.rendering?.uid;
 
   return (
-    <section className="bg-white py-12 md:py-16 lg:py-20" key={id}>
+    <section
+      className="relative container m-0 mx-auto flex h-full bg-white py-12 md:py-16 lg:py-20"
+      key={id}
+    >
       <div className="container mx-auto px-4">
         <div className="max-w-4xl">
           <h2 className="mb-6 text-2xl font-light text-balance text-[#1e22aa] md:mb-8 md:text-3xl lg:text-4xl">
