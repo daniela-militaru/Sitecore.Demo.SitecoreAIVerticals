@@ -1,0 +1,86 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { getSession } from '@auth0/nextjs-auth0';
+
+import client from 'lib/sitecore-client';
+import { getEntitlementsFromSession, getRolesFromSession } from 'lib/entitlements';
+import { getNavMetadata } from 'lib/nav-metadata';
+import { enrichNavTree, filterNavTree, type NavFields } from 'lib/nav-apply';
+import { getNavigationFieldsFromLayout, setNavigationFieldsOnLayout } from 'lib/nav-layout';
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  res.setHeader('Cache-Control', 'private, no-store, max-age=0');
+  res.setHeader('Vary', 'Cookie');
+
+  try {
+    const locale = typeof req.query.locale === 'string' ? req.query.locale : 'en';
+
+    // Editing/Preview bypass: still apply redirects, skip entitlement filtering
+    const isEditingOrPreview =
+      req.query.editing === '1' ||
+      req.query.preview === '1' ||
+      (typeof req.query.sc_mode === 'string' &&
+        ['edit', 'preview'].includes(req.query.sc_mode.toLowerCase()));
+
+    const page = (await client.getPage('/', { locale })) as { layout?: unknown };
+    if (!page?.layout) return res.status(200).json({ fields: {} });
+
+    let session: Awaited<ReturnType<typeof getSession>> = null;
+    if (process.env.AUTH0_SECRET) {
+      session = await getSession(req, res);
+    }
+    const entitlements = getEntitlementsFromSession(session);
+    const userRoles = getRolesFromSession(session);
+
+    const navFields = getNavigationFieldsFromLayout(page.layout);
+    if (!navFields) return res.status(200).json({ fields: {} });
+
+    const collectIds = (fields: NavFields): string[] => {
+      const ids: string[] = [];
+      const walk = (it: any) => {
+        if (it?.Id) ids.push(it.Id);
+        if (Array.isArray(it?.Children)) it.Children.forEach(walk);
+      };
+      Object.values(fields).forEach(walk);
+      return [...new Set(ids)];
+    };
+
+    const ids = collectIds(navFields);
+
+    // Always fetch redirects; only fetch entitlement keys when NOT editing/preview
+    const meta = await getNavMetadata({
+      itemIds: ids,
+      language: locale,
+      includeEntitlements: !isEditingOrPreview,
+      debug: false,
+    });
+
+    // Always enrich (redirects always applied)
+    const enriched = enrichNavTree({
+      fields: navFields,
+      redirectMap: meta.redirectMap,
+      requiredKeysMap: meta.requiredKeysMap,
+      requiredOperatorMap: meta.requiredOperatorMap,
+      requiredRolesMap: meta.requiredRolesMap,
+      requiredRolesOperatorMap: meta.requiredRolesOperatorMap,
+    });
+
+    // Filter only when not editing/preview (filter function will bypass automatically)
+    const filtered = filterNavTree({
+      fields: enriched,
+      userEntitlements: entitlements,
+      userRoles,
+      isEditingOrPreview,
+      language: locale,
+      userSub: session?.user?.sub,
+    });
+
+    setNavigationFieldsOnLayout(page.layout, filtered);
+
+    const updated = getNavigationFieldsFromLayout(page.layout) || {};
+    return res.status(200).json({ fields: updated });
+  } catch (e: unknown) {
+    console.error('[NAV API] error', e);
+    return res.status(200).json({ fields: {} });
+  }
+}
